@@ -19,7 +19,6 @@ class BaseModel:
 
     def __init__(self, **kwargs):
         self.id = str(uuid.uuid4())
-        print(self.id)
         self.created_at = datetime.utcnow()
         self.updated_at = self.created_at
         for key, value in kwargs.items():

@@ -13,6 +13,7 @@ class Category(BaseModel, Base):
     icon = Column(String(1024))
     children = relationship('Category', back_populates='parent', remote_side='Category.parent_id')
     parent = relationship('Category', back_populates='children', remote_side='Category.id', uselist=False)
+    products = relationship('Product', back_populates='category', cascade='all, delete-orphan')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

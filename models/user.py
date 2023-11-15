@@ -13,7 +13,6 @@ class User(BaseModel, Base):
     email = Column(String(128), nullable=False, unique=True)
     address = relationship('Address', uselist=False, back_populates='user', cascade='all, delete-orphan')
     cars = relationship('Car', back_populates='user', cascade='all, delete-orphan')
-#    cart_id = Column(String(60), ForeignKey('carts.id'))
     role = Column(String(10), default='user')
 
     def __init__(self, **kwargs):
