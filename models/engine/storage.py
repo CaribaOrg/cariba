@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from models.user import User
 from models.address import Address
 from models.car import Car
+from models.category import Category
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
