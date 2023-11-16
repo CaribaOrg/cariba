@@ -36,4 +36,3 @@ class BaseModel:
     def delete(self):
         from models import strg
         strg.delete()
-

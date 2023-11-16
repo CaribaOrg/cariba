@@ -4,6 +4,8 @@ from models.base_model import BaseModel, Base
 from models.user import User
 from models.address import Address
 from models.car import Car
+from models.cart import Cart
+from models.cart_item import CartItem
 from models.category import Category
 from models.product import Product
 from sqlalchemy import create_engine
