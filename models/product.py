@@ -1,10 +1,28 @@
 #!/usr/bin/python3
+''' This is a module for Product '''
 
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Float, Integer
 from sqlalchemy.orm import relationship
 
+
 class Product(BaseModel, Base):
+    '''
+    Product class represents a product in the inventory.
+
+    Attributes:
+        name (str): The name of the product.
+        price (float): The price of the product (default=0).
+        description (str): The description of the product.
+        quantity (int): The quantity available in the inventory (default=1).
+        oem_number (str): The Original Equipment Manufacturer (OEM)
+            number of the product.
+        category_id (str): The foreign key referencing the associated category.
+        category (relationship): The relationship with the associated category.
+
+    Relationships:
+        - 'category': Represents the linked category, back-ref to 'products'.
+    '''
     __tablename__ = 'products'
     name = Column(String(128))
     price = Column(Float, default=0)
@@ -12,12 +30,27 @@ class Product(BaseModel, Base):
     quantity = Column(Integer, default=1)
     oem_number = Column(String(128))
     category_id = Column(String(60), ForeignKey('categories.id'))
-    category = relationship('Category', back_populates='products', uselist=False)
+    category = relationship('Category',
+                            back_populates='products',
+                            uselist=False)
 
     def __init__(self, **kwargs):
+        '''
+        Initialize a new instance of the Product class.
+
+        Args:
+            **kwargs: Arbitrary keyword arguments for attribute assignment.
+        '''
         super().__init__(**kwargs)
 
     def add_to_cart(self, user, quantity=1):
+        '''
+        Add the product to the user's shopping cart.
+
+        Args:
+            user (User): The user for whom the product is added to the cart.
+            quantity (int): The quantity of product to be added (default=1).
+        '''
         from models.cart_item import CartItem
         for item in user.cart.cart_items:
             if self.id == item.product.id:
