@@ -24,6 +24,7 @@ class Product(BaseModel, Base):
                 if quantity <= 0 or quantity + item.quantity > self.quantity:
                     quantity = self.quantity - item.quantity
                 item.quantity += quantity
+                item.cart.total_price += quantity * self.price
                 return
         if quantity <= 0 or quantity > self.quantity:
             quantity = self.quantity
@@ -35,3 +36,4 @@ class Product(BaseModel, Base):
         ci = CartItem(**ci_dict)
         ci.save()
         user.cart.cart_items.append(ci)
+        user.cart.total_price += quantity * self.price
