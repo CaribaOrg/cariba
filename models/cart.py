@@ -14,7 +14,13 @@ class Cart(BaseModel, Base):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-#    def add_item(obj):
-#        self.cart_items.append(obj)
-#        self.total_price += obj.product.price * obj.quantity
-#        self.save()
+    def checkout(self):
+        from models.order import Order
+        order_dict = {
+                'user_id': self.user_id,
+                'cart_id': self.id
+                }
+        order = Order(**order_dict)
+        order.save()
+        self.user_id = None
+        return order

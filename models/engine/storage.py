@@ -8,6 +8,7 @@ from models.cart import Cart
 from models.cart_item import CartItem
 from models.category import Category
 from models.product import Product
+from models.order import Order
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 

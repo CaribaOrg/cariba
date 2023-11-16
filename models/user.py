@@ -14,6 +14,7 @@ class User(BaseModel, Base):
     address = relationship('Address', uselist=False, back_populates='user', cascade='all, delete-orphan')
     cart = relationship('Cart', uselist=False, back_populates='user', cascade='all, delete-orphan')
     cars = relationship('Car', back_populates='user', cascade='all, delete-orphan')
+    orders = relationship('Order', back_populates='user', cascade='all, delete-orphan')
     role = Column(String(10), default='user')
 
     def __init__(self, **kwargs):
