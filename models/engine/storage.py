@@ -12,6 +12,7 @@ from models.product import Product
 from models.order import Order
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from os import getenv
 
 
 class Storage:
@@ -30,8 +31,15 @@ class Storage:
         Initialize a new instance of the Storage class.
         Initializes the database engine with MySQL configuration.
         '''
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}\
-'.format('root', 'root', '172.17.0.3', 'db'))
+        CARIBA_MYSQL_USER = getenv('CARIBA_MYSQL_USER')
+        CARIBA_MYSQL_PWD = getenv('CARIBA_MYSQL_PWD')
+        CARIBA_MYSQL_HOST = getenv('CARIBA_MYSQL_HOST')
+        CARIBA_MYSQL_DB = getenv('CARIBA_MYSQL_DB')
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
+                                      .format(CARIBA_MYSQL_USER,
+                                              CARIBA_MYSQL_PWD,
+                                              CARIBA_MYSQL_HOST,
+                                              CARIBA_MYSQL_DB))
     
     def all(self, cls=None):
         '''
