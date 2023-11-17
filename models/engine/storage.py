@@ -32,6 +32,77 @@ class Storage:
         '''
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}\
 '.format('root', 'root', '172.17.0.3', 'db'))
+    
+    def all(self, cls=None):
+        '''
+        Retrieve all objects of the specified class or a list of classes.
+
+        Args:
+            cls (type or list[type], optional): The class to query.
+                If not provided, the method retrieves all objects
+        '''
+        if cls is None:
+            cls = [User, Address, Car, Cart, CartItem, Category, Product, Order]
+            query = []
+            for c in cls:
+                query.extend(self.__session.query(c).all())
+        else:
+            query = self.__session.query(cls).all()
+        objs = []
+        for obj in query:
+            objs.append(obj)
+        return objs
+
+    def search(self, **kwargs):
+        '''
+        Search for objects based on specified attribute-value pairs.
+
+        Args:
+            **kwargs: Keyword arguments representing attribute-value pairs.
+                - cls (type, optional): The class to search within.
+                - case_sensitive (bool, optional): Whether the search should be
+                            case-sensitive (default is True).
+                - exact (bool, optional): Whether the search should match values
+                            exactly (default is True).
+                - Other keyword arguments are treated as attribute-value pairs
+                            for filtering.
+
+        Returns:
+            list: A list containing objects that match the specified criteria.
+        '''
+        cls = kwargs.get('cls', None)
+        case_sensitive = kwargs.get('case_sensitive', True)
+        exact = kwargs.get('exact', True)
+        kwargs.pop('cls', None)
+        kwargs.pop('case_sensitive', None)
+        kwargs.pop('exact', None)
+        all_objs = self.all(cls)
+        if len(kwargs) == 0:
+            return all_objs
+        result = []
+        for obj in all_objs:
+            for key, value in kwargs.items():
+                current_exact = exact
+                current_case_sensitive = case_sensitive
+                matched = True
+                obj_value = getattr(obj, key, None)
+                if not isinstance(obj_value, str) or not isinstance(value, str):
+                    current_exact = True
+                    current_case_sensitive = True
+                if not current_case_sensitive:
+                    value = value.lower()
+                    obj_value = obj_value.lower()
+                if current_exact:
+                    if value != obj_value:
+                        matched = False
+                        break
+                else:
+                    if value not in obj_value:
+                        matched = False
+                        break
+            if matched:
+                result.append(obj)
+        return result
 
     def new(self, obj):
         '''
