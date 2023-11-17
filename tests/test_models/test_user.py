@@ -8,6 +8,7 @@ Unittest classes:
     TestBaseModel_to_dict
 """
 import os
+import time
 import models
 import unittest
 from datetime import datetime
@@ -104,3 +105,26 @@ class TestUserModel(unittest.TestCase):
         """get the pattern of the password"""
         md5_pattern = re.compile(r"^[a-fA-F0-9]{32}$")
         self.assertTrue(md5_pattern.match(obj1.password))
+
+    def test_save_method(self):
+        obj1 = User(username="quelqueen")
+        obj_id = obj1.id
+        obj1.username = "newName_lol"
+        self.assertEqual(obj1.id, obj_id)
+        self.assertTrue(obj1.username != "quelqueen")
+
+    def test_update_at_updated(self):
+        obj1 = User(username="quelqueen")
+        old_date = obj1.updated_at
+        time.sleep(1)
+        obj1 = User(username="another_name")
+        obj1.save()
+        self.assertTrue(old_date < obj1.updated_at)
+
+    def test_delete_method(self):
+        from models import strg
+
+        obj1 = User(username="quelqueen")
+        obj1.delete()
+        all_obj = strg.all(User)
+        self.assertTrue(obj1 not in all_obj)

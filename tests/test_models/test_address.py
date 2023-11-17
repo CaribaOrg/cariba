@@ -74,3 +74,25 @@ class TestAddressModel(unittest.TestCase):
         obj1 = Address(street="", city="",state_province="", zip_code=2)
         obj2 = Address(street="", city="",state_province="", zip_code=2)
         self.assertTrue(obj1.created_at < obj2.created_at)
+
+    def test_save_method(self):
+        obj1 = Address(street="", city="",state_province="", zip_code=2)
+        obj_id = obj1.id
+        obj1.street = "back street doesn't exist"
+        self.assertEqual(obj1.id, obj_id)
+        self.assertTrue(obj1.street != "")
+
+    def test_update_at_updated(self):
+        obj1 = Address(street="", city="",state_province="", zip_code=2)
+        old_date = obj1.updated_at
+        obj1.city = "Nairobi"
+        obj1.save()
+        self.assertTrue(old_date < obj1.updated_at)
+
+    def test_delete_method(self):
+        from models import strg
+
+        obj1 = Address(street="", city="",state_province="", zip_code=2)
+        obj1.delete()
+        all_obj = strg.all(Address)
+        self.assertTrue(obj1 not in all_obj)
