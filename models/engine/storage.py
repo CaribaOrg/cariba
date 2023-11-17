@@ -85,14 +85,12 @@ class Storage:
         kwargs.pop('case_sensitive', None)
         kwargs.pop('exact', None)
         all_objs = self.all(cls)
-        if len(kwargs) == 0:
-            return all_objs
         result = []
         for obj in all_objs:
+            matched = True
             for key, value in kwargs.items():
                 current_exact = exact
                 current_case_sensitive = case_sensitive
-                matched = True
                 obj_value = getattr(obj, key, None)
                 if not isinstance(obj_value, str) or not isinstance(value, str):
                     current_exact = True
