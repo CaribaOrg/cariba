@@ -39,6 +39,7 @@ class BaseModel:
             if key == "password":
                 value = md5(value.encode()).hexdigest()
             setattr(self, key, value)
+        self.save()
 
     def save(self):
         ''' Save the current instance to the storage db. '''

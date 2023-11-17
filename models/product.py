@@ -58,6 +58,7 @@ class Product(BaseModel, Base):
                     quantity = self.quantity - item.quantity
                 item.quantity += quantity
                 item.cart.total_price += quantity * self.price
+                item.cart.total_items += quantity
                 return
         if quantity <= 0 or quantity > self.quantity:
             quantity = self.quantity
@@ -70,3 +71,27 @@ class Product(BaseModel, Base):
         ci.save()
         user.cart.cart_items.append(ci)
         user.cart.total_price += quantity * self.price
+        user.cart.total_items += quantity
+
+    def remove_from_cart(self, user, quantity=1):
+        '''
+        Remove a specified quantity of the product from user's shopping cart.
+
+        Args:
+            user (User): The user whose cart needs to be updated.
+            quantity (int, optional): The quantity of the product to be removed
+                (default=1).
+        '''
+        from models.cart_item import CartItem
+        for item in user.cart.cart_items:
+            if self.id == item.product.id:
+                if item.quantity <= quantity:
+                    item.delete()
+                    user.cart.cart_items.remove(item)
+                    user.cart.total_price -= item.quantity * self.price
+                    user.cart.total_items -= item.quantity
+                    return
+                user.cart.total_price -= self.price * quantity
+                item.quantity -= quantity
+                item.cart.total_items -= quantity
+                return

@@ -30,11 +30,11 @@ class User(BaseModel, Base):
 
     '''
     __tablename__ = 'users'
-    username = Column(String(128), nullable=False, unique=True)
-    first_name = Column(String(128), nullable=False)
-    last_name = Column(String(128), nullable=False)
-    password = Column(String(128), nullable=False)
-    email = Column(String(128), nullable=False, unique=True)
+    username = Column(String(128))
+    first_name = Column(String(128))
+    last_name = Column(String(128))
+    password = Column(String(128))
+    email = Column(String(128))
     address = relationship('Address',
                            uselist=False,
                            back_populates='user',
@@ -52,6 +52,7 @@ class User(BaseModel, Base):
     role = Column(String(10), default='user')
 
     def __init__(self, **kwargs):
+        from models.cart import Cart
         '''
         Initialize a new instance of the User class.
 
@@ -59,3 +60,6 @@ class User(BaseModel, Base):
             **kwargs: Arbitrary keyword arguments for attribute assignment.
         '''
         super().__init__(**kwargs)
+        cart_dict = {'user_id': self.id}
+        crt = Cart(**cart_dict)
+        crt.save()
