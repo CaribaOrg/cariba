@@ -117,7 +117,7 @@ class TestUserModel(unittest.TestCase):
         obj1 = User(username="quelqueen")
         old_date = obj1.updated_at
         time.sleep(1)
-        obj1 = User(username="another_name")
+        obj1.username = "another_name"
         obj1.save()
         self.assertTrue(old_date < obj1.updated_at)
 
