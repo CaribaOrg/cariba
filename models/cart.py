@@ -47,11 +47,19 @@ class Cart(BaseModel, Base):
             Order: The order created during the checkout process.
         '''
         from models.order import Order
+        from models import strg
         order_dict = {
                 'user_id': self.user_id,
                 'cart_id': self.id
                 }
         order = Order(**order_dict)
         order.save()
+        for item in self.cart_items:
+            item.product.quantity -= item.quantity
+        cart_dict = {'user_id': self.user_id}
+        crt = Cart(**cart_dict)
+        crt.save()
+        self.user.cart = crt
         self.user_id = None
+        strg.save()
         return order

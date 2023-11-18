@@ -41,8 +41,7 @@ class User(BaseModel, Base):
                            cascade='all, delete-orphan')
     cart = relationship('Cart',
                         uselist=False,
-                        back_populates='user',
-                        cascade='all, delete-orphan')
+                        back_populates='user')
     cars = relationship('Car',
                         back_populates='user',
                         cascade='all, delete-orphan')
