@@ -20,7 +20,7 @@ class TestAddressModel(unittest.TestCase):
 
     def test_is_subclass_of_basemodel(self):
         address = Address(street="", city="",state_province="", zip_code=1)
-        self.assertIsInstance(address, Address)
+        self.assertIsInstance(address, BaseModel)
         self.assertTrue(hasattr(address, "id"))
         self.assertTrue(hasattr(address, "created_at"))
         self.assertTrue(hasattr(address, "updated_at"))
