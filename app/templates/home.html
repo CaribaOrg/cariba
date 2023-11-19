@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/dist/css/output.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
     <title>Cariba</title>
-</head>
-<body>
-    <h1 class=" text-green-600 font-helvetica text-xl">Hello, Flask!</h1>
-</body>
+  </head>
+  <body class="bg-darkPrimary">
+    {% import 'header.html' as macros %} {{ macros.display_header() }}
+  </body>
 </html>
