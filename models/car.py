@@ -46,6 +46,12 @@ class Car(BaseModel, Base):
             url = 'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/{}?\
 format=json'.format(self.vin)
             response = requests.get(url).json().get('Results')[0]
-            self.make = response.get('Make')
-            self.model = response.get('Model')
-            self.year = int(response.get('ModelYear'))
+            if response.get('Make'):
+                self.make = response.get('Make')
+            if response.get('Model'):
+                self.model = response.get('Model')
+            if response.get('ModelYear'):
+                try:
+                    self.year = int(response.get('ModelYear'))
+                except ValueError:
+                    pass
