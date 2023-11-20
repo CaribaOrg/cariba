@@ -52,3 +52,11 @@ class BaseModel:
         ''' Delete the current instance from the storage db. '''
         from models import strg
         strg.delete(self)
+
+    def dictify(self):
+        dictified = self.__dict__.copy()
+        dictified["created_at"] = dictified["created_at"].strftime(time)
+        dictified["updated_at"] = dictified["updated_at"].strftime(time)
+        dictified.pop('_sa_instance_state', None)
+        dictified.pop('password', None)
+        return dictified

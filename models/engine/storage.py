@@ -35,7 +35,7 @@ class Storage:
         CARIBA_MYSQL_PWD = getenv('CARIBA_MYSQL_PWD')
         CARIBA_MYSQL_HOST = getenv('CARIBA_MYSQL_HOST')
         CARIBA_MYSQL_DB = getenv('CARIBA_MYSQL_DB')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}:3306/{}'
                                       .format(CARIBA_MYSQL_USER,
                                               CARIBA_MYSQL_PWD,
                                               CARIBA_MYSQL_HOST,
@@ -140,6 +140,10 @@ class Storage:
         '''
         if obj is not None:
             self.__session.delete(obj)
+
+    def expire(self, obj):
+        if obj is not None:
+            self.__session.expire(obj)
 
     def close(self):
         ''' Close the current database session. '''
