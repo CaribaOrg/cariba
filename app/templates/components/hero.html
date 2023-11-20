@@ -1,0 +1,24 @@
+<!-- hero's macro -->
+{% macro display_hero() %}
+<div class="w-full bg-black p-8">
+  <div class="flex flex-row justify-between max-md:flex-col">
+    <div class="flex flex-col justify-center items-center w-full">
+      <span class="text-white text-6xl max-md:text-2xl"
+        >Explore our wide range <br />
+        of car <span class="text-primary">batteries</span>
+      </span>
+      <div class="w-full pl-2">
+        {% import 'components/shop_now_btn.html' as btn%} {{ btn.shop_now() }}
+      </div>
+    </div>
+    <div class="w-full relative z-1">
+      <div class="img-wrap"></div>
+      <img
+        src="../../static/images/carousel/battery-carousel.jpg"
+        alt="Battery image"
+        class="rounded-xl"
+      />
+    </div>
+  </div>
+</div>
+{% endmacro %}
