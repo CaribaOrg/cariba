@@ -140,6 +140,7 @@ class Storage:
         '''
         if obj is not None:
             self.__session.delete(obj)
+            self.save()
 
     def expire(self, obj):
         if obj is not None:

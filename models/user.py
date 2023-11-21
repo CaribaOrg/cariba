@@ -2,8 +2,10 @@
 ''' This is a module for User '''
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+from marshmallow import Schema, fields
+
 
 
 class User(BaseModel, Base):

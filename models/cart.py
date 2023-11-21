@@ -48,6 +48,8 @@ class Cart(BaseModel, Base):
         '''
         from models.order import Order
         from models import strg
+        if self.total_items == 0:
+            return None
         order_dict = {
                 'user_id': self.user_id,
                 'cart_id': self.id

@@ -18,5 +18,9 @@ def close_db(error):
 def error(err):
     return 'oops, nothing here', 404
 
+@app.route('/')
+def root():
+    return 'hola', 200
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, threaded=True)
