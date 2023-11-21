@@ -5,9 +5,114 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/carousel.js"></script>
+
     <title>Cariba</title>
   </head>
   <body class="bg-darkPrimary">
-    {% import 'header.html' as macros %} {{ macros.display_header() }}
+    <!-- header macro -->
+    {% import 'components/header.html' as macros %} {{ macros.display_header()
+    }}
+
+    <!-- hero macro -->
+    {%import'components/hero.html' as hero %} {{ hero.display_hero() }}
+
+    <!-- add car -->
+    <div class="flex items-center my-8 py-8 px-4 max-md:flex-col gap-16">
+      <div class="border-2 border-white rounded-lg p-2">
+        <div class="border-2 border-primary rounded-lg">
+          <img
+            class="translate-x-14"
+            src="../static/images/ford.png"
+            alt="ford car image"
+            width="512px"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div>
+          <h3 class="text-xl text-white">Find parts for your car</h3>
+          <p class="text-slate-400">
+            Add your vehicle and we will find the right parts for you!
+          </p>
+        </div>
+        <div>
+          <a class="px-8 py-2 bg-primary" href="">
+            <span class="font-medium text-white">Add a car</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- shop by category -->
+    <section class="flex flex-col px-8 pt-8 pb-16 gap-4">
+      <h2 class="text-white text-3xl">Shop by categories</h2>
+      <div class="flex flex-wrap gap-6 justify-center pt-4">
+        <a href="">
+          <div
+            class="w-[210px] py-3 text-center text-xl border-2 border-slate-200 text-white hover:bg-primary hover:border-primary transition-transform hover:-translate-y-1"
+          >
+            Tires & Wheels
+          </div></a
+        >
+        <a href="">
+          <div
+            class="w-[210px] py-3 text-center text-xl border-2 border-slate-200 text-white hover:bg-primary hover:border-primary transition-transform hover:-translate-y-1"
+          >
+            Oils & Fuilds
+          </div></a
+        >
+        <a href="">
+          <div
+            class="w-[210px] py-3 text-center text-xl border-2 border-slate-200 text-white hover:bg-primary hover:border-primary transition-transform hover:-translate-y-1"
+          >
+            Tools & Equipements
+          </div></a
+        >
+        <a href="">
+          <div
+            class="w-[210px] py-3 text-center text-xl border-2 border-slate-200 text-white hover:bg-primary hover:border-primary transition-transform hover:-translate-y-1"
+          >
+            Interior Accessories
+          </div></a
+        >
+        <a href="">
+          <div
+            class="w-[210px] py-3 text-center text-xl border-2 border-slate-200 text-white hover:bg-primary hover:border-primary transition-transform hover:-translate-y-1"
+          >
+            Exterior Accessories
+          </div></a
+        >
+
+        <div
+          class="w-[210px] py-3 text-center text-xl border-2 border-slate-200 text-white hover:bg-primary hover:border-primary transition-transform hover:-translate-y-1"
+        >
+          Truck Parts
+        </div>
+      </div>
+    </section>
+    <!-- popular products -->
+    <section class="flex flex-col p-8 gap-4">
+      <h2 class="text-white text-3xl">Popular products</h2>
+      <div class="flex flex-wrap gap-6 justify-start">
+        {% import 'components/product_card.html' as product %} {{
+        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
+        }} {% import 'components/product_card.html' as product %} {{
+        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
+        }} {% import 'components/product_card.html' as product %} {{
+        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
+        }} {% import 'components/product_card.html' as product %} {{
+        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
+        }} {% import 'components/product_card.html' as product %} {{
+        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
+        }} {% import 'components/product_card.html' as product %} {{
+        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
+        }}
+      </div>
+    </section>
+
+    <!-- footer -->
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
   </body>
 </html>

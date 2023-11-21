@@ -1,0 +1,49 @@
+{% macro footer() %}
+<footer class="bg-black">
+  <div class="w-full flex justify-around max-md:gap-6 flex-wrap p-4">
+    <div class="h-full">
+      <h3 class="text-xl font-medium text-white">Customer service</h3>
+      <ul class="pl-2">
+        <li class="text-white">Help</li>
+        <li class="text-white">FAQ</li>
+      </ul>
+    </div>
+    <div class="h-full">
+      <h3 class="text-xl font-medium text-white">Get in touch</h3>
+      <ul class="pl-2">
+        <li class="text-white">Facebook</li>
+        <li class="text-white">X</li>
+        <li class="text-white">Whatsapp</li>
+      </ul>
+    </div>
+    <div class="flex flex-col items-start h-full">
+      <h3 class="text-xl font-medium text-white">Get our newsletters</h3>
+      <p class="font-light text-white mb-2">
+        Receive the latest updates and exclusive offers.
+      </p>
+      <form action="submit" class="w-full" class="flex justify-center pl-2">
+        <input
+          class="p-2 outline-none"
+          type="email"
+          placeholder="your@email.com"
+          id="newsletter_email"
+          required
+        />
+        <input
+          class="bg-primary text-white p-2"
+          type="submit"
+          value="Subscribe"
+        />
+      </form>
+    </div>
+  </div>
+  <div class="flex justify-center mt-4 py-4 border-t-2 border-primary">
+    <img
+      src="../static/images/caribawhite.png"
+      alt="Cariba Logo"
+      width="110"
+      class="max-md:w-[80px]"
+    />
+  </div>
+</footer>
+{% endmacro %}

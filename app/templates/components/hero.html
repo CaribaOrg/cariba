@@ -2,12 +2,14 @@
 {% macro display_hero() %}
 <div class="w-full bg-black p-8">
   <div class="flex flex-row justify-between max-md:flex-col">
-    <div class="flex flex-col justify-center items-center w-full">
-      <span class="text-white text-6xl max-md:text-2xl"
+    <div
+      class="flex flex-col justify-center items-center w-full max-md:items-start"
+    >
+      <span class="text-white text-6xl max-md:text-4xl"
         >Explore our wide range <br />
         of car <span class="text-primary">batteries</span>
       </span>
-      <div class="w-full pl-2">
+      <div class="w-full">
         {% import 'components/shop_now_btn.html' as btn%} {{ btn.shop_now() }}
       </div>
     </div>
