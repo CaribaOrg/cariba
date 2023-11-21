@@ -15,15 +15,14 @@ class RolesUsers(Base):
     '''
     __tablename__ = 'roles_users'
     id = Column(Integer(), primary_key=True)
-    user_id = Column('user_id', Integer(), ForeignKey('user.id'))
-    role_id = Column('role_id', Integer(), ForeignKey('role.id'))
+    user_id = Column('user_id', String(60), ForeignKey('users.id'))
+    role_id = Column('role_id', String(60), ForeignKey('roles.id'))
 
-class Role(Base, RoleMixin):
+class Role(BaseModel, Base, RoleMixin):
     '''
     Docs
     '''
-    __tablename__ = 'role'
-    id = Column(Integer(), primary_key=True)
+    __tablename__ = 'roles'
     name = Column(String(80), unique=True)
     description = Column(String(255))
     permissions = Column(MutableList.as_mutable(AsaList()), nullable=True)
@@ -53,18 +52,18 @@ class User(BaseModel, Base, UserMixin):
     '''
     __tablename__ = 'users'
     username = Column(String(255), unique=True, nullable=True)
-    first_name = Column(String(255))
-    last_name = Column(String(255))
+    first_name = Column(String(255), nullable=True)
+    last_name = Column(String(255), nullable=True)
     password = Column(String(255), nullable=False)
     email = Column(String(255), unique=True)
     is_active = Column(Boolean, default=True)
-    last_login_at = Column(DateTime())
-    current_login_at = Column(DateTime())
-    last_login_ip = Column(String(100))
-    current_login_ip = Column(String(100))
+    last_login_at = Column(DateTime(), nullable=True)
+    current_login_at = Column(DateTime(), nullable=True)
+    last_login_ip = Column(String(100), nullable=True)
+    current_login_ip = Column(String(100), nullable=True)
     login_count = Column(Integer)
     fs_uniquifier = Column(String(64), unique=True, nullable=False)
-    confirmed_at = Column(DateTime())
+    confirmed_at = Column(DateTime(), nullable=True)
     roles = relationship('Role', secondary='roles_users',
                          backref=backref('users', lazy='dynamic'))
     address = relationship('Address',
@@ -80,7 +79,6 @@ class User(BaseModel, Base, UserMixin):
     orders = relationship('Order',
                           back_populates='user',
                           cascade='all, delete-orphan')
-    role = Column(String(10), default='user')
 
     def __init__(self, **kwargs):
         from models.cart import Cart

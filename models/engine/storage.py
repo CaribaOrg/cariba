@@ -151,3 +151,10 @@ class Storage:
     def close(self):
         ''' Close the current database session. '''
         self.__session.remove()
+    
+    @property
+    def session(self):
+        '''
+        Docs
+        '''
+        return self.__session

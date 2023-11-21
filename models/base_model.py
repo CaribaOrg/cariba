@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from hashlib import md5
+from flask_security import hash_password
 import models
 import uuid
 
@@ -37,7 +38,7 @@ class BaseModel:
         self.updated_at = self.created_at
         for key, value in kwargs.items():
             if key == "password":
-                value = md5(value.encode()).hexdigest()
+                print(value)
             setattr(self, key, value)
         self.save()
 

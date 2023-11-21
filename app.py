@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, render_template_string
 from models import strg
-from flask_login import LoginManager
 from api import api
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, LoginManager
 from models.user import User, Role
 from flask_security import Security, current_user, auth_required, hash_password, \
      SQLAlchemySessionUserDatastore, permissions_accepted
+import os
+from models.user import User
 
 app = Flask(__name__)
 
@@ -24,8 +25,16 @@ app.config["SECURITY_EMAIL_VALIDATOR_ARGS"] = {"check_deliverability": False}
 
 
 # Setup Flask-Security
-user_datastore = SQLAlchemySessionUserDatastore(strg, User, Role)
+user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
 app.security = Security(app, user_datastore)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return strg.session.query(User).get(user_id)
+
 
 # Views
 @app.route("/")
@@ -41,16 +50,14 @@ def user_home():
 
 # one time setup
 with app.app_context():
-    init_db()
     # Create a user and role to test with
     app.security.datastore.find_or_create_role(
         name="user", permissions={"user-read", "user-write"}
     )
-    strg.commit()
+    strg.save()
     if not app.security.datastore.find_user(email="test@me.com"):
-        app.security.datastore.create_user(email="test@me.com",
-        password=hash_password("password"), roles=["user"])
-    strg.commit()
+        app.security.datastore.create_user(email="test@me.com", password=hash_password("password"), roles=["user"])
+    strg.save()
 
 @app.teardown_appcontext
 def close_db(error):
@@ -60,16 +67,6 @@ def close_db(error):
 @app.errorhandler(404)
 def error(err):
     return 'oops, nothing here', 404
-
-with app.app_context():
-    app.security.datastore.find_or_create_role(
-        name="user", permissions={"user-read", "user-write"}
-    )
-
-    app.security.datastore.find_or_create_role(
-        name="admin", permissions={"user-read", "user-write", "admin-read", "admin-write"}
-    )
-    strg.save()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, threaded=True)
