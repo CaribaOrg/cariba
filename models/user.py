@@ -1,13 +1,34 @@
 #!/usr/bin/python3
-''' This is a module for User '''
+''' This is a module for User and Authentication'''
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Boolean
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Boolean, DateTime, Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy.ext.mutable import MutableList
 from hashlib import md5
+from flask_security import UserMixin, RoleMixin, AsaList
 
 
-class User(BaseModel, Base):
+class RolesUsers(Base):
+    '''
+    Docs
+    '''
+    __tablename__ = 'roles_users'
+    id = Column(Integer(), primary_key=True)
+    user_id = Column('user_id', Integer(), ForeignKey('user.id'))
+    role_id = Column('role_id', Integer(), ForeignKey('role.id'))
+
+class Role(Base, RoleMixin):
+    '''
+    Docs
+    '''
+    __tablename__ = 'role'
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(80), unique=True)
+    description = Column(String(255))
+    permissions = Column(MutableList.as_mutable(AsaList()), nullable=True)
+
+class User(BaseModel, Base, UserMixin):
     '''
     User class represents a registered user.
 
@@ -31,12 +52,21 @@ class User(BaseModel, Base):
 
     '''
     __tablename__ = 'users'
-    username = Column(String(128))
-    first_name = Column(String(128))
-    last_name = Column(String(128))
-    password = Column(String(128))
-    email = Column(String(128))
+    username = Column(String(255), unique=True, nullable=True)
+    first_name = Column(String(255))
+    last_name = Column(String(255))
+    password = Column(String(255), nullable=False)
+    email = Column(String(255), unique=True)
     is_active = Column(Boolean, default=True)
+    last_login_at = Column(DateTime())
+    current_login_at = Column(DateTime())
+    last_login_ip = Column(String(100))
+    current_login_ip = Column(String(100))
+    login_count = Column(Integer)
+    fs_uniquifier = Column(String(64), unique=True, nullable=False)
+    confirmed_at = Column(DateTime())
+    roles = relationship('Role', secondary='roles_users',
+                         backref=backref('users', lazy='dynamic'))
     address = relationship('Address',
                            uselist=False,
                            back_populates='user',
