@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 
 from flask import jsonify
-from api import api, api_restplus
+from api import api_restplus
 from models import strg
 from models.user import User
 from flask_restx import Resource
-
 
 class Users(Resource):
     def get(self):
@@ -16,9 +15,8 @@ class Users(Resource):
 class Users2(Resource):
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
-        user = user[0] if len(user) > 0 else None
         if not user:
-            return 'None found'
+            return 'None found', 404
         user_dict = user.dictify()
         user_dict['address'] = user.address.dictify() if user.address else None
         user_dict['cars'] = len(user.cars)
@@ -29,7 +27,7 @@ class Users2(Resource):
         user = strg.search(cls=User, id=user_id)
         user = user[0] if len(user) > 0 else None
         if not user:
-            return 'None found'
+            return 'None found', 404
         user.delete()
         return {}
         
@@ -37,9 +35,8 @@ class Users2(Resource):
 class UserCart(Resource):
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
-        user = user[0] if len(user) > 0 else None
         if not user:
-            return 'None found'
+            return 'None found', 404
         cart_dict = user.cart.dictify()
         items = []
         for item in user.cart.cart_items:
@@ -55,12 +52,26 @@ class UserCart(Resource):
         cart_dict['items'] = items
         return jsonify(cart_dict)
 
+class UserCheckout(Resource):
+    def get(self, user_id):
+        user = strg.search(cls=User, id=user_id)
+        if not user:
+            return 'None found', 404
+        order = user.cart.checkout()
+        order_dict = order.dictify()
+        order_dict.pop('user_id')
+        cart_dict = {}
+        cart_dict['total_price'] = order.cart.total_price
+        cart_dict['total_items'] = order.cart.total_items
+        order_dict['cart_info'] = cart_dict
+        return jsonify(order_dict)
+        
+
 class UserGarage(Resource):
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
-        user = user[0] if len(user) > 0 else None
         if not user:
-            return 'None found'
+            return 'None found', 404
         cars_dict = {}
         cars_dict['count'] = len(user.cars)
         cars_list = []
@@ -74,9 +85,8 @@ class UserGarage(Resource):
 class UserOrder(Resource):
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
-        user = user[0] if len(user) > 0 else None
         if not user:
-            return 'None found'
+            return 'None found', 404
         orders_dict = {}
         orders_dict['count'] = len(user.orders)
         orders_list = []
@@ -97,3 +107,4 @@ api_restplus.add_resource(Users2, '/users/<user_id>')
 api_restplus.add_resource(UserCart, '/users/<user_id>/cart')
 api_restplus.add_resource(UserGarage, '/users/<user_id>/garage')
 api_restplus.add_resource(UserOrder, '/users/<user_id>/orders')
+api_restplus.add_resource(UserCheckout, '/users/<user_id>/checkout')

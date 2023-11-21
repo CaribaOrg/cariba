@@ -2,10 +2,9 @@
 ''' This is a module for User '''
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Boolean
 from sqlalchemy.orm import relationship
-from marshmallow import Schema, fields
-
+from hashlib import md5
 
 
 class User(BaseModel, Base):
@@ -37,6 +36,7 @@ class User(BaseModel, Base):
     last_name = Column(String(128))
     password = Column(String(128))
     email = Column(String(128))
+    is_active = Column(Boolean, default=True)
     address = relationship('Address',
                            uselist=False,
                            back_populates='user',
@@ -64,3 +64,10 @@ class User(BaseModel, Base):
         cart_dict = {'user_id': self.id}
         crt = Cart(**cart_dict)
         crt.save()
+
+    def check_password(self, password):
+        password = md5(password.encode()).hexdigest()
+        return password == self.password
+
+    def get_id(self):
+        return self.id

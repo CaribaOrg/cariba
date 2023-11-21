@@ -108,6 +108,8 @@ class Storage:
                         break
             if matched:
                 result.append(obj)
+        if len(result) == 1:
+            return result[0]
         return result
 
     def new(self, obj):

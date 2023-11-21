@@ -72,6 +72,9 @@ class Product(BaseModel, Base):
         user.cart.cart_items.append(ci)
         user.cart.total_price += quantity * self.price
         user.cart.total_items += quantity
+        user.save()
+        print('quantity:', quantity)
+        print('total_items:', user.cart.total_items)
 
     def remove_from_cart(self, user, quantity=1):
         '''
@@ -90,8 +93,11 @@ class Product(BaseModel, Base):
                     user.cart.cart_items.remove(item)
                     user.cart.total_price -= item.quantity * self.price
                     user.cart.total_items -= item.quantity
+                    user.save()
                     return
                 user.cart.total_price -= self.price * quantity
                 item.quantity -= quantity
                 item.cart.total_items -= quantity
+                item.save()
+                user.save()
                 return

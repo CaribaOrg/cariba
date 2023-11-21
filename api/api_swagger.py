@@ -1,9 +1,6 @@
 #!/usr/bin/python3
 from apispec import APISpec
 from apispec_webframeworks.flask import FlaskPlugin
-from apispec.ext.marshmallow import MarshmallowPlugin
-from marshmallow import Schema, fields
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from models.user import User
 from models import strg
 from api import api
