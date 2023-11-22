@@ -25,11 +25,10 @@ class Product(BaseModel, Base):
         - 'category': Represents the linked category, back-ref to 'products'.
     '''
     __tablename__ = 'products'
-    name = Column(String(128))
+    name = Column(String(1024))
     price = Column(Float, default=0)
     description = Column(String(1024))
     quantity = Column(Integer, default=1)
-    oem_number = Column(String(128))
     rating = Column(Float)
     category_id = Column(String(60), ForeignKey('categories.id'))
     category = relationship('Category',
@@ -45,6 +44,7 @@ class Product(BaseModel, Base):
         '''
         super().__init__(**kwargs)
         self.rating = round(random.uniform(3.0, 5.0), 1)
+        self.quantity = round(random.uniform(0, 500))
 
     def add_to_cart(self, user, quantity=1):
         '''

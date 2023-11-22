@@ -13,7 +13,6 @@ class Category(BaseModel, Base):
     Attributes:
         name (str): The name of the category.
         parent_id (str): The foreign key referencing the parent category.
-        description (str): The description of the category.
         active (bool): A boolean indicating if the category is active.
         icon (str): The icon associated with the category.
         children (relationship): The relationship with child categories.
@@ -28,7 +27,6 @@ class Category(BaseModel, Base):
     __tablename__ = 'categories'
     name = Column(String(128), nullable=False)
     parent_id = Column(String(60), ForeignKey('categories.id'))
-    description = Column(String(1024))
     active = Column(Boolean, default=True)
     icon = Column(String(1024))
     children = relationship('Category',
