@@ -50,15 +50,15 @@ def error(err):
 def root():
     return 'hola', 200
 
-with app.app_context():
-    app.security.datastore.find_or_create_role(
-        name="user", permissions={"user-read", "user-write"}
-    )
+# with app.app_context():
+#     app.security.datastore.find_or_create_role(
+#         name="user", permissions={"user-read", "user-write"}
+#     )
 
-    app.security.datastore.find_or_create_role(
-        name="admin", permissions={"user-read", "user-write", "admin-read", "admin-write"}
-    )
-    strg.save()
+#     app.security.datastore.find_or_create_role(
+#         name="admin", permissions={"user-read", "user-write", "admin-read", "admin-write"}
+#     )
+#     strg.save()
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, threaded=True)

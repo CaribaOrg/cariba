@@ -29,7 +29,7 @@ class Users2(Resource):
         if not user:
             return 'None found', 404
         user.delete()
-        return {}
+        return jsonify({})
         
 
 class UserCart(Resource):

@@ -8,4 +8,5 @@ api_restplus = Api(api)
 
 from api.status import *
 from api.user import *
+from api.order import *
 from api.api_swagger import *
