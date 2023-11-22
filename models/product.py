@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 ''' This is a module for Product '''
 
+import random
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Float, Integer
 from sqlalchemy.orm import relationship
@@ -29,6 +30,7 @@ class Product(BaseModel, Base):
     description = Column(String(1024))
     quantity = Column(Integer, default=1)
     oem_number = Column(String(128))
+    rating = Column(Float)
     category_id = Column(String(60), ForeignKey('categories.id'))
     category = relationship('Category',
                             back_populates='products',
@@ -42,6 +44,7 @@ class Product(BaseModel, Base):
             **kwargs: Arbitrary keyword arguments for attribute assignment.
         '''
         super().__init__(**kwargs)
+        self.rating = round(random.uniform(3.0, 5.0), 1)
 
     def add_to_cart(self, user, quantity=1):
         '''
