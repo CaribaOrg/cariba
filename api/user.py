@@ -1,18 +1,55 @@
 #!/usr/bin/python3
 
-from flask import jsonify
-from api import api_restplus
+from flask import jsonify, request
+from api import api_restx
 from models import strg
 from models.user import User
-from flask_restx import Resource
+from models.car import Car
+from flask_restx import Resource, fields
+
+user_model = api_restx.model('User', {
+    'username': fields.String(required=True, description='Username of the user'),
+    'first_name': fields.String(required=False, description='First name of the user'),
+    'last_name': fields.String(required=False, description='Last name of the user'),
+    'password': fields.String(required=True, description='Password of the user'),
+    'email': fields.String(required=True, description='email of the user'),
+    'is_active': fields.Boolean(required=False, description='Is the user active?'),
+    'role': fields.String(required=False, description='Role', default='user'),
+})
 
 class Users(Resource):
+    @api_restx.response(200, 'Success')
     def get(self):
         users = strg.all(User)
         return jsonify([user.dictify() for user in users])
+    
+    @api_restx.expect(user_model)
+    @api_restx.response(200, 'Success')
+    @api_restx.response(400, 'Bad Request')
+    @api_restx.response(404, 'Not Found')
+    @api_restx.response(409, 'Conflict')
+    def post(self):
+        data = request.get_json()
+        if not data:
+            return {'error': 'Invalid request format, expected JSON'}, 400
+        if 'username' not in data or 'password' not in data or 'email' not in data:
+            return {'error': 'Username, email and password are required'}, 404
+        if strg.search(cls=User, username=data['username']):
+            return {'error': 'Username is not unique'}, 409
+        if strg.search(cls=User, email=data['email']):
+            return {'error': 'Email is not unique'}, 409
+        ignore_list = ['id', 'created_at', 'updated_at', 'cars', 'cart', 'address', 'orders']
+        user_dict = {}
+        for key, value in data.items():
+            if key not in ignore_list:
+                user_dict[key] = value
+        user = User(**user_dict)
+        return jsonify(user.dictify())
 
 
 class Users2(Resource):
+    @api_restx.response(200, 'Success')
+    @api_restx.response(404, 'Not Found')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -23,9 +60,33 @@ class Users2(Resource):
         user_dict['orders'] = len(user.orders)
         return jsonify(user_dict)
     
+    @api_restx.expect(user_model)
+    @api_restx.response(200, 'Success')
+    @api_restx.response(400, 'Bad Request')
+    @api_restx.response(404, 'Not Found')
+    @api_restx.response(409, 'Conflict')
+    def put(self, user_id):
+        user = strg.search(cls=User, id=user_id)
+        if not user:
+           return {'error': 'None found'}, 404
+        data = request.get_json()
+        if not data:
+            return {'error': 'Invalid request format, expected JSON'}, 400
+        ignore_list = ['id', 'created_at', 'updated_at', 'cars', 'cart', 'address', 'orders']
+        if 'username' in data.keys() and strg.search(cls=User, username=data['username']):
+            return {'error': 'Username is not unique'}, 409
+        if 'email' in data.keys() and strg.search(cls=User, email=data['email']):
+            return {'error': 'Username is not unique'}, 409
+        for key, value in data.items():
+            if key not in ignore_list:
+                setattr(user, key, value)
+        user.save()
+        return jsonify(user.dictify())
+        
+    @api_restx.response(200, 'Success')
+    @api_restx.response(404, 'Not Found')
     def delete(self, user_id):
         user = strg.search(cls=User, id=user_id)
-        user = user[0] if len(user) > 0 else None
         if not user:
             return 'None found', 404
         user.delete()
@@ -33,6 +94,8 @@ class Users2(Resource):
         
 
 class UserCart(Resource):
+    @api_restx.response(200, 'Success')
+    @api_restx.response(404, 'Not Found')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -53,6 +116,8 @@ class UserCart(Resource):
         return jsonify(cart_dict)
 
 class UserCheckout(Resource):
+    @api_restx.response(200, 'Success')
+    @api_restx.response(404, 'Not Found')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -66,8 +131,17 @@ class UserCheckout(Resource):
         order_dict['cart_info'] = cart_dict
         return jsonify(order_dict)
         
+car_model = api_restx.model('Car', {
+    'name': fields.String(required=True, description='Name of the car'),
+    'vin': fields.String(required=True, description='Vehicle Identification Number of the car'),
+    'make': fields.String(required=False, description='Make of the car'),
+    'model': fields.String(required=False, description='Model of the car'),
+    'year': fields.Integer(required=False, description='Year of the car')
+})
 
 class UserGarage(Resource):
+    @api_restx.response(200, 'Success')
+    @api_restx.response(404, 'Not Found')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -81,8 +155,65 @@ class UserGarage(Resource):
             cars_list.append(cars)
         cars_dict['cars'] = cars_list
         return jsonify(cars_dict)
+    
+    @api_restx.expect(car_model)
+    @api_restx.response(200, 'Success')
+    @api_restx.response(400, 'Bad Request')
+    @api_restx.response(404, 'Not Found')
+    def post(self, user_id):
+        user = strg.search(cls=User, id=user_id)
+        if not user:
+            return 'None found', 404
+        data = request.get_json()
+        if not data:
+            return {'error': 'Invalid request format, expected JSON'}, 400
+        if 'vin' not in data or 'name' not in data:
+            return {'error': 'Name and VIN are required'}, 404
+        ignore_list = ['id', 'created_at', 'updated_at', 'user_id', 'user']
+        car_dict = {}
+        for key, value in data.items():
+            if key not in ignore_list:
+                car_dict[key] = value
+        car_dict['user_id'] = user.id
+        car = Car(**car_dict)
+        return jsonify(car.dictify())
+    
+class GarageUser(Resource):
+    @api_restx.expect(car_model)
+    @api_restx.response(200, 'Success')
+    @api_restx.response(400, 'Bad Request')
+    @api_restx.response(404, 'Not Found')
+    def put(self, user_id, car_id):
+        if not strg.search(cls=User, id=user_id):
+            return {'error': 'None found'}, 404
+        car = strg.search(cls=Car, id=car_id)
+        if not car:
+           return {'error': 'None found'}, 404
+        data = request.get_json()
+        if not data:
+            return {'error': 'Invalid request format, expected JSON'}, 400
+        ignore_list = ['id', 'created_at', 'updated_at', 'user_id', 'user']
+        for key, value in data.items():
+            if key not in ignore_list:
+                setattr(car, key, value)
+        car.save()
+        return jsonify(car.dictify())
+    
+    @api_restx.response(200, 'Success')
+    @api_restx.response(404, 'Not Found')
+    def delete(self, user_id, car_id):
+        if not strg.search(cls=User, id=user_id):
+            return {'error': 'None found'}, 404
+        car = strg.search(cls=Car, id=car_id)
+        if not car:
+           return {'error': 'None found'}, 404
+        car.delete()
+        return jsonify({})
+        
 
 class UserOrder(Resource):
+    @api_restx.response(200, 'Success')
+    @api_restx.response(404, 'Not Found')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -102,9 +233,10 @@ class UserOrder(Resource):
         return jsonify(orders_dict)
 
 
-api_restplus.add_resource(Users, '/users')
-api_restplus.add_resource(Users2, '/users/<user_id>')
-api_restplus.add_resource(UserCart, '/users/<user_id>/cart')
-api_restplus.add_resource(UserGarage, '/users/<user_id>/garage')
-api_restplus.add_resource(UserOrder, '/users/<user_id>/orders')
-api_restplus.add_resource(UserCheckout, '/users/<user_id>/checkout')
+api_restx.add_resource(Users, '/users')
+api_restx.add_resource(Users2, '/users/<user_id>')
+api_restx.add_resource(UserCart, '/users/<user_id>/cart')
+api_restx.add_resource(UserGarage, '/users/<user_id>/garage')
+api_restx.add_resource(GarageUser, '/users/<user_id>/garage/<car_id>')
+api_restx.add_resource(UserOrder, '/users/<user_id>/orders')
+api_restx.add_resource(UserCheckout, '/users/<user_id>/checkout')

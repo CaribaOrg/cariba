@@ -2,6 +2,7 @@
 ''' This is a module for Base and BaseModel '''
 
 from datetime import datetime
+from typing import Any
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from hashlib import md5
@@ -36,11 +37,14 @@ class BaseModel:
         self.created_at = datetime.utcnow()
         self.updated_at = self.created_at
         for key, value in kwargs.items():
-            if key == "password":
-                value = md5(value.encode()).hexdigest()
             setattr(self, key, value)
         self.save()
 
+    def __setattr__(self, name, value):
+        if name == "password":
+            value = md5(value.encode()).hexdigest()
+        super().__setattr__(name, value)
+        
     def save(self):
         ''' Save the current instance to the storage db. '''
         from models import strg

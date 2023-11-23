@@ -1,18 +1,22 @@
 #!/usr/bin/python3
 
 from flask import jsonify
-from api import api_restplus
+from api import api_restx
 from models import strg
 from models.order import Order
 from flask_restx import Resource
 
+
 class Orders(Resource):
+    @api_restx.response(200, 'Success')
     def get(self):
         orders = strg.all(Order)
         return jsonify([order.dictify() for order in orders])
 
 
 class Orders2(Resource):
+    @api_restx.response(200, 'Success')
+    @api_restx.response(404, 'Not Found')
     def get(self, order_id):
         order = strg.search(cls=Order, id=order_id)
         if not order:
@@ -38,5 +42,5 @@ class Orders2(Resource):
         return jsonify(order_dict)
     
 
-api_restplus.add_resource(Orders, '/orders')
-api_restplus.add_resource(Orders2, '/orders/<order_id>')
+api_restx.add_resource(Orders, '/orders')
+api_restx.add_resource(Orders2, '/orders/<order_id>')

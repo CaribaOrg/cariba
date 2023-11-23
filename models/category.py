@@ -37,8 +37,7 @@ class Category(BaseModel, Base):
                           remote_side='Category.id',
                           uselist=False)
     products = relationship('Product',
-                            back_populates='category',
-                            cascade='all, delete-orphan')
+                            back_populates='category')
 
     def __init__(self, **kwargs):
         '''
