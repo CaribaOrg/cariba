@@ -18,16 +18,16 @@ user_model = api_restx.model('User', {
 })
 
 class Users(Resource):
-    @api_restx.response(200, 'Success')
+    @api_restx.response(200, 'Successful operation')
     def get(self):
         users = strg.all(User)
         return jsonify([user.dictify() for user in users])
     
     @api_restx.expect(user_model)
-    @api_restx.response(200, 'Success')
-    @api_restx.response(400, 'Bad Request')
-    @api_restx.response(404, 'Not Found')
-    @api_restx.response(409, 'Conflict')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(400, 'Invalid Request Format')
+    @api_restx.response(404, 'Invalid ID supplied')
+    @api_restx.response(409, 'Non unique parameters supplied')
     def post(self):
         data = request.get_json()
         if not data:
@@ -48,8 +48,8 @@ class Users(Resource):
 
 
 class Users2(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -61,10 +61,10 @@ class Users2(Resource):
         return jsonify(user_dict)
     
     @api_restx.expect(user_model)
-    @api_restx.response(200, 'Success')
-    @api_restx.response(400, 'Bad Request')
-    @api_restx.response(404, 'Not Found')
-    @api_restx.response(409, 'Conflict')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(400, 'Invalid Request Format')
+    @api_restx.response(404, 'Invalid ID supplied')
+    @api_restx.response(409, 'Non unique parameters supplied')
     def put(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -83,8 +83,8 @@ class Users2(Resource):
         user.save()
         return jsonify(user.dictify())
         
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def delete(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -94,8 +94,8 @@ class Users2(Resource):
         
 
 class UserCart(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -116,8 +116,8 @@ class UserCart(Resource):
         return jsonify(cart_dict)
 
 class UserCheckout(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -140,8 +140,8 @@ car_model = api_restx.model('Car', {
 })
 
 class UserGarage(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -157,9 +157,9 @@ class UserGarage(Resource):
         return jsonify(cars_dict)
     
     @api_restx.expect(car_model)
-    @api_restx.response(200, 'Success')
-    @api_restx.response(400, 'Bad Request')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(400, 'Invalid Request Format')
+    @api_restx.response(404, 'Invalid ID supplied')
     def post(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:
@@ -180,9 +180,9 @@ class UserGarage(Resource):
     
 class GarageUser(Resource):
     @api_restx.expect(car_model)
-    @api_restx.response(200, 'Success')
-    @api_restx.response(400, 'Bad Request')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(400, 'Invalid Request Format')
+    @api_restx.response(404, 'Invalid ID supplied')
     def put(self, user_id, car_id):
         if not strg.search(cls=User, id=user_id):
             return {'error': 'None found'}, 404
@@ -199,8 +199,8 @@ class GarageUser(Resource):
         car.save()
         return jsonify(car.dictify())
     
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def delete(self, user_id, car_id):
         if not strg.search(cls=User, id=user_id):
             return {'error': 'None found'}, 404
@@ -212,8 +212,8 @@ class GarageUser(Resource):
         
 
 class UserOrder(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, user_id):
         user = strg.search(cls=User, id=user_id)
         if not user:

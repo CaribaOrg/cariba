@@ -16,15 +16,15 @@ part_model = api_restx.model('Parts', {
 })
 
 class Parts(Resource):
-    @api_restx.response(200, 'Success')
+    @api_restx.response(200, 'Successful Operation')
     def get(self):
         products = strg.all(Product)
         return jsonify([product.dictify() for product in products])
     
     @api_restx.expect(part_model)
-    @api_restx.response(200, 'Success')
-    @api_restx.response(400, 'Bad Request')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(400, 'Invalid Request Format')
+    @api_restx.response(404, 'Invalid ID supplied')
     def post(self):
         data = request.get_json()
         if not data:
@@ -41,8 +41,8 @@ class Parts(Resource):
 
 
 class Part(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, product_id):
         product = strg.search(cls=Product, id=product_id)
         if not product:
@@ -52,9 +52,9 @@ class Part(Resource):
         return jsonify(part_dict)
 
     @api_restx.expect(part_model)
-    @api_restx.response(200, 'Success')
-    @api_restx.response(400, 'Bad Request')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(400, 'Invalid Request Format')
+    @api_restx.response(404, 'Invalid ID supplied')
     def put(self, product_id):
         product = strg.search(cls=Product, id=product_id)
         if not product:
@@ -69,8 +69,8 @@ class Part(Resource):
         product.save()
         return jsonify(product.dictify())
     
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def delete(self, product_id):
         part = strg.search(cls=Product, id=product_id)
         if not part:

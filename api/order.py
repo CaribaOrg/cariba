@@ -8,15 +8,15 @@ from flask_restx import Resource
 
 
 class Orders(Resource):
-    @api_restx.response(200, 'Success')
+    @api_restx.response(200, 'Successful Operation')
     def get(self):
         orders = strg.all(Order)
         return jsonify([order.dictify() for order in orders])
 
 
 class Orders2(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, order_id):
         order = strg.search(cls=Order, id=order_id)
         if not order:

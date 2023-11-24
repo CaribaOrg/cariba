@@ -13,14 +13,14 @@ category_model = api_restx.model('Category', {
 })
 
 class Categories(Resource):
-    @api_restx.response(200, 'Success')
+    @api_restx.response(200, 'Successful Operation')
     def get(self):
         categories = strg.all(Category)
         return jsonify([category.dictify() for category in categories])
     
-    @api_restx.response(200, 'Success')
-    @api_restx.response(400, 'Bad Request')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(400, 'Invalid Request Format')
+    @api_restx.response(404, 'Invalid ID supplied')
     @api_restx.expect(category_model)
     def post(self):
         data = request.get_json()
@@ -33,8 +33,8 @@ class Categories(Resource):
 
 
 class Categories2(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, category_id):
         category = strg.search(cls=Category, id=category_id)
         if not category:
@@ -47,9 +47,9 @@ class Categories2(Resource):
         return jsonify(category_dict)
     
     @api_restx.expect(category_model)
-    @api_restx.response(200, 'Success')
-    @api_restx.response(400, 'Bad Request')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(400, 'Invalid Request Format')
+    @api_restx.response(404, 'Invalid ID supplied')
     def put(self, category_id):
         category = strg.search(cls=Category, id=category_id)
         if not category:
@@ -64,8 +64,8 @@ class Categories2(Resource):
         category.save()
         return jsonify(category.dictify())
     
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def delete(self, category_id):
         category = strg.search(cls=Category, id=category_id)
         if not category:
@@ -87,8 +87,8 @@ def recursion(obj):
     return children_list
 
 class CategoryPart(Resource):
-    @api_restx.response(200, 'Success')
-    @api_restx.response(404, 'Not Found')
+    @api_restx.response(200, 'Successful Operation')
+    @api_restx.response(404, 'Invalid ID supplied')
     def get(self, category_id):
         category = strg.search(cls=Category, id=category_id)
         if not category:
