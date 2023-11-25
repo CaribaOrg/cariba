@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <title>Register</title>
+  </head>
+  <body>
+    <!-- component -->
+    <body class="font-mono bg-darkPrimary">
+      <!-- Container -->
+      <div class="container mx-auto">
+        <div class="flex justify-center px-6 my-12">
+          <!-- Row -->
+          <div class="w-full xl:w-3/4 lg:w-11/12 flex">
+            <!-- Col -->
+            <div
+              class="w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg"
+              style="
+                background-image: url('https://images.unsplash.com/photo-1600598879017-d7d12cefcaf3?q=80&w=1426&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+              "
+            ></div>
+            <!-- Col -->
+            <div
+              class="w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none"
+            >
+              <h3 class="pt-4 text-2xl text-center">Create an account</h3>
+              <form
+                class="px-8 pt-6 pb-8 mb-4 bg-white rounded"
+                ,
+                method="POST"
+                ,
+                action="/register"
+              >
+                {{ form.hidden_tag() }}
+                <div class="mb-4">
+                  <label
+                    class="block mb-2 text-sm font-bold text-gray-700"
+                    for="username"
+                  >
+                    Username
+                  </label>
+                  {{ form.username }}
+                </div>
+                {% if form.username.errors %}
+                <ul class="text-sm text-red-500">
+                  {% for error in form.username.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="mb-4">
+                  <label
+                    class="block mb-2 text-sm font-bold text-gray-700"
+                    for="email"
+                  >
+                    Email
+                  </label>
+                  {{ form.email }}
+                </div>
+                {% if form.email.errors %}
+                <ul class="text-sm text-red-500">
+                  {% for error in form.email.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="mb-4">
+                  <label
+                    class="block mb-2 text-sm font-bold text-gray-700"
+                    for="password"
+                  >
+                    Password
+                  </label>
+                  {{ form.password }}
+                  <p class="hidden text-xs italic text-red-500">
+                    Please enter a correct password.
+                  </p>
+                </div>
+                {% if form.password.errors %}
+                <ul class="text-sm text-red-500">
+                  {% for error in form.password.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="mb-4">
+                  <label
+                    class="block mb-2 text-sm font-bold text-gray-700"
+                    for="confirm_password"
+                  >
+                    Confirm password
+                  </label>
+                  {{ form.confirm_password }}
+                  <p class="hidden text-xs italic text-red-500">
+                    Please enter a correct password.
+                  </p>
+                </div>
+                {% if form.confirm_password.errors %}
+                <ul class="text-sm text-red-500">
+                  {% for error in form.confirm_password.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="mb-6 text-center">
+                  <button
+                    class="w-full px-4 py-2 font-bold text-white bg-primary rounded-full hover:bg-darkPrimary focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Register
+                  </button>
+                </div>
+                <hr class="mb-6 border-t" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+  </body>
+</html>
