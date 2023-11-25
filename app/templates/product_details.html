@@ -11,7 +11,7 @@
     <title>{{ product_name }}</title>
   </head>
   <body class="bg-white">
-    {% import 'components/header.html' as header %} {{ header.display_header()
+    {% import 'components/header.html' as header %} {{ header.display_header(current_user)
     }}
 
     <div
