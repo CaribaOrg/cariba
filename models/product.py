@@ -2,7 +2,7 @@
 ''' This is a module for Product '''
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Float, Integer, ARRAY
+from sqlalchemy import Column, String, ForeignKey, Float, Integer, JSON
 from sqlalchemy.orm import relationship
 import random
 
@@ -34,7 +34,7 @@ class Product(BaseModel, Base):
     category = relationship('Category',
                             back_populates='products',
                             uselist=False)
-    support = Column(ARRAY(String))
+    support = Column(JSON)
 
     def __init__(self, **kwargs):
         '''

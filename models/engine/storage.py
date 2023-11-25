@@ -2,7 +2,7 @@
 ''' This is a module for Storage '''
 
 from models.base_model import BaseModel, Base
-from models.user import User, Role, RolesUsers
+from models.user import User
 from models.address import Address
 from models.car import Car
 from models.cart import Cart
@@ -40,7 +40,7 @@ class Storage:
                                               CARIBA_MYSQL_PWD,
                                               CARIBA_MYSQL_HOST,
                                               CARIBA_MYSQL_DB))
-        
+    
     def all(self, cls=None):
         '''
         Retrieve all objects of the specified class or a list of classes.
@@ -127,11 +127,11 @@ class Storage:
 
     def reload(self):
         ''' Reload the database engine and create a new session. '''
-        self.__session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=self.__engine))
-        Base.query = self.__session.query_property()
-        Base.metadata.create_all(bind=self.__engine)
+        Base.metadata.create_all(self.__engine)
+        sess_factory = sessionmaker(bind=self.__engine,
+                                    expire_on_commit=False)
+        Session = scoped_session(sess_factory)
+        self.__session = Session
 
     def delete(self, obj=None):
         '''
