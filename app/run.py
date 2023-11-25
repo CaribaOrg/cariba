@@ -12,13 +12,12 @@ from models.product import Product
 from models.car import Car
 from models.category import Category
 from app.forms.user_forms import LoginForm
-
+from models.custom_view import CustomView
 
 app = Flask(__name__)
 
 # Load configuration from a separate file (e.g., config.py)
 app.config.from_pyfile('config.py')
-
 
 db = SQLAlchemy(app)
 login = LoginManager(app)
@@ -35,8 +34,8 @@ def login():
     if form.validate_on_submit():
         user = db.session().query(User).filter_by(username=form.username.data).first()
         if user:
-            # if user.check_password(form.password.data):
-            if user.password == form.password.data:
+            if user.check_password(form.password.data):
+                # if user.password == form.password.data:
                 login_user(user, remember=form.rememberMe.data)
                 return redirect(url_for("index"))
         return "password or uesrname is incorrect"
@@ -57,18 +56,15 @@ class myAdminView(ModelView):
         return redirect(url_for("login"))
 
 
-def create_admin(app, db):
+def create_admin(app):
     from flask_admin.contrib.sqla import ModelView
 
     admin = Admin(app, name='Admin', template_mode='bootstrap3')
-    admin.add_view(ModelView(User, db.session))
-    # admin.add_view(ModelView(Cart, db.session))
-    # admin.add_view(ModelView(Product, db.session))
-    # admin.add_view(ModelView(Car, db.session))
-    # Add other views as needed
+    admin.add_view(CustomView(User))
+    admin.add_view(CustomView(Product))
 
 
-create_admin(app, db)
+create_admin(app)
 
 # Register API blueprint
 app.register_blueprint(api, url_prefix='/api')
