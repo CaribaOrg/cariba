@@ -11,7 +11,7 @@ from models.cart import Cart
 from models.product import Product
 from models.car import Car
 from models.category import Category
-from app.forms.user_forms import LoginForm
+from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 
 app = Flask(__name__)
@@ -40,6 +40,19 @@ def login():
                 return redirect(url_for("index"))
         return "password or uesrname is incorrect"
     return render_template("login.html", form=form)
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data,
+                    email=form.email.data,
+                    password=form.password.data)
+        if user:
+            return "Your account has been created successfully <br>You can login now!"
+        return "Something went wrong! Please try again later or contact support."
+    return render_template("register.html", form=form)
 
 
 @app.route("/logout", methods=['GET', 'POST'])
