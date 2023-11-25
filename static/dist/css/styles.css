@@ -1,0 +1,56 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+body {
+  overflow-y: auto; /* or overflow: auto; */
+  position: relative;
+}
+.account_drop {
+  z-index: 2;
+  display: none;
+}
+@media (min-width: 768px) {
+  .nav_my_account:hover > .account_drop {
+    display: block;
+  }
+}
+
+/* img-wrap: black gradient to left */
+.img-wrap {
+  z-index: 1;
+  position: absolute;
+  content: "";
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 0) 50%,
+    rgb(0, 0, 0) 100%
+  );
+  height: 100%;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #888;
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
