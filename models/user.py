@@ -54,8 +54,8 @@ class User(BaseModel, Base, UserMixin):
     '''
     __tablename__ = 'users'
     username = Column(String(255), unique=True, nullable=False)
-    first_name = Column(String(255), nullable=False)
-    last_name = Column(String(255), nullable=False)
+    first_name = Column(String(255), nullable=True)
+    last_name = Column(String(255), nullable=True)
     password = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     is_active = Column(Boolean, default=True)
