@@ -28,7 +28,6 @@ class Product(BaseModel, Base):
     price = Column(Float, default=0)
     description = Column(String(1024))
     quantity = Column(Integer, default=1)
-    oem_number = Column(String(128))
     category_id = Column(String(60), ForeignKey('categories.id'))
     category = relationship('Category',
                             back_populates='products',

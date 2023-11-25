@@ -8,6 +8,8 @@ import os
 from api import api
 from models import strg
 from models.user import User, Role
+from models.product import Product
+from models.custom_view import CustomView
 
 app = Flask(__name__)
 
@@ -15,18 +17,17 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py')
 
 
-db = SQLAlchemy(app)
 
-
-def create_admin(app, db):
+def create_admin(app):
     from flask_admin.contrib.sqla import ModelView
 
     admin = Admin(app, name='Admin', template_mode='bootstrap3')
-    admin.add_view(ModelView(User, db.session))
+    admin.add_view(CustomView(User))
+    admin.add_view(CustomView(Product))
     # Add other views as needed
 
 
-create_admin(app, db)
+create_admin(app)
 
 # Register API blueprint
 app.register_blueprint(api, url_prefix='/api')
