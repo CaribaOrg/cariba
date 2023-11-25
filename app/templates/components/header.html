@@ -1,5 +1,5 @@
 <!-- header's macro -->
-{% macro display_header() %}
+{% macro display_header(current_user) %}
 <header
   class="sticky z-10 top-0 w-full border-b-2 border-b-primary bg-black p-3"
 >
@@ -37,7 +37,9 @@
       <li class="nav_my_account">
         <span class="text-white text-sm max-md:hidden">
           <span class="text-xs">Hi, welcome!</span>
-          <br />Login / resgister
+          <br />
+          {% if current_user.is_authenticated %} {{ current_user.username }} {%
+          else %} Login / register {% endif %}
         </span>
         <img
           src="../static/images/user2.png"
@@ -47,7 +49,7 @@
         />
         <!-- account window -->
         {% import 'components/account_drop.html' as accDrop %} {{
-        accDrop.display_drop() }}
+        accDrop.display_drop(current_user) }}
       </li>
       <!-- cart -->
       <li>

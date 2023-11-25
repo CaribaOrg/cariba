@@ -1,13 +1,18 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user, login_user, logout_user
 from flask_admin.contrib.sqla import ModelView
-from flask_security import Security, SQLAlchemySessionUserDatastore
 import os
 from api import api
 from models import strg
 from models.user import User, Role
+from models.cart import Cart
+from models.product import Product
+from models.car import Car
+from models.category import Category
+from app.forms.user_forms import LoginForm
+
 
 app = Flask(__name__)
 
@@ -16,6 +21,40 @@ app.config.from_pyfile('config.py')
 
 
 db = SQLAlchemy(app)
+login = LoginManager(app)
+
+
+@login.user_loader
+def load_user(user_id):
+    return strg.session.query(User).get(user_id)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = db.session().query(User).filter_by(username=form.username.data).first()
+        if user:
+            # if user.check_password(form.password.data):
+            if user.password == form.password.data:
+                login_user(user, remember=form.rememberMe.data)
+                return redirect(url_for("index"))
+        return "password or uesrname is incorrect"
+    return render_template("login.html", form=form)
+
+
+@app.route("/logout", methods=['GET', 'POST'])
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
+
+
+class myAdminView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for("login"))
 
 
 def create_admin(app, db):
@@ -23,6 +62,9 @@ def create_admin(app, db):
 
     admin = Admin(app, name='Admin', template_mode='bootstrap3')
     admin.add_view(ModelView(User, db.session))
+    # admin.add_view(ModelView(Cart, db.session))
+    # admin.add_view(ModelView(Product, db.session))
+    # admin.add_view(ModelView(Car, db.session))
     # Add other views as needed
 
 
@@ -36,7 +78,7 @@ app.url_map.strict_slashes = False
 @app.route("/")
 @app.route("/home")
 def index():
-    return render_template("home.html")
+    return render_template("home.html", current_user=current_user)
 
 
 @app.route("/product/<name>")
