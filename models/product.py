@@ -2,8 +2,9 @@
 ''' This is a module for Product '''
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Float, Integer
+from sqlalchemy import Column, String, ForeignKey, Float, Integer, JSON
 from sqlalchemy.orm import relationship
+import random
 
 
 class Product(BaseModel, Base):
@@ -24,14 +25,16 @@ class Product(BaseModel, Base):
         - 'category': Represents the linked category, back-ref to 'products'.
     '''
     __tablename__ = 'products'
-    name = Column(String(128))
+    name = Column(String(1024))
     price = Column(Float, default=0)
     description = Column(String(1024))
     quantity = Column(Integer, default=1)
+    rating = Column(Float)
     category_id = Column(String(60), ForeignKey('categories.id'))
     category = relationship('Category',
                             back_populates='products',
                             uselist=False)
+    support = Column(JSON)
 
     def __init__(self, **kwargs):
         '''
@@ -41,6 +44,10 @@ class Product(BaseModel, Base):
             **kwargs: Arbitrary keyword arguments for attribute assignment.
         '''
         super().__init__(**kwargs)
+        self.rating = round(random.uniform(3.0, 5.0), 1)
+        self.quantity = round(random.uniform(0, 500))
+        make_names = ['abarth', 'ac', 'acura', 'alfa romeo', 'allard', 'allstate', 'alpine', 'alvis', 'am general', 'american austin', 'american bantam', 'american motors', 'amphicar', 'apollo', 'armstrong-siddeley', 'arnolt-bristol', 'arnolt-mg', 'aston martin', 'asuna', 'auburn', 'audi', 'austin', 'austin-healey', 'avanti', 'baic', 'bentley', 'berkeley', 'bizzarrini', 'bmw', 'bond', 'borgward', 'bricklin', 'bristol', 'bugatti', 'buick', 'cadillac', 'case', 'changan', 'checker', 'chevrolet', 'chirey', 'chrysler', 'cisitalia', 'citroen', 'cole', 'continental', 'cord', 'crosley', 'cunningham', 'cupra', 'daewoo', 'daf', 'daihatsu', 'daimler', 'datsun', 'delage', 'delahaye', 'dellow', 'delorean', 'denzel', 'desoto', 'detomaso', 'deutsch-bonnet', 'diana', 'dkw', 'dodge', 'doretti', 'du pont', 'dual-ghia', 'duesenberg', 'durant', 'eagle', 'edsel', 'elcar', 'elva', 'erskine', 'essex', 'excalibur', 'facel vega', 'fairthorpe', 'falcon knight', 'fargo', 'faw', 'ferrari', 'fiat', 'fisker', 'flint', 'ford', 'foton', 'franklin', 'frazer nash', 'freightliner', 'gardner', 'genesis', 'geo', 'giant motors', 'glas', 'gmc', 'goliath', 'gordon-keeble', 'graham', 'graham-paige', 'griffith', 'healey', 'henry j', 'hillman', 'hino', 'hispano-suiza', 'honda', 'hotchkiss', 'hrg', 'hudson', 'humber', 'hummer', 'hupmobile', 'hyundai', 'infiniti', 'international', 'iso', 'isuzu', 'iveco', 'jac', 'jaguar', 'jeep', 'jensen', 'jewett', 'jmc', 'jordan', 'jowett', 'kaiser-frazer', 'karma', 'kenworth', 'kia', 'kissel', 'kurtis', 'lada', 'laforza', 'lagonda', 'lamborghini', 'lanchester', 'lancia', 'land rover', 'lasalle', 'lea-francis', 'lexington', 'lexus', 'lincoln', 'lotus', 'lucid', 'mack', 'maico', 'marathon', 'marauder', 'marcos', 'marmon', 'maserati', 'mastretta', 'matra', 'maxwell', 'maybach', 'mazda', 'mclaren', 'mercedes-benz', 'mercury', 'merkur', 'messerschmitt', 'mg', 'mini', 'mitsubishi', 'mitsubishi fuso', 'mobility ventures', 'monteverdi', 'moon', 'moretti', 'morgan', 'morris', 'moskvich', 'nardi', 'nash', 'nissan', 'nsu', 'oakland', 'oldsmobile', 'omega', 'opel', 'osca', 'packard', 'paige', 'panhard', 'panoz', 'panther', 'passport', 'peerless', 'pegaso', 'peterbilt', 'peugeot', 'pierce-arrow', 'plymouth', 'polestar', 'pontiac', 'porsche', 'qvale', 'ram', 'reliant', 'renault', 'reo', 'rickenbacker', 'riley', 'rivian', 'roamer', 'rockne', 'rolls-royce', 'rover', 'saab', 'sabra', 'saleen', 'salmson', 'saturn', 'scion', 'seat', 'shelby', 'siata', 'simca', 'singer', 'skoda', 'smart', 'spyker', 'srt', 'ssangyong', 'standard', 'star', 'stearns knight', 'sterling', 'stevens-duryea', 'studebaker', 'stutz', 'subaru', 'sunbeam', 'suzuki', 'swallow', 'talbot-lago', 'tatra', 'tesla', 'think', 'toyota', 'triumph', 'turner', 'tvr', 'uaz', 'ud', 'utilimaster', 'vam', 'vauxhall', 'vespa', 'volkswagen', 'volvo', 'vpg', 'wartburg', 'westcott', 'whippet', 'willys', 'windsor', 'wolseley', 'workhorse', 'yellow cab', 'yugo', 'zacua', 'zundapp']
+        self.support = random.sample(make_names, random.randint(50, 250))
 
     def add_to_cart(self, user, quantity=1):
         '''
