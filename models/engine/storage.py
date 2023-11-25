@@ -61,6 +61,27 @@ class Storage:
             objs.append(obj)
         return objs
 
+    def product_search(self, name='', category_id='', car_make=''):
+        p_dict = {
+            'cls': Product,
+            'case_sensitive': False,
+            'exact': False
+        }
+        if name:
+            p_dict['name'] = name
+        if category_id:
+            p_dict['category_id'] = category_id
+        products = self.search(**p_dict)
+        if not car_make:
+            return products
+        prod_list = []
+        print(products[0].support)
+        for product in products:
+            if car_make.lower() in product.support:
+                prod_list.append(product)
+        return prod_list
+            
+
     def search(self, **kwargs):
         '''
         Search for objects based on specified attribute-value pairs.
@@ -85,6 +106,8 @@ class Storage:
         kwargs.pop('case_sensitive', None)
         kwargs.pop('exact', None)
         all_objs = self.all(cls)
+        if not kwargs:
+            return all_objs
         result = []
         for obj in all_objs:
             matched = True
