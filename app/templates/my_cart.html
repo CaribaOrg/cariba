@@ -26,22 +26,23 @@
         class="mx-auto max-w-5xl justify-center px-6 md:flex md:mb-4 md:space-x-6 xl:px-0"
       >
         <div class="rounded-lg md:w-2/3">
+          
+          {% for item in items %}
           <div
             class="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start"
           >
             <div class="w-40 h-40 object-contain">
               <img
-                src="../static/images/car_oil.jpg"
+                src="{{ url_for('static', filename='images/pics/' + item.product.icon + '.jpg') }}"
                 alt="product-image"
                 class="rounded-lg w-40 sm:w-24"
                 width="156px"
               />
             </div>
-
             <div class="sm:ml-4 sm:flex sm:w-full sm:justify-between">
               <div class="mt-5 sm:mt-0">
                 <h2 class="text-lg font-bold text-gray-900">
-                  Drive Shaft Center...
+                  {{ item.product.name }}
                 </h2>
                 <!-- <p class="mt-1 text-xs text-gray-700">some details</p> -->
               </div>
@@ -59,7 +60,7 @@
                     id="quantityCount"
                     class="h-8 w-8 border bg-white text-center text-xs outline-none"
                     type="number"
-                    value="2"
+                    value="{{ item.quantity }}"
                     min="1"
                   />
                   <span
@@ -70,7 +71,7 @@
                   </span>
                 </div>
                 <div class="flex items-center space-x-4">
-                  <p id="productPrice" class="text-sm">16.95 $</p>
+                  <p id="productPrice" class="text-sm">{{ item.product.price * item.quantity }}$</p>
                   <!-- <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -101,6 +102,7 @@
               </div>
             </div>
           </div>
+          {% endfor %}
         </div>
         <!-- Sub total -->
         <div
@@ -108,17 +110,17 @@
         >
           <div class="mb-2 flex justify-between">
             <p class="text-slate-700">Subtotal</p>
-            <p id="subtotal" class="text-slate-700">$16.99</p>
+            <p id="subtotal" class="text-slate-700">${{ cart.total_price }}</p>
           </div>
           <div class="flex justify-between">
             <p class="text-slate-700">Shipping</p>
-            <p id="shippingPrice" class="text-slate-700">$5.99</p>
+            <p id="shippingPrice" class="text-slate-700">${{ cart.shipping }}</p>
           </div>
           <hr class="my-4" />
           <div class="flex justify-between">
             <p class="text-lg font-bold">Total</p>
             <div class="">
-              <p id="totalPrice" class="mb-1 text-lg font-bold">$21.98 USD</p>
+              <p id="totalPrice" class="mb-1 text-lg font-bold">${{ cart.total_price + cart.shipping }}</p>
               <!-- <p class="text-sm text-gray-700">including VAT</p> -->
             </div>
           </div>

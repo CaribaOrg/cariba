@@ -30,6 +30,7 @@ class Product(BaseModel, Base):
     description = Column(String(1024))
     quantity = Column(Integer, default=1)
     rating = Column(Float)
+    icon = Column(String(1024))
     category_id = Column(String(60), ForeignKey('categories.id'))
     category = relationship('Category',
                             back_populates='products',
@@ -65,6 +66,7 @@ class Product(BaseModel, Base):
                 item.quantity += quantity
                 item.cart.total_price += quantity * self.price
                 item.cart.total_items += quantity
+                item.cart.shipping = 3 + (0.1 * user.cart.total_price)
                 return
         if quantity <= 0 or quantity > self.quantity:
             quantity = self.quantity
@@ -78,9 +80,8 @@ class Product(BaseModel, Base):
         user.cart.cart_items.append(ci)
         user.cart.total_price += quantity * self.price
         user.cart.total_items += quantity
+        user.cart.shipping = 3 + (0.1 * user.cart.total_price)
         user.save()
-        print('quantity:', quantity)
-        print('total_items:', user.cart.total_items)
 
     def remove_from_cart(self, user, quantity=1):
         '''
@@ -104,6 +105,7 @@ class Product(BaseModel, Base):
                 user.cart.total_price -= self.price * quantity
                 item.quantity -= quantity
                 item.cart.total_items -= quantity
+                user.cart.shipping = 3 + (0.1 * user.cart.total_price) if item.cart.total_items else 0
                 item.save()
                 user.save()
                 return

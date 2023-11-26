@@ -25,6 +25,7 @@ class Cart(BaseModel, Base):
     user = relationship('User', back_populates='cart')
     total_price = Column(Float, default=0)
     total_items = Column(Integer, default=0)
+    shipping = Column(Float, default=0)
     cart_items = relationship('CartItem',
                               back_populates='cart',
                               cascade='all, delete-orphan')

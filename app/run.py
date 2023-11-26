@@ -105,7 +105,9 @@ def product_page(name):
 @login_required
 def my_cart():
     """Cart method"""
-    return render_template("my_cart.html", current_user=current_user)
+    cart = current_user.cart
+    items = current_user.cart.cart_items
+    return render_template("my_cart.html", current_user=current_user, items=items, cart=cart)
 
 
 @app.errorhandler(401)
