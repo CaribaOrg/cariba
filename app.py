@@ -35,6 +35,9 @@ app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", 
 app.config["SECURITY_EMAIL_VALIDATOR_ARGS"] = {"check_deliverability": False}
 app.config["SECURITY_REGISTERABLE"] = True
 app.config["SECURITY_CONFIRMABLE"] = True
+app.config["SECURITY_RECOVERABLE"] = True
+app.config["SECURITY_CHANGEABLE"] = True
+
 
 # Setup Flask-Security
 user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
