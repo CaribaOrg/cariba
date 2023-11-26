@@ -13,6 +13,7 @@ from models.car import Car
 from models.category import Category
 from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
+import random
 
 app = Flask(__name__)
 
@@ -74,6 +75,7 @@ def create_admin(app):
 
     admin = Admin(app, name='Admin', template_mode='bootstrap3')
     admin.add_view(CustomView(User))
+    admin.add_view(CustomView(Cart))
     admin.add_view(CustomView(Product))
 
 
@@ -87,7 +89,9 @@ app.url_map.strict_slashes = False
 @app.route("/")
 @app.route("/home")
 def index():
-    return render_template("home.html", current_user=current_user)
+    categories = strg.search(cls=Category, parent_id=None)
+    popular = random.sample(strg.all(Product), 8)
+    return render_template("home.html", current_user=current_user, categories=categories, popular=popular)
 
 
 @app.route("/product/<name>")
