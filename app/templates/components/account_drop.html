@@ -25,20 +25,21 @@
     class="flex flex-col items-center w-full gap-2 border-b-[1px] border-gray-300 mx-2 pb-2"
   >
     <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
-      <a href="/myOrders" class="pl-2">My Orders</a>
+      <a href="/myOrders" class="flex w-full pl-2">My Orders</a>
+    </li>
+
+    <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
+      <a href="myCart" class="flex w-full pl-2">Cart</a>
     </li>
     <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
-      <a href="myCart" class="pl-2">Cart</a>
+      <a href="messages" class="flex w-full pl-2">Messages</a>
     </li>
     <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
-      <a href="messages" class="pl-2">Messages</a>
-    </li>
-    <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
-      <a href="account" class="pl-2">Account</a>
+      <a href="account" class="flex w-full pl-2">Account</a>
     </li>
     {% if current_user.is_authenticated %}
     <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
-      <a href="/logout" class="pl-2">Log out</a>
+      <a href="/logout" class="flex w-full pl-2">Log out</a>
       {% endif %}
     </li>
   </ul>

@@ -1,7 +1,7 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request, session, abort
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, current_user, login_user, logout_user
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
 import os
 from api import api
@@ -38,7 +38,9 @@ def login():
             if user.check_password(form.password.data):
                 # if user.password == form.password.data:
                 login_user(user, remember=form.rememberMe.data)
-                return redirect(url_for("index"))
+                next_url = session.pop(
+                    'next', None) or url_for("index")
+                return redirect(next_url)
         return "password or uesrname is incorrect"
     return render_template("login.html", form=form)
 
@@ -97,6 +99,20 @@ def index():
 @app.route("/product/<name>")
 def product_page(name):
     return render_template("product_details.html", product_name=name)
+
+
+@app.route("/myCart")
+@login_required
+def my_cart():
+    """Cart method"""
+    return render_template("my_cart.html", current_user=current_user)
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+    """Handle unauthorized access to redirect to login page"""
+    session['next'] = request.url
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':

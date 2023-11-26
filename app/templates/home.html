@@ -12,8 +12,8 @@
   </head>
   <body class="bg-darkPrimary">
     <!-- header macro -->
-    {% import 'components/header.html' as macros %} {{
-    macros.display_header(current_user) }}
+    {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
 
     <!-- hero macro -->
     {%import'components/hero.html' as hero %} {{ hero.display_hero() }}
