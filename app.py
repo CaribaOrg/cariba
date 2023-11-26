@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from flask_mailman import Mail
 from flask import Flask, request, render_template, render_template_string
 from models import strg
 from api import api
@@ -15,6 +16,16 @@ app = Flask(__name__)
 app.register_blueprint(api, url_prefix='/api')
 app.url_map.strict_slashes = False
 
+# Mail config
+app.config["MAIL_SERVER"] = os.environ.get("MAIL_SERVER")
+app.config["MAIL_PORT"] = os.environ.get("MAIL_PORT")
+app.config["MAIL_USE_SSL"] = True
+app.config["MAIL_USE_TLS"] = False
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_DEFAULT_SENDER")
+mail = Mail(app)
+
 # Generate a nice key using secrets.token_urlsafe()
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", 'pf9Wkove4IKEAXvy-cQkeDPhv9Cb3Ag-wyJILbq_dFw')
 # Bcrypt is set as default SECURITY_PASSWORD_HASH, which requires a salt
@@ -23,7 +34,7 @@ app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", 
 # Don't worry if email has findable domain
 app.config["SECURITY_EMAIL_VALIDATOR_ARGS"] = {"check_deliverability": False}
 app.config["SECURITY_REGISTERABLE"] = True
-
+app.config["SECURITY_CONFIRMABLE"] = True
 
 # Setup Flask-Security
 user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)

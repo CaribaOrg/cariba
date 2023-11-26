@@ -16,3 +16,11 @@ export CARIBA_MYSQL_USER="cariba_dev"
 export CARIBA_MYSQL_PWD="cariba_dev_pwd"
 export CARIBA_MYSQL_HOST="localhost"
 export CARIBA_MYSQL_DB="cariba_dev_db"
+
+export MAIL_SERVER="mail.fuzzfoo.tech"
+export MAIL_PORT=465
+export MAIL_USE_SSL="False"
+export MAIL_USE_TLS="True"
+export MAIL_USERNAME="noreply@fuzzfoo.tech"
+export MAIL_PASSWORD="gPXyczHNmbe3"
+export MAIL_DEFAULT_SENDER="noreply@fuzzfoo.tech"
