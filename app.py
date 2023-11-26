@@ -37,6 +37,9 @@ app.config["SECURITY_REGISTERABLE"] = True
 app.config["SECURITY_CONFIRMABLE"] = True
 app.config["SECURITY_RECOVERABLE"] = True
 app.config["SECURITY_CHANGEABLE"] = True
+app.config["SECURITY_USERNAME_ENABLE"] = True
+app.config["SECURITY_USERNAME_REQUIRED"] = True
+
 
 
 # Setup Flask-Security
