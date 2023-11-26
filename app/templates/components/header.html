@@ -53,7 +53,7 @@
       </li>
       <!-- cart -->
       <li>
-        <a href="/cart" class="flex justify-between gap-1 items-end">
+        <a href="/myCart" class="flex justify-between gap-1 items-end">
           <img
             src="../static/images/shopping-cart.png"
             alt="Shopping Cart"
@@ -62,7 +62,10 @@
           <div class="flex flex-col p-0 items-center max-md:hidden" width="16">
             <h4 class="text-white text-sm">Cart</h4>
             <div class="bg-white flex rounded-full px-3 items-center">
-              <h4 id="cart_items_count" class="text-darkPrimary text-sm">0</h4>
+              <h4 id="cart_items_count" class="text-darkPrimary text-sm">
+                {% if current_user.is_authenticated %} {{
+                current_user.cart.total_items }} {% else %} 0 {% endif %}
+              </h4>
             </div>
           </div>
         </a>

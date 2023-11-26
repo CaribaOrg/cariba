@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, abort
+from flask import Flask, render_template, redirect, url_for, request, session, abort, jsonify
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
@@ -11,6 +11,7 @@ from models.cart import Cart
 from models.product import Product
 from models.car import Car
 from models.category import Category
+from models.cart_item import CartItem
 from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
@@ -108,6 +109,16 @@ def my_cart():
     cart = current_user.cart
     items = current_user.cart.cart_items
     return render_template("my_cart.html", current_user=current_user, items=items, cart=cart)
+
+
+@app.route('/add_to_cart/<uuid:product_id>', methods=['POST'])
+@login_required
+def add_to_cart(product_id):
+    cart = current_user.cart
+    prod = CartItem(cart_id=cart.id, quantity=1, product_id=product_id)
+    cart.total_items += 1
+    strg.save()
+    return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
 
 
 @app.errorhandler(401)

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../static/dist/css/output.css" />
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
-    <title>My cart</title>
+    <title>Shopping Cart</title>
   </head>
   <body>
     <!-- cart component -->
@@ -20,25 +20,24 @@
     </style>
     {% import 'components/header.html' as header %} {{
     header.display_header(current_user) }}
-    <div class="h-screen bg-gray-100 pt-20">
-      <h1 class="mb-10 text-center text-3xl font-bold">Cart</h1>
+    <div class="min-h-screen bg-darkPrimary pt-12">
+      <h1 class="pb-10 text-center text-3xl font-bold text-white">
+        Shopping Cart
+      </h1>
       <div
-        class="mx-auto max-w-5xl justify-center px-6 md:flex md:mb-4 md:space-x-6 xl:px-0"
+        class="mx-auto max-w-5xl justify-center px-6 md:flex pb-8 md:space-x-6 xl:px-0"
       >
         <div class="rounded-lg md:w-2/3">
-          
           {% for item in items %}
           <div
             class="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start"
           >
-            <div class="w-40 h-40 object-contain">
-              <img
-                src="{{ url_for('static', filename='images/pics/' + item.product.icon + '.jpg') }}"
-                alt="product-image"
-                class="rounded-lg w-40 sm:w-24"
-                width="156px"
-              />
-            </div>
+            <img
+              src="{{ url_for('static', filename='images/pics/' + item.product.icon + '.jpg') }}"
+              alt="product-image"
+              class="rounded-lg w-40 h-[106px] sm:w-24 object-contain"
+              width="160px"
+            />
             <div class="sm:ml-4 sm:flex sm:w-full sm:justify-between">
               <div class="mt-5 sm:mt-0">
                 <h2 class="text-lg font-bold text-gray-900">
@@ -71,19 +70,9 @@
                   </span>
                 </div>
                 <div class="flex items-center space-x-4">
-                  <p id="productPrice" class="text-sm">{{ item.product.price * item.quantity }}$</p>
-                  <!-- <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="h-5 w-5 cursor-pointer duration-150 hover:text-red-500"
-                  >
-                    <path
-                      d="M 49 1 C 47.34 1 46 2.34 46 4 C 46 5.66 47.34 7 49 7 L 79 7 C 80.66 7 82 5.66 82 4 C 82 2.34 80.66 1 79 1 L 49 1 z M 24 15 C 16.83 15 11 20.83 11 28 C 11 35.17 16.83 41 24 41 L 101 41 L 101 104 C 101 113.37 93.37 121 84 121 L 44 121 C 34.63 121 27 113.37 27 104 L 27 52 C 27 50.34 25.66 49 24 49 C 22.34 49 21 50.34 21 52 L 21 104 C 21 116.68 31.32 127 44 127 L 84 127 C 96.68 127 107 116.68 107 104 L 107 40.640625 C 112.72 39.280625 117 34.14 117 28 C 117 20.83 111.17 15 104 15 L 24 15 z M 24 21 L 104 21 C 107.86 21 111 24.14 111 28 C 111 31.86 107.86 35 104 35 L 24 35 C 20.14 35 17 31.86 17 28 C 17 24.14 20.14 21 24 21 z M 50 55 C 48.34 55 47 56.34 47 58 L 47 104 C 47 105.66 48.34 107 50 107 C 51.66 107 53 105.66 53 104 L 53 58 C 53 56.34 51.66 55 50 55 z M 78 55 C 76.34 55 75 56.34 75 58 L 75 104 C 75 105.66 76.34 107 78 107 C 79.66 107 81 105.66 81 104 L 81 58 C 81 56.34 79.66 55 78 55 z"
-                    ></path>
-                  </svg> -->
+                  <p id="productPrice" class="text-sm">
+                    {{ item.product.price * item.quantity }}$
+                  </p>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
@@ -114,13 +103,17 @@
           </div>
           <div class="flex justify-between">
             <p class="text-slate-700">Shipping</p>
-            <p id="shippingPrice" class="text-slate-700">${{ cart.shipping }}</p>
+            <p id="shippingPrice" class="text-slate-700">
+              ${{ cart.shipping }}
+            </p>
           </div>
           <hr class="my-4" />
           <div class="flex justify-between">
             <p class="text-lg font-bold">Total</p>
             <div class="">
-              <p id="totalPrice" class="mb-1 text-lg font-bold">${{ cart.total_price + cart.shipping }}</p>
+              <p id="totalPrice" class="mb-1 text-lg font-bold">
+                ${{ cart.total_price + cart.shipping }}
+              </p>
               <!-- <p class="text-sm text-gray-700">including VAT</p> -->
             </div>
           </div>

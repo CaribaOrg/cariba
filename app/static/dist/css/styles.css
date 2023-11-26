@@ -54,3 +54,11 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* clamp product card title */
+.limited-div {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+}
