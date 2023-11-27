@@ -1,27 +1,27 @@
-{% macro product_card(product_name, price, image, product_id) %}
+{% macro product_card(product) %}
 <div
   class="flex flex-col w-52 bg-white p-2 rounded-lg overflow-hidden justify-between"
 >
-  <a href="{{ url_for('product_page', id=product_id) }}">
+  <a href="{{ url_for('product_page', id=product.id) }}">
     <img
-      src="{{ image }}"
-      alt="{{ name }}"
+      src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
+      alt="{{ product.name }}"
       class="w-[200px] h-[200px] object-contain rounded-t-lg transition-transform hover:shadow-xl hover:transform hover:scale-[1.06]"
     />
   </a>
 
-  <a href="{{ url_for('product_page', id=product_id) }}">
+  <a href="{{ url_for('product_page', id=product.id) }}">
     <h3
       class="pt-2 text-sm limited-div leading-normal font-semibold font-palanquin"
     >
-      {{ product_name }}
+      {{ product.name }}
     </h3>
   </a>
   <div class="flex justify-between items-center pt-2 border-t-2">
     <p class="leading-normal font-montserrat text-lg">
-      Price: <span class="text-primary text-xl">{{ price }}$</span>
+      Price: <span class="text-primary text-xl">{{ product.price }}$</span>
     </p>
-    <button onclick="addToCart('{{ product_id }}', this, false)">
+    <button onclick="addToCart('{{ product.id }}', this, false)">
       <img
         id="product_add"
         src="../../static/images/add-to-cart.png"

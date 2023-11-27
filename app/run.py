@@ -114,9 +114,9 @@ def my_cart():
     return render_template("my_cart.html", current_user=current_user, items=items, cart=cart)
 
 
-@app.route('/add_to_cart/<uuid:product_id>', methods=['POST'])
+@app.route('/add_to_cart/<uuid:product_id>/<int:quantity>', methods=['POST'])
 @login_required
-def add_to_cart(product_id):
+def add_to_cart(product_id, quantity=1):
     """add an element to the cart"""
     product = strg.session().query(Product).get(product_id)
     product.add_to_cart(current_user)
