@@ -71,7 +71,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                   <p id="productPrice" class="text-sm">
-                    {{ item.product.price * item.quantity }}$
+                    {{ (item.product.price * item.quantity)|round(2) }}$
                   </p>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

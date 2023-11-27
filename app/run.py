@@ -9,7 +9,7 @@ from models import strg
 from models.user import User, Role
 from models.cart import Cart
 from models.product import Product
-from models.car import Car
+from models import strg
 from models.category import Category
 from models.cart_item import CartItem
 from app.forms.user_forms import LoginForm, RegisterForm
@@ -21,9 +21,7 @@ app = Flask(__name__)
 # Load configuration from a separate file (e.g., config.py)
 app.config.from_pyfile('config.py')
 
-db = SQLAlchemy(app)
 login = LoginManager(app)
-
 
 @login.user_loader
 def load_user(user_id):
@@ -34,7 +32,7 @@ def load_user(user_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.session().query(User).filter_by(username=form.username.data).first()
+        user = strg.session.query(User).filter_by(username=form.username.data).first()
         if user:
             if user.check_password(form.password.data):
                 # if user.password == form.password.data:
@@ -97,9 +95,11 @@ def index():
     return render_template("home.html", current_user=current_user, categories=categories, popular=popular)
 
 
-@app.route("/product/<name>")
-def product_page(name):
-    return render_template("product_details.html", product_name=name)
+@app.route("/product/<id>")
+def product_page(id):
+    product=strg.search(cls=Product, id=id)
+    popular = random.sample(strg.all(Product), 5)
+    return render_template("product_details.html", product=product, popular=popular)
 
 
 @app.route("/myCart")

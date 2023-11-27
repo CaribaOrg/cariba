@@ -64,9 +64,9 @@ class Product(BaseModel, Base):
                 if quantity <= 0 or quantity + item.quantity > self.quantity:
                     quantity = self.quantity - item.quantity
                 item.quantity += quantity
-                item.cart.total_price += quantity * self.price
+                item.cart.total_price += round(quantity * self.price, 2)
                 item.cart.total_items += quantity
-                item.cart.shipping = 3 + (0.1 * user.cart.total_price)
+                item.cart.shipping = 3 + round((0.1 * user.cart.total_price), 2)
                 return
         if quantity <= 0 or quantity > self.quantity:
             quantity = self.quantity
@@ -78,9 +78,9 @@ class Product(BaseModel, Base):
         ci = CartItem(**ci_dict)
         ci.save()
         user.cart.cart_items.append(ci)
-        user.cart.total_price += quantity * self.price
+        user.cart.total_price += round(quantity * self.price, 2)
         user.cart.total_items += quantity
-        user.cart.shipping = 3 + (0.1 * user.cart.total_price)
+        user.cart.shipping = 3 + round((0.1 * user.cart.total_price), 2)
         user.save()
 
     def remove_from_cart(self, user, quantity=1):
@@ -98,14 +98,14 @@ class Product(BaseModel, Base):
                 if item.quantity <= quantity:
                     item.delete()
                     user.cart.cart_items.remove(item)
-                    user.cart.total_price -= item.quantity * self.price
+                    user.cart.total_price -= round(item.quantity * self.price, 2)
                     user.cart.total_items -= item.quantity
                     user.save()
                     return
-                user.cart.total_price -= self.price * quantity
+                user.cart.total_price -= round(quantity * self.price, 2)
                 item.quantity -= quantity
                 item.cart.total_items -= quantity
-                user.cart.shipping = 3 + (0.1 * user.cart.total_price) if item.cart.total_items else 0
+                user.cart.shipping = 3 + round((0.1 * user.cart.total_price), 2) if item.cart.total_items else 0
                 item.save()
                 user.save()
                 return

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/product_details.js"></script>
 
-    <title>{{ product_name }}</title>
+    <title>{{ product.name }}</title>
   </head>
   <body class="bg-white">
     {% import 'components/header.html' as header %} {{ header.display_header(current_user)
@@ -21,7 +21,7 @@
         <div class="w-72 h-72">
           <img
             id="big_image"
-            src="../static/images/car_oil_2.jpg"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
             class="border-[1px] w-72 h-72 object-contain border-slate-700"
           />
@@ -31,41 +31,39 @@
           <img
             class="w-16 h-16 border-[1px] border-slate-700 object-contain cursor-pointer"
             id="image_1"
-            src="../static/images/car_oil.jpg"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
             width="64px"
           />
           <img
             class="w-16 h-16 border-[1px] border-slate-700 object-contain cursor-pointer"
             id="image_2"
-            src="../static/images/car_oil_2.jpg"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
             width="64px"
           />
           <img
             class="w-16 h-16 border-[1px] border-slate-700 object-contain cursor-pointer"
             id="image_3"
-            src="../static/images/car_oil_3.jpg"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
             width="64px"
           />
           <img
             class="w-16 h-16 border-[1px] border-slate-700 object-contain cursor-pointer"
             id="image_4"
-            src="../static/images/car_oil_4.jpg"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
             width="64px"
           />
         </div>
       </div>
       <div class="p-4">
-        <h3 class="text-xl font-semibold">
-          Mobil 1 Advanced Full Synthetic Motor Oil 5W-20, 5 Quart
+        <h3 class="text-xl w-100 font-semibold">
+          {{ product.name }}
         </h3>
-        <ul class="my-2 pl-2 py-1 border-y-2 border-slate-300">
-          <li class="text-xs">Fast Delivery</li>
-          <li class="text-xs">High-Quality Materials</li>
-          <li class="text-xs">24/7 Customer Support</li>
+        <ul class="my-2 pl-2 w-100 py-1 border-y-2 border-slate-300">
+          {{ product.description }}
         </ul>
         <div
           class="my-1 pl-2 py-1 flex flex-col border-b-2 border-slate-300 gap-4"
@@ -83,11 +81,11 @@
               min="1"
               max="100"
             />
-            <p id="totalQuantity" class="text-red-600">/ 208 left</p>
+            <p id="totalQuantity" class="text-red-600">/ {{ product.quantity }} left</p>
           </div>
 
           <h3 class="">
-            Price: <span class="text-primary text-2xl">99$</span>
+            Price: <span class="text-primary text-2xl">{{ product.price }}$</span>
           </h3>
           <div class="flex gap-3">
             <div
@@ -121,7 +119,7 @@
           </div>
         </div>
         <div class="flex gap-1 items-center pl-2">
-          <h3>Rating: <span class="font-semibold">4.5</span></h3>
+          <h3>Rating: <span class="font-semibold">{{ product.rating }}</span></h3>
           <img class="w-4 h-4" src="../static/images/star-yellow.png" />
           <a href="#reviews_section"><span>(25 reviews)</span></a>
         </div>
@@ -186,19 +184,9 @@
     <section class="flex flex-col p-8 gap-4">
       <h2 class="text-black text-3xl">Popular products</h2>
       <div class="flex flex-wrap gap-6 justify-start">
-        {% import 'components/product_card.html' as product %} {{
-        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
-        }} {% import 'components/product_card.html' as product %} {{
-        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
-        }} {% import 'components/product_card.html' as product %} {{
-        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
-        }} {% import 'components/product_card.html' as product %} {{
-        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
-        }} {% import 'components/product_card.html' as product %} {{
-        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
-        }} {% import 'components/product_card.html' as product %} {{
-        product.product_card('Car Oil', '49$', '../static/images/car_oil.jpg')
-        }}
+        {% for prod in popular %} {% import 'components/product_card.html' as
+        product %} {{ product.product_card(prod.name, prod.price,
+        '../static/images/pics/' + prod.icon + '.jpg', prod.id) }} {% endfor %}
       </div>
     </section>
     {% import 'components/footer.html' as footer %} {{ footer.footer() }}
