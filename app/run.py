@@ -23,6 +23,7 @@ app.config.from_pyfile('config.py')
 
 login = LoginManager(app)
 
+
 @login.user_loader
 def load_user(user_id):
     return strg.session.query(User).get(user_id)
@@ -32,7 +33,8 @@ def load_user(user_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = strg.session.query(User).filter_by(username=form.username.data).first()
+        user = strg.session.query(User).filter_by(
+            username=form.username.data).first()
         if user:
             if user.check_password(form.password.data):
                 # if user.password == form.password.data:
@@ -95,9 +97,10 @@ def index():
     return render_template("home.html", current_user=current_user, categories=categories, popular=popular)
 
 
-@app.route("/product/<id>")
+@app.route("/product/<uuid:id>")
 def product_page(id):
-    product=strg.search(cls=Product, id=id)
+    # product = strg.search(cls=Product, id=id) // search needs a fix
+    product = strg.session().query(Product).get(id)
     popular = random.sample(strg.all(Product), 5)
     return render_template("product_details.html", product=product, popular=popular)
 
@@ -114,7 +117,7 @@ def my_cart():
 @app.route('/add_to_cart/<uuid:product_id>', methods=['POST'])
 @login_required
 def add_to_cart(product_id):
-    product = db.session().query(Product).get(product_id)
+    product = strg.session().query(Product).get(product_id)
     product.add_to_cart(current_user)
     strg.save()
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
@@ -123,7 +126,7 @@ def add_to_cart(product_id):
 @app.route('/remove_from_cart/<uuid:product_id>', methods=['POST'])
 @login_required
 def remove_from_cart(product_id):
-    product = db.session().query(Product).get(product_id)
+    product = strg.session().query(Product).get(product_id)
     product.remove_from_cart(current_user)
     strg.save()
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
