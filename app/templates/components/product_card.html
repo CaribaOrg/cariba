@@ -1,31 +1,40 @@
 {% macro product_card(product_name, price, image, product_id) %}
-<div class="flex flex-col w-72 bg-white p-2 rounded-lg">
+<div
+  class="flex flex-col w-52 bg-white p-2 rounded-lg overflow-hidden justify-between"
+>
   <a href="{{ url_for('product_page', name=product_name) }}">
     <img
       src="{{ image }}"
       alt="{{ name }}"
-      class="w-[280px] h-[280px] object-contain rounded-t-lg transition-transform hover:shadow-xl hover:transform hover:scale-[1.06] hover:-translate-y-2"
+      class="w-[200px] h-[200px] object-contain rounded-t-lg transition-transform hover:shadow-xl hover:transform hover:scale-[1.06]"
     />
   </a>
 
   <a href="{{ url_for('product_page', name=product_name) }}">
     <h3
-      class="pt-2 text-2xl limited-div leading-normal font-semibold font-palanquin"
+      class="pt-2 text-sm limited-div leading-normal font-semibold font-palanquin"
     >
       {{ product_name }}
     </h3>
   </a>
   <div class="flex justify-between items-center pt-2 border-t-2">
-    <p class="leading-normal font-montserrat text-2xl">
-      Price: <span class="text-primary">{{ price }}$</span>
+    <p class="leading-normal font-montserrat text-lg">
+      Price: <span class="text-primary text-xl">{{ price }}$</span>
     </p>
-    <button onclick="addToCart('{{ product_id }}')">
+    <button onclick="addToCart('{{ product_id }}', this)">
       <img
-        id="product_add_remove"
+        id="product_add"
         src="../../static/images/add-to-cart.png"
         alt="Shopping Cart"
         width="32px"
-        class="cursor-pointer"
+        class="cursor-pointer hover:scale-[1.06]"
+      />
+      <img
+        id="product_remove"
+        src="../../static/images/remove.png"
+        alt="Shopping Cart"
+        width="32px"
+        class="cursor-pointer hover:scale-[1.06] hidden"
       />
     </button>
   </div>

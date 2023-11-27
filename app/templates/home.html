@@ -61,9 +61,9 @@
       </div>
     </section>
     <!-- popular products -->
-    <section class="flex flex-col p-8 gap-4">
+    <section class="flex flex-col p-4 gap-4">
       <h2 class="text-white text-3xl">Popular products</h2>
-      <div class="flex flex-wrap gap-6 justify-start">
+      <div class="flex flex-wrap gap-3 justify-start">
         {% for prod in popular %} {% import 'components/product_card.html' as
         product %} {{ product.product_card(prod.name, prod.price,
         '../static/images/pics/' + prod.icon + '.jpg', prod.id) }} {% endfor %}

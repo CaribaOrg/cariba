@@ -114,9 +114,17 @@ def my_cart():
 @app.route('/add_to_cart/<uuid:product_id>', methods=['POST'])
 @login_required
 def add_to_cart(product_id):
-    cart = current_user.cart
-    prod = CartItem(cart_id=cart.id, quantity=1, product_id=product_id)
-    cart.total_items += 1
+    product = db.session().query(Product).get(product_id)
+    product.add_to_cart(current_user)
+    strg.save()
+    return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
+
+
+@app.route('/remove_from_cart/<uuid:product_id>', methods=['POST'])
+@login_required
+def remove_from_cart(product_id):
+    product = db.session().query(Product).get(product_id)
+    product.remove_from_cart(current_user)
     strg.save()
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
 
