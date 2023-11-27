@@ -17,6 +17,9 @@ body {
   }
 }
 
+.w-100 {
+  width: 26rem;
+}
 /* img-wrap: black gradient to left */
 .img-wrap {
   z-index: 1;

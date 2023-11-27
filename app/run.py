@@ -95,9 +95,11 @@ def index():
     return render_template("home.html", current_user=current_user, categories=categories, popular=popular)
 
 
-@app.route("/product/<name>")
-def product_page(name):
-    return render_template("product_details.html", product_name=name)
+@app.route("/product/<id>")
+def product_page(id):
+    product=strg.search(cls=Product, id=id)
+    popular = random.sample(strg.all(Product), 5)
+    return render_template("product_details.html", product=product, popular=popular)
 
 
 @app.route("/myCart")
