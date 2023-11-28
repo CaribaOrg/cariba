@@ -118,7 +118,7 @@ def my_cart():
 def add_to_cart(product_id, quantity=1):
     """add an element to the cart"""
     product = strg.session().query(Product).get(product_id)
-    product.add_to_cart(current_user)
+    product.add_to_cart(current_user, quantity)
     strg.save()
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
 

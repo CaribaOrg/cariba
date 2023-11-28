@@ -24,7 +24,7 @@ function addToCart(product_id, buttonCaller) {
             });
     }
     else {
-        // Remove a product to the cart
+        // Remove a product from the cart
         fetch(`/remove_from_cart/${product_id}/1`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
@@ -44,22 +44,37 @@ function addToCart(product_id, buttonCaller) {
     }
 }
 
-function IncreaseCartItem(product_id) {
+function IncreaseCartItem(product_id, inCart) {
     // Add a product to the cart
-    console.log(product_id)
-    fetch(`/add_to_cart/${product_id}/1`, { method: 'POST' })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Update the cart count on the page and the add img to remove img
-                location.reload();
-            } else {
-                console.error('Failed to add item to cart.');
-            }
-        })
-        .catch(error => {
-            console.error('Error adding item to cart:', error);
-        });
+    if (inCart) {
+        fetch(`/add_to_cart/${product_id}/1`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the cart count
+                    location.reload();
+                } else {
+                    console.error('Failed to add item to cart.');
+                }
+            })
+            .catch(error => {
+                console.error('Error adding item to cart:', error);
+            });
+    }
+    else {
+        const quantityCount = document.getElementById("quantityCount");
+        if (quantityCount.value < parseInt(quantityCount.max)) {
+            quantityCount.value = parseInt(quantityCount.value) + 1;
+        }
+    }
+
+}
+
+function decreaseProductQuantity(product_price) {
+    const quantityCount = document.getElementById("quantityCount");
+    if (quantityCount.value >= 2) {
+        quantityCount.value = parseInt(quantityCount.value) - 1;
+    }
 }
 
 function removeFromCart(product_id, item_quantity, buttonCaller, inCart) {

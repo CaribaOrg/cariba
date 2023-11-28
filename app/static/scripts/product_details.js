@@ -9,3 +9,40 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+function buyNow(product_id) {
+    const quantityCount = document.getElementById("quantityCount");
+    const quantityValue = parseInt(quantityCount.value);
+    fetch(`/add_to_cart/${product_id}/${quantityValue}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the cart count
+                window.location.href = '/myCart';
+            } else {
+                console.error('Failed to add item to cart.');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding item to cart:', error);
+        });
+}
+function addToCart2(product_id, addToCartButton) {
+    const quantityCount = document.getElementById("quantityCount");
+    const quantityValue = parseInt(quantityCount.value);
+    fetch(`/add_to_cart/${product_id}/${quantityValue}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the cart count
+                document.getElementById('cart_items_count').innerText = `${data.cart_count}`;
+                addToCartButton.classList.add("hidden");
+
+            } else {
+                console.error('Failed to add item to cart.');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding item to cart:', error);
+        });
+}

@@ -12,8 +12,8 @@
     <title>{{ product.name }}</title>
   </head>
   <body class="bg-white">
-    {% import 'components/header.html' as header %} {{ header.display_header(current_user)
-    }}
+    {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
 
     <div
       class="my-8 py-8 mx-auto rounded-lg flex justify-center flex-wrap gap-3 min-h-[75vh] bg-white"
@@ -60,9 +60,7 @@
         </div>
       </div>
       <div class="p-4">
-        <h3 class="text-xl w-100 font-semibold">
-          {{ product.name }}
-        </h3>
+        <h3 class="text-xl w-100 font-semibold">{{ product.name }}</h3>
         <ul class="my-2 pl-2 w-100 py-1 border-y-2 border-slate-300">
           {{ product.description }}
         </ul>
@@ -73,7 +71,7 @@
         >
           <div class="flex items-center gap-2">
             <label for="quantityInput">Quantity:</label>
-            <input
+            <!-- <input
               class="text-right p-1 border-[1px] border-black rounded-lg"
               type="number"
               id="quantityInput"
@@ -81,25 +79,53 @@
               value="1"
               min="1"
               max="100"
-            />
-            <p id="totalQuantity" class="text-red-600">/ {{ product.quantity }} left</p>
+            /> -->
+            <div class="flex items-center border-gray-100">
+              <span
+                id="decreaseQuantity"
+                class="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50"
+                onclick="decreaseProductQuantity()"
+              >
+                -
+              </span>
+              <input
+                id="quantityCount"
+                class="h-8 w-8 border bg-white text-center text-xs outline-none"
+                type="number"
+                value="1"
+                min="1"
+                max="{{ product.quantity }}"
+              />
+              <span
+                id="increaseQuantity"
+                class="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50"
+                onclick="IncreaseCartItem('{{ product.id }}', false)"
+              >
+                +
+              </span>
+            </div>
+            <p id="totalQuantity" class="text-red-600">
+              / {{ product.quantity }} left
+            </p>
           </div>
 
           <h3 class="">
-            Price: <span class="text-primary text-2xl">{{ product.price }}$</span>
+            Price:
+            <span class="text-primary text-2xl">{{ product.price }}$</span>
           </h3>
           <div class="flex gap-3">
-            <div
+            <button
+              onclick="buyNow('{{ product.id }}')"
               class="bg-primary text-white py-2 px-4 rounded-lg cursor-pointer"
             >
               Buy Now
-            </div>
-            <a href="/"></a>
-            <div
+            </button>
+            <button
+              onclick="addToCart2('{{ product.id }}', this)"
               class="bg-darkPrimary text-white py-2 px-4 rounded-lg cursor-pointer"
             >
               Add to cart
-            </div>
+            </button>
           </div>
           <div class="flex items-center gap-2">
             <h3 class="">Payments:</h3>
@@ -121,7 +147,9 @@
           </div>
         </div>
         <div class="flex gap-1 items-center pl-2">
-          <h3>Rating: <span class="font-semibold">{{ product.rating }}</span></h3>
+          <h3>
+            Rating: <span class="font-semibold">{{ product.rating }}</span>
+          </h3>
           <img class="w-4 h-4" src="../static/images/star-yellow.png" />
           <a href="#reviews_section"><span>(25 reviews)</span></a>
         </div>

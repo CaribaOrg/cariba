@@ -65,3 +65,9 @@ body {
   overflow: hidden;
   -webkit-line-clamp: 2;
 }
+
+#quantityCount::-webkit-inner-spin-button,
+#quantityCount::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Webkit browsers */
+  margin: 0; /* Removes the margin */
+}
