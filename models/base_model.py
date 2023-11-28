@@ -2,6 +2,7 @@
 ''' This is a module for Base and BaseModel '''
 
 from datetime import datetime
+from typing import Any
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from hashlib import md5

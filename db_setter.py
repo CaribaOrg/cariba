@@ -210,3 +210,4 @@ products = [globals()[name] for name in products_names]
 
 for _ in range(0, 50):
     random.choice(products).add_to_cart(random.choice(users), random.randint(1, 100))
+strg.save()         

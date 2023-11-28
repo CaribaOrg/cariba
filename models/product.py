@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 ''' This is a module for Product '''
 
+import random
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Float, Integer, JSON
 from sqlalchemy.orm import relationship
