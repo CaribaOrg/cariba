@@ -53,11 +53,14 @@ def register():
         user = User(username=form.username.data,
                     email=form.email.data,
                     password=form.password.data)
-        if user:
-            return "Your account has been created successfully <br>You can login now!"
+        if user: 
+            return redirect(url_for('redirect_page'))
         return "Something went wrong! Please try again later or contact support."
     return render_template("register.html", form=form)
 
+@app.route("/redirect", methods=['GET'])
+def redirect_page():
+    return render_template("redirect.html")
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
