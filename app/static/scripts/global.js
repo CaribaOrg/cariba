@@ -44,7 +44,7 @@ function addToCart(product_id, buttonCaller) {
     }
 }
 
-function IncreaseCartItem(product_id, product_price, inCart) {
+function IncreaseCartItem(product_id, inCart) {
     // Add a product to the cart
     if (inCart) {
         fetch(`/add_to_cart/${product_id}/1`, { method: 'POST' })
