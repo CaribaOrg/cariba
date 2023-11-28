@@ -134,6 +134,14 @@ def remove_from_cart(product_id, quantity=1):
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
 
 
+@app.route('/categories/<category>')
+def categories(category):
+    categories = strg.search(cls=Category, parent_id=None)
+    current_category = strg.session.query(
+        Category).filter_by(name=category).first()
+    return render_template('categories.html', current_user=current_user, current_category=current_category, categories=categories)
+
+
 @app.errorhandler(401)
 def unauthorized(error):
     """Handle unauthorized access to redirect to login page"""
