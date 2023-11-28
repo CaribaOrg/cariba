@@ -1,0 +1,47 @@
+<!-- account dropdown macro -->
+{% macro display_drop(current_user) %}
+<div
+  class="account_drop absolute top-2 right-6 w-64 h-80 bg-gray-200 rounded-3xl py-3 px-4"
+>
+  <ul
+    class="flex flex-col items-center w-full gap-2 border-b-[1px] border-gray-300 pb-2"
+  >
+    {% if not current_user.is_authenticated %}
+    <li
+      class="text-lg font-bold bg-black rounded-full w-full text-white text-center py-1 cursor-pointer"
+    >
+      <a href="/login">Sign In</a>
+    </li>
+    <li class="text-md rounded-full w-full text-center cursor-pointer">
+      <a href="/register">Register</a>
+    </li>
+    {% else %}
+    <li class="text-md rounded-full w-full text-center">
+      Hi {{current_user.username }}!
+    </li>
+    {% endif %}
+  </ul>
+  <ul
+    class="flex flex-col items-center w-full gap-2 border-b-[1px] border-gray-300 mx-2 pb-2"
+  >
+    <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
+      <a href="/myOrders" class="flex w-full pl-2">My Orders</a>
+    </li>
+
+    <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
+      <a href="/myCart" class="flex w-full pl-2">Cart</a>
+    </li>
+    <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
+      <a href="/messages" class="flex w-full pl-2">Messages</a>
+    </li>
+    <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
+      <a href="/account" class="flex w-full pl-2">Account</a>
+    </li>
+    {% if current_user.is_authenticated %}
+    <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
+      <a href="/logout" class="flex w-full pl-2">Log out</a>
+      {% endif %}
+    </li>
+  </ul>
+</div>
+{% endmacro %}
