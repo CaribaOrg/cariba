@@ -44,7 +44,7 @@ function addToCart(product_id, buttonCaller) {
     }
 }
 
-function IncreaseCartItem(product_id, buttonCaller) {
+function IncreaseCartItem(product_id) {
     // Add a product to the cart
     console.log(product_id)
     fetch(`/add_to_cart/${product_id}/1`, { method: 'POST' })
