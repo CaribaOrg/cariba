@@ -16,11 +16,10 @@ from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 
 # Load configuration from a separate file (e.g., config.py)
-app.config.from_pyfile('config.py')
-
+app.config.from_pyfile('app/config.py')
 login = LoginManager(app)
 
 
@@ -30,7 +29,7 @@ def load_user(user_id):
 
 
 @app.route("/login", methods=['GET', 'POST'])
-def login():
+def login_page():
     form = LoginForm()
     if form.validate_on_submit():
         user = strg.session.query(User).filter_by(
