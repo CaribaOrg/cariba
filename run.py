@@ -29,7 +29,7 @@ def load_user(user_id):
 
 
 @app.route("/login", methods=['GET', 'POST'])
-def login_page():
+def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = strg.session.query(User).filter_by(
