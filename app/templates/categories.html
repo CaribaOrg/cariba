@@ -91,7 +91,7 @@
           <div class="flex flex-wrap gap-3 justify-start">
             {% for prod in current_category.products %} {% import
             'components/product_card.html' as product %} {{
-            product.product_card(prod) }} {% endfor %}
+            product.product_card(prod, current_user) }} {% endfor %}
           </div>
         </section>
       </div>
