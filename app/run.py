@@ -142,7 +142,8 @@ def categories(category):
     categories = strg.search(cls=Category, parent_id=None)
     current_category = strg.session.query(
         Category).filter_by(name=category).first()
-    return render_template('categories.html', current_user=current_user, current_category=current_category, categories=categories)
+    n = getNumberProducts(current_category)
+    return render_template('categories.html', n_prod=n, current_user=current_user, current_category=current_category, categories=categories)
 
 
 @app.errorhandler(401)
@@ -151,6 +152,10 @@ def unauthorized(error):
     session['next'] = request.url
     return redirect(url_for('login'))
 
-
+def getNumberProducts(cat, n=0):
+    n = len(cat.products)
+    for sub_cat in cat.children:
+        n += getNumberProducts(sub_cat)
+    return n
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

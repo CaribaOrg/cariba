@@ -50,7 +50,7 @@
       <h2 class="text-white text-3xl">Shop by categories</h2>
       <div class="flex flex-wrap gap-6 justify-center pt-4">
         {% for category in categories %}
-        <a href="">
+        <a href="/categories/{{ category.name }}">
           <div
             class="w-[210px] py-3 text-center text-xl border-2 border-slate-200 text-white hover:bg-primary hover:border-primary transition-transform hover:-translate-y-1"
           >
