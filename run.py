@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, abort, jsonify
+from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
@@ -53,9 +53,14 @@ def register():
                     email=form.email.data,
                     password=form.password.data)
         if user:
-            return "Your account has been created successfully <br>You can login now!"
+            return redirect(url_for('redirect_page'))
         return "Something went wrong! Please try again later or contact support."
     return render_template("register.html", form=form)
+
+
+@app.route("/redirect", methods=['GET'])
+def redirect_page():
+    return render_template("redirect.html")
 
 
 @app.route("/logout", methods=['GET', 'POST'])
@@ -101,7 +106,7 @@ def product_page(id):
     # product = strg.search(cls=Product, id=id) // search needs a fix
     product = strg.session().query(Product).get(id)
     popular = random.sample(strg.all(Product), 5)
-    return render_template("product_details.html", product=product, popular=popular)
+    return render_template("product_details.html", product=product, popular=popular, current_user=current_user)
 
 
 @app.route("/myCart")
@@ -133,12 +138,30 @@ def remove_from_cart(product_id, quantity=1):
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
 
 
+@app.route('/categories/<category>')
+def categories(category):
+    categories = strg.search(cls=Category, parent_id=None)
+    current_category = strg.session.query(
+        Category).filter_by(name=category).first()
+    n = getNumberProducts(current_category)
+    return render_template('categories.html', n_prod=n, current_user=current_user, current_category=current_category, categories=categories)
+
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+
 @app.errorhandler(401)
 def unauthorized(error):
     """Handle unauthorized access to redirect to login page"""
     session['next'] = request.url
     return redirect(url_for('login'))
 
-
+def getNumberProducts(cat, n=0):
+    n = len(cat.products)
+    for sub_cat in cat.children:
+        n += getNumberProducts(sub_cat)
+    return n
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

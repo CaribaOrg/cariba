@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/product_details.js"></script>
+    <script src="../static/scripts/global.js"></script>
+
+    <title>Redirected ...</title>
+  </head>
+  <body class="bg-darkPrimary flex justify-center">
+    <script>
+        setTimeout(function() {
+            window.location.href = "/login";
+        }, 1500);
+    </script>
+    <div class="flex items-center justify-center bg-white rounded-lg text-center h-50 w-100 font-mono mt-20">
+        <p>Your account has been created successfully!<br>
+        Please be patient while you're being redirected to the login page<br>
+        Click <a class="link" href="/login">here</a> if you haven't been redirected automatically.</p>
+    </div>
+  </body>

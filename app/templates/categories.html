@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../static/dist/css/output.css" />
+  <link rel="stylesheet" href="../static/dist/css/styles.css" />
+  <script src="../static/scripts/global.js"></script>
+
+  <title>Cariba</title>
+</head>
+
+<body class="bg-darkPrimary">
+  <!-- header macro -->
+  {% import 'components/header.html' as header %} {{
+  header.display_header(current_user) }}
+
+  <div class="flex">
+    <aside class="py-6 px-2 w-64 bg-white">
+      <div class="space-y-8 text-sm">
+        <h2 class="text-darkPrimary text-xl text-center font-bold">
+          Categories
+        </h2>
+        <!-- main categories -->
+        {% for catego in categories %} {% if catego.parent_id is none %}
+        <div class="space-y-2">
+          <a class="text-sm font-bold uppercase text-slate-900"
+            href="/categories/{{ catego.name }}">
+            {{ catego.name }}
+          </a>
+          <!-- sub categories -->
+          <div class="flex flex-col pl-1 space-y-1">
+            {% for sub_catego in catego.children %}
+            <a class="text-sm text-slate-700 font-medium" rel="noopener noreferrer"
+              href="/categories/{{ sub_catego.name }}">{{ sub_catego.name }}</a>
+            <!-- sub sub categories -->
+            <div class="flex flex-col pl-2 text-slate-600 space-y-1">
+              {% for sub_sub_catego in sub_catego.children %}
+              <a class="text-sm" rel="noopener noreferrer" href="/categories/{{ sub_sub_catego.name }}">{{
+                sub_sub_catego.name }}</a>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %} {% endfor %}
+      </div>
+    </aside>
+    <div class="w-full">
+      <!-- popular products -->
+      <section class="flex flex-col p-4 gap-4 pb-28">
+        <h2 class="text-white text-3xl">{{ current_category.name }}</h2>
+        <h3 class="text-white pl-8 text-2xl">{{n_prod }} products</h3>
+        <div class="flex flex-wrap gap-3 justify-start">
+          {% if current_category.children %}
+          {% for child in current_category.children %}
+          {% if child.children %}
+          {% for c in child.children %}
+          {% for p in c.products %}
+          {% import 'components/product_card.html' as product %}
+          {{ product.product_card(p, current_user) }}
+          {% endfor %}
+          {% endfor %}
+          {% else %}
+          {% for prod in child.products %}
+          {% import 'components/product_card.html' as product %}
+          {{ product.product_card(prod, current_user) }}
+          {% endfor %}
+          {% endif %}
+          {% endfor %}
+          {% else %}
+          {% for prod in current_category.products %}
+          {% import 'components/product_card.html' as product %}
+          {{ product.product_card(prod, current_user) }}
+          {% endfor %}
+          {% endif %}
+        </div>
+      </section>
+    </div>
+  </div>
+  <!-- footer -->
+  {% import 'components/footer.html' as footer %} {{ footer.footer() }}
+</body>
+
+</html>

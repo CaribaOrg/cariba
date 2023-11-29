@@ -18,8 +18,23 @@ body {
 }
 
 .w-100 {
-  width: 26rem;
+  width: 40rem;
 }
+
+.h-50 {
+  height: 8rem;
+}
+
+.mt-20 {
+  margin-top: 7rem;
+}
+
+.link {
+  text-decoration: underline;
+  color: #0088cc;
+  font-style: italic;
+}
+
 /* img-wrap: black gradient to left */
 .img-wrap {
   z-index: 1;
