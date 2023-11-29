@@ -655,6 +655,10 @@ video {
   margin-top: 0.25rem;
 }
 
+.mt-20 {
+  margin-top: 5rem;
+}
+
 .mt-4 {
   margin-top: 1rem;
 }
@@ -665,10 +669,6 @@ video {
 
 .mt-6 {
   margin-top: 1.5rem;
-}
-
-.mt-20 {
-  margin-top: 5rem;
 }
 
 .block {
@@ -787,18 +787,6 @@ video {
   width: 100%;
 }
 
-.w-48 {
-  width: 12rem;
-}
-
-.w-56 {
-  width: 14rem;
-}
-
-.w-60 {
-  width: 15rem;
-}
-
 .max-w-5xl {
   max-width: 64rem;
 }
@@ -898,6 +886,12 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
+}
+
+.divide-y > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
 }
 
 .overflow-hidden {
@@ -1177,14 +1171,14 @@ video {
   padding-bottom: 1rem;
 }
 
-.py-8 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .pb-10 {
@@ -1199,8 +1193,20 @@ video {
   padding-bottom: 0.5rem;
 }
 
+.pb-28 {
+  padding-bottom: 7rem;
+}
+
+.pb-4 {
+  padding-bottom: 1rem;
+}
+
 .pb-8 {
   padding-bottom: 2rem;
+}
+
+.pl-1 {
+  padding-left: 0.25rem;
 }
 
 .pl-2 {
@@ -1239,28 +1245,12 @@ video {
   padding-top: 2rem;
 }
 
-.pl-1 {
-  padding-left: 0.25rem;
-}
-
-.pb-12 {
-  padding-bottom: 3rem;
-}
-
-.pb-28 {
-  padding-bottom: 7rem;
-}
-
 .text-center {
   text-align: center;
 }
 
 .text-right {
   text-align: right;
-}
-
-.text-justify {
-  text-align: justify;
 }
 
 .align-baseline {
@@ -1387,24 +1377,24 @@ video {
   color: rgb(148 163 184 / var(--tw-text-opacity));
 }
 
-.text-slate-700 {
-  --tw-text-opacity: 1;
-  color: rgb(51 65 85 / var(--tw-text-opacity));
-}
-
-.text-white {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
 .text-slate-600 {
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity));
 }
 
+.text-slate-700 {
+  --tw-text-opacity: 1;
+  color: rgb(51 65 85 / var(--tw-text-opacity));
+}
+
 .text-slate-900 {
   --tw-text-opacity: 1;
   color: rgb(15 23 42 / var(--tw-text-opacity));
+}
+
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .shadow-md {
@@ -1512,15 +1502,24 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.focus\:underline:focus {
+  text-decoration-line: underline;
+}
+
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
 
 @media (prefers-color-scheme: dark) {
-  .dark\:text-gray-400 {
+  .dark\:bg-violet-400 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(167 139 250 / var(--tw-bg-opacity));
+  }
+
+  .dark\:text-gray-900 {
     --tw-text-opacity: 1;
-    color: rgb(156 163 175 / var(--tw-text-opacity));
+    color: rgb(17 24 39 / var(--tw-text-opacity));
   }
 }
 
@@ -1612,6 +1611,11 @@ video {
     margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
     margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
   }
+
+  .sm\:px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -1640,9 +1644,22 @@ video {
     margin-right: calc(1.5rem * var(--tw-space-x-reverse));
     margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
   }
+
+  .md\:p-8 {
+    padding: 2rem;
+  }
+
+  .md\:text-5xl {
+    font-size: 3rem;
+    line-height: 1;
+  }
 }
 
 @media (min-width: 1024px) {
+  .lg\:col-end-13 {
+    grid-column-end: 13;
+  }
+
   .lg\:block {
     display: block;
   }
@@ -1659,6 +1676,15 @@ video {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
   }
+
+  .lg\:px-12 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+
+  .lg\:pt-0 {
+    padding-top: 0px;
+  }
 }
 
 @media (min-width: 1280px) {
@@ -1669,5 +1695,10 @@ video {
   .xl\:px-0 {
     padding-left: 0px;
     padding-right: 0px;
+  }
+
+  .xl\:px-32 {
+    padding-left: 8rem;
+    padding-right: 8rem;
   }
 }
