@@ -86,3 +86,14 @@ body {
   -webkit-appearance: none; /* Webkit browsers */
   margin: 0; /* Removes the margin */
 }
+
+@media (max-width: 1024px) {
+  .max-md-minus-80 {
+    max-height: calc(100% - 80px);
+  }
+
+  .slideOut {
+    transition: transform 0.5s ease-in-out;
+    transform: translateX(-288px);
+  }
+}
