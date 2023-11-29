@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, abort, jsonify
+from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
@@ -105,7 +105,7 @@ def product_page(id):
     # product = strg.search(cls=Product, id=id) // search needs a fix
     product = strg.session().query(Product).get(id)
     popular = random.sample(strg.all(Product), 5)
-    return render_template("product_details.html", product=product, popular=popular)
+    return render_template("product_details.html", product=product, popular=popular, current_user=current_user)
 
 
 @app.route("/myCart")
