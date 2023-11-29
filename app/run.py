@@ -53,14 +53,16 @@ def register():
         user = User(username=form.username.data,
                     email=form.email.data,
                     password=form.password.data)
-        if user: 
+        if user:
             return redirect(url_for('redirect_page'))
         return "Something went wrong! Please try again later or contact support."
     return render_template("register.html", form=form)
 
+
 @app.route("/redirect", methods=['GET'])
 def redirect_page():
     return render_template("redirect.html")
+
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
@@ -143,6 +145,11 @@ def categories(category):
     current_category = strg.session.query(
         Category).filter_by(name=category).first()
     return render_template('categories.html', current_user=current_user, current_category=current_category, categories=categories)
+
+
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
 
 
 @app.errorhandler(401)
