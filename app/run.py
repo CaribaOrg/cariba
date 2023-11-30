@@ -117,7 +117,7 @@ def index():
 @app.route("/product/<uuid:id>")
 def product_page(id):
     # product = strg.search(cls=Product, id=id) // search needs a fix
-    product = strg.session().query(Product).get(id)
+    product = strg.session.query(Product).get(id)
     popular = random.sample(strg.all(Product), 5)
     return render_template("product_details.html", product=product, popular=popular, current_user=current_user)
 
@@ -135,7 +135,7 @@ def my_cart():
 @auth_required()
 def add_to_cart(product_id, quantity=1):
     """add an element to the cart"""
-    product = strg.session().query(Product).get(product_id)
+    product = strg.session.query(Product).get(product_id)
     product.add_to_cart(current_user, quantity)
     strg.save()
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
@@ -145,7 +145,7 @@ def add_to_cart(product_id, quantity=1):
 @auth_required()
 def remove_from_cart(product_id, quantity=1):
     """remove an element from the cart"""
-    product = strg.session().query(Product).get(product_id)
+    product = strg.session.query(Product).get(product_id)
     product.remove_from_cart(current_user, quantity)
     strg.save()
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
