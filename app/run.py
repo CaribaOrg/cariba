@@ -6,8 +6,9 @@ from flask_admin.contrib.sqla import ModelView
 import os
 from api import api
 from models import strg
-from models.user import User, Role
+from models.user import User
 from models.cart import Cart
+from models.car import Car
 from models.product import Product
 from models import strg
 from models.category import Category
@@ -85,6 +86,8 @@ def create_admin(app):
     admin.add_view(CustomView(User))
     admin.add_view(CustomView(Cart))
     admin.add_view(CustomView(Product))
+    admin.add_view(CustomView(Car))
+
 
 
 create_admin(app)

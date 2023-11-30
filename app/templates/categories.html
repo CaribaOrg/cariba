@@ -88,10 +88,30 @@
           <h2 class="text-white text-3xl text-center">
             {{ current_category.name }}
           </h2>
+          <h3 class="text-white pl-8 text-2xl">{{n_prod }} products</h3>
           <div class="flex flex-wrap gap-3 justify-start">
-            {% for prod in current_category.products %} {% import
-            'components/product_card.html' as product %} {{
-            product.product_card(prod, current_user) }} {% endfor %}
+          {% if current_category.children %}
+          {% for child in current_category.children %}
+          {% if child.children %}
+          {% for c in child.children %}
+          {% for p in c.products %}
+          {% import 'components/product_card.html' as product %}
+          {{ product.product_card(p, current_user) }}
+          {% endfor %}
+          {% endfor %}
+          {% else %}
+          {% for prod in child.products %}
+          {% import 'components/product_card.html' as product %}
+          {{ product.product_card(prod, current_user) }}
+          {% endfor %}
+          {% endif %}
+          {% endfor %}
+          {% else %}
+          {% for prod in current_category.products %}
+          {% import 'components/product_card.html' as product %}
+          {{ product.product_card(prod, current_user) }}
+          {% endfor %}
+          {% endif %}
           </div>
         </section>
       </div>
