@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 ''' This is a module for Storage '''
 
-from models.base_model import BaseModel, Base
+from models.base_model import Base
 from models.user import User
 from models.address import Address
 from models.car import Car
@@ -40,6 +40,22 @@ class Storage:
                                               CARIBA_MYSQL_PWD,
                                               CARIBA_MYSQL_HOST,
                                               CARIBA_MYSQL_DB))
+        self.__session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                        bind=self.__engine))
+        
+        from models.user import User, Role, RolesUsers
+        from models.address import Address
+        from models.car import Car
+        from models.cart import Cart
+        from models.cart_item import CartItem
+        from models.category import Category
+        from models.product import Product
+        from models.order import Order
+        
+        Base.query = self.__session.query_property()
+        Base.metadata.create_all(bind=self.__engine)
+
     
     def all(self, cls=None):
         '''
@@ -150,11 +166,30 @@ class Storage:
 
     def reload(self):
         ''' Reload the database engine and create a new session. '''
-        Base.metadata.create_all(self.__engine)
-        sess_factory = sessionmaker(bind=self.__engine,
-                                    expire_on_commit=False)
-        Session = scoped_session(sess_factory)
-        self.__session = Session
+        CARIBA_MYSQL_USER = getenv('CARIBA_MYSQL_USER')
+        CARIBA_MYSQL_PWD = getenv('CARIBA_MYSQL_PWD')
+        CARIBA_MYSQL_HOST = getenv('CARIBA_MYSQL_HOST')
+        CARIBA_MYSQL_DB = getenv('CARIBA_MYSQL_DB')
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}:3306/{}'
+                                      .format(CARIBA_MYSQL_USER,
+                                              CARIBA_MYSQL_PWD,
+                                              CARIBA_MYSQL_HOST,
+                                              CARIBA_MYSQL_DB))
+        self.__session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                        bind=self.__engine))
+        Base.query = self.__session.query_property()
+
+        from models.user import User, Role, RolesUsers
+        from models.address import Address
+        from models.car import Car
+        from models.cart import Cart
+        from models.cart_item import CartItem
+        from models.category import Category
+        from models.product import Product
+        from models.order import Order
+        
+        Base.metadata.create_all(bind=self.__engine)
 
     def delete(self, obj=None):
         '''
