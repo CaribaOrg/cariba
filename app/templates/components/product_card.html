@@ -21,7 +21,7 @@
     <p class="leading-normal font-montserrat text-lg">
       Price: <span class="text-primary text-xl">{{ product.price }}$</span>
     </p>
-    <button onclick="{{ 'addToCart(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('security.login') ~ '\'' }}">
+    <button onclick="{{ 'addToCart(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('login') ~ '\'' }}">
       <img
         id="product_add"
         src="../../static/images/add-to-cart.png"

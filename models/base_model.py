@@ -4,6 +4,8 @@
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from hashlib import md5
+import models
 import uuid
 
 time = "%Y-%m-%dT%H:%M:%S"
@@ -36,6 +38,11 @@ class BaseModel:
         for key, value in kwargs.items():
             setattr(self, key, value)
         self.save()
+
+    def __setattr__(self, name, value):
+        if name == "password":
+            value = md5(value.encode()).hexdigest()
+        super().__setattr__(name, value)
         
     def save(self):
         ''' Save the current instance to the storage db. '''
