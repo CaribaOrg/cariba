@@ -124,6 +124,7 @@
                 please switch to the "Car VIN" tab.
               </p>
               <div
+                id="carTabs"
                 x-data="{ tab: 'fullDetails' }"
                 class="w-full mx-auto bg-white rounded-md"
               >
@@ -229,6 +230,7 @@
               class="flex items-center space-x-2 rtl:space-x-reverse rounded-b border-t border-gray-200 p-6"
             >
               <button
+                onclick="submitCarForm()"
                 type="button"
                 class="rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-darkPrimary focus:outline-none focus:ring-4 focus:ring-blue-300"
               >

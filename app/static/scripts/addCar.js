@@ -4,9 +4,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function submitCarForm() {
-    const activeTab = Alpine.data('component-name').tab;
+    const carTabs = document.getElementById('carTabs');
+    const activeTab = carTabs.__x.$data.tab;
     if (activeTab === "fullDetails") {
-
+        console.log("this tab");
+    }
+    else {
+        console.log("other tab");
     }
 }
 
