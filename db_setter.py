@@ -184,33 +184,33 @@ prod_3_6_2_10 = Product(name='labwork Diesel Filter Kit 68507598AA Replacement f
 
 strg.save() 
 
-user1 = User(username='user1', email='email1', password='password1')
-user2 = User(username='user2', email='email2', password='password2')
-user3 = User(username='user3', email='email3', password='password3')
-user4 = User(username='user4', email='email4', password='password4')
-user5 = User(username='user5', email='email5', password='password5')
-user6 = User(username='user6', email='email6', password='password6')
-user7 = User(username='user7', email='email7', password='password7')
-user8 = User(username='user8', email='email8', password='password8')
-user9 = User(username='user9', email='email9', password='password9')
-user10 = User(username='user10', email='email10', password='password10')
-user11 = User(username='user11', email='email11', password='password11')
-user12 = User(username='user12', email='email12', password='password12')
-user13 = User(username='user13', email='email13', password='password13')
-user14 = User(username='user14', email='email14', password='password14')
-user15 = User(username='user15', email='email15', password='password15')
-strg.save() 
+# user1 = User(username='user1', email='email1', password='password1')
+# user2 = User(username='user2', email='email2', password='password2')
+# user3 = User(username='user3', email='email3', password='password3')
+# user4 = User(username='user4', email='email4', password='password4')
+# user5 = User(username='user5', email='email5', password='password5')
+# user6 = User(username='user6', email='email6', password='password6')
+# user7 = User(username='user7', email='email7', password='password7')
+# user8 = User(username='user8', email='email8', password='password8')
+# user9 = User(username='user9', email='email9', password='password9')
+# user10 = User(username='user10', email='email10', password='password10')
+# user11 = User(username='user11', email='email11', password='password11')
+# user12 = User(username='user12', email='email12', password='password12')
+# user13 = User(username='user13', email='email13', password='password13')
+# user14 = User(username='user14', email='email14', password='password14')
+# user15 = User(username='user15', email='email15', password='password15')
+# strg.save() 
 
-users = [user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14, user15]
-products_names = []
-image_names = []
-for filename in os.listdir('./app/static/images/pics'):
-    products_names.append(filename.split('.')[0])
-products = [globals()[name] for name in products_names]
+# users = [user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14, user15]
+# products_names = []
+# image_names = []
+# for filename in os.listdir('./app/static/images/pics'):
+#     products_names.append(filename.split('.')[0])
+# products = [globals()[name] for name in products_names]
 
-for _ in range(0, 50):
-    random.choice(products).add_to_cart(random.choice(users), random.randint(1, 100))
-vins = ['YV1622FSXC2043336', '1GTHK53629F127465', '1GKKRREDXCJ367618', '2C4GM68404R510793', '1FUJA6CK07LX43602', 'JNKCA31A2YT209235', '1GCVKREH1FZ206466', '5FNRL5H92EB094910', 'WDBNG75J73A366238', '4C3AG42G14E146713', '1FDKF37G7VEB87285', '1GKFK63837J218001', '1LNHL9EK1FG600515', '1FMYU01141KD92514', '3TMJU62N55M002416', '4A4AR3AU7FE008355', 'WDDHF5KB6DA720745', '1FMDU73K95UA41752', '1GC1KVE8XFF118069', '3VWDX7AJ3CM342263', '2G1WG5E32D1241972', '1FMCU9J93DUA77183', '2G4WS52M2W1486966', 'JTEEP21A960159267', '1FBNE3BL2EDA25664', 'JHLRD1842XC024854', '5XXGN4A71DG153445', 'WBAKF9C58BE620116', 'JN8AZ1MW1EW529304']
-for user in users[1:-1]:
-    for _ in range(1, random.randint(1, 5)):
-        Car(user_id=user.id, vin=random.choice(vins))
+# for _ in range(0, 50):
+#     random.choice(products).add_to_cart(random.choice(users), random.randint(1, 100))
+# vins = ['YV1622FSXC2043336', '1GTHK53629F127465', '1GKKRREDXCJ367618', '2C4GM68404R510793', '1FUJA6CK07LX43602', 'JNKCA31A2YT209235', '1GCVKREH1FZ206466', '5FNRL5H92EB094910', 'WDBNG75J73A366238', '4C3AG42G14E146713', '1FDKF37G7VEB87285', '1GKFK63837J218001', '1LNHL9EK1FG600515', '1FMYU01141KD92514', '3TMJU62N55M002416', '4A4AR3AU7FE008355', 'WDDHF5KB6DA720745', '1FMDU73K95UA41752', '1GC1KVE8XFF118069', '3VWDX7AJ3CM342263', '2G1WG5E32D1241972', '1FMCU9J93DUA77183', '2G4WS52M2W1486966', 'JTEEP21A960159267', '1FBNE3BL2EDA25664', 'JHLRD1842XC024854', '5XXGN4A71DG153445', 'WBAKF9C58BE620116', 'JN8AZ1MW1EW529304']
+# for user in users[1:-1]:
+#     for _ in range(1, random.randint(1, 5)):
+#         Car(user_id=user.id, vin=random.choice(vins))

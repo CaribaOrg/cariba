@@ -29,9 +29,11 @@
           <!-- main categories -->
           {% for catego in categories %} {% if catego.parent_id is none %}
           <div class="space-y-2">
-            <h2 class="text-sm font-bold uppercase text-slate-900">
-              {{ catego.name }}
-            </h2>
+            <a
+                class="text-sm font-bold uppercase text-slate-900"
+                href="/categories/{{ catego.name }}"
+                >{{ catego.name }}</a
+              >
             <!-- sub categories -->
             <div class="flex flex-col pl-1 space-y-1">
               {% for sub_catego in catego.children %}
@@ -90,28 +92,10 @@
           </h2>
           <h3 class="text-white pl-8 text-2xl">{{n_prod }} products</h3>
           <div class="flex flex-wrap gap-3 justify-start">
-          {% if current_category.children %}
-          {% for child in current_category.children %}
-          {% if child.children %}
-          {% for c in child.children %}
-          {% for p in c.products %}
-          {% import 'components/product_card.html' as product %}
-          {{ product.product_card(p, current_user) }}
-          {% endfor %}
-          {% endfor %}
-          {% else %}
-          {% for prod in child.products %}
+          {% for prod in prod_list %}
           {% import 'components/product_card.html' as product %}
           {{ product.product_card(prod, current_user) }}
           {% endfor %}
-          {% endif %}
-          {% endfor %}
-          {% else %}
-          {% for prod in current_category.products %}
-          {% import 'components/product_card.html' as product %}
-          {{ product.product_card(prod, current_user) }}
-          {% endfor %}
-          {% endif %}
           </div>
         </section>
       </div>
