@@ -5,7 +5,6 @@ from datetime import datetime
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from hashlib import md5
-from flask_security import hash_password
 import models
 import uuid
 

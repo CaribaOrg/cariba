@@ -151,8 +151,9 @@ def categories(category):
     else:
         current_category = strg.session.query(
             Category).filter_by(name=category).first()
-    n = getNumberProducts(current_category)
-    return render_template('categories.html', n_prod=n, current_user=current_user, current_category=current_category, categories=categories)
+    prod_list = []
+    n = getNumberProducts(current_category, prod_list)
+    return render_template('categories.html', n_prod=n, prod_list=prod_list, current_user=current_user, current_category=current_category, categories=categories)
 
 
 @app.route('/faq')
@@ -167,10 +168,11 @@ def unauthorized(error):
     return redirect(url_for('login'))
 
 
-def getNumberProducts(cat, n=0):
+def getNumberProducts(cat, prods):
     n = len(cat.products)
+    prods.extend(cat.products)
     for sub_cat in cat.children:
-        n += getNumberProducts(sub_cat)
+        n += getNumberProducts(sub_cat, prods)
     return n
 
 
