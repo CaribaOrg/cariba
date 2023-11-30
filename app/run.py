@@ -23,11 +23,11 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py')
 
 # manage sessions per request - make sure connections are closed and returned
-app.teardown_appcontext(lambda exc: strg.session().close())
+app.teardown_appcontext(lambda exc: strg.session.close())
 
 
 # Setup Flask-Security
-user_datastore = SQLAlchemySessionUserDatastore(strg.session(), User, Role)
+user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
 app.security = Security(app, user_datastore)
 mail = Mail(app)
 
