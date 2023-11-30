@@ -9,3 +9,4 @@ apispec==6.3.0
 apispec-webframeworks==0.5.2
 pyyaml==6.0.1
 flask-wtf==1.2.1
+Flask-Mail==0.9.1
