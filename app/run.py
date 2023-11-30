@@ -139,11 +139,15 @@ def remove_from_cart(product_id, quantity=1):
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
 
 
+@app.route('/categories', defaults={'category': None})
 @app.route('/categories/<category>')
 def categories(category):
     categories = strg.search(cls=Category, parent_id=None)
-    current_category = strg.session.query(
-        Category).filter_by(name=category).first()
+    if category is None:
+        current_category = strg.session.query(Category).first()
+    else:
+        current_category = strg.session.query(
+            Category).filter_by(name=category).first()
     n = getNumberProducts(current_category)
     return render_template('categories.html', n_prod=n, current_user=current_user, current_category=current_category, categories=categories)
 
@@ -159,10 +163,13 @@ def unauthorized(error):
     session['next'] = request.url
     return redirect(url_for('login'))
 
+
 def getNumberProducts(cat, n=0):
     n = len(cat.products)
     for sub_cat in cat.children:
         n += getNumberProducts(sub_cat)
     return n
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
