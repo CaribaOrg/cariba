@@ -88,18 +88,14 @@
         <!-- popular products -->
         <section class="flex flex-col p-4 gap-4 pb-28">
           <h2 class="text-white text-3xl text-center">
-            {{ current_category.name }}
+            Search results for "{{ search_input }}"
           </h2>
-          {% if prod_list|length == 0%}
-          <p class="text-white">No product is compatible with any of the cars in your garage, make sure your car information is correct</p> 
-          {% else %}
-          <h3 class="text-white pl-8 text-2xl">{{ prod_list|length }} products</h3>
+          <h3 class="text-white pl-8 text-2xl">{{ products|length }} products</h3>
           <div class="flex flex-wrap gap-3 justify-start">
-          {% for prod in prod_list %}
+          {% for prod in products %}
           {% import 'components/product_card.html' as product %}
           {{ product.product_card(prod, current_user) }}
           {% endfor %}
-          {% endif %}
           </div>
         </section>
       </div>
