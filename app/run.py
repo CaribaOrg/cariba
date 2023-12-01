@@ -96,7 +96,6 @@ create_admin(app)
 app.register_blueprint(api, url_prefix='/api')
 app.url_map.strict_slashes = False
 
-
 @app.route("/")
 @app.route("/home")
 def index():
@@ -175,6 +174,22 @@ def getNumberProducts(cat, prods):
         n += getNumberProducts(sub_cat, prods)
     return n
 
+
+
+@app.route("/addCar", methods=['POST'])
+@login_required
+def add_car():
+    form_data = request.form.to_dict()
+    form_data['user_id'] = current_user.id
+    Car(**form_data)
+    strg.save()
+    return redirect(url_for('garage'))
+
+@app.route("/myGarage")
+@login_required
+def garage():
+    cars = current_user.cars
+    return render_template('garage.html', cars=cars)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

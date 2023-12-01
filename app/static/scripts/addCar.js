@@ -1,16 +1,13 @@
-// script for add car form
-document.addEventListener("DOMContentLoaded", function () {
-
-});
-
 function submitCarForm() {
     const carTabs = document.getElementById('carTabs');
     const activeTab = carTabs.__x.$data.tab;
     if (activeTab === "fullDetails") {
-        console.log("this tab");
+        var button = document.getElementById('fullsubmit');
+        button.click()
     }
     else {
-        console.log("other tab");
+        var button = document.getElementById('vinsubmit');
+        button.click()
     }
 }
 

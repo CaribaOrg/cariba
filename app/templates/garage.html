@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/global.js"></script>
+    <title>Shopping Cart</title>
+  </head>
+
+  <body>
+    {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
+    <div class="min-h-screen bg-darkPrimary pt-12 h-auto">
+      {% if cars|length == 0 %}
+      <h3 class="text-2xl text-center text-slate-300">Your garage is empty!</h3>
+      {% else %}
+      {% for car in cars %}
+      <div class="text-center m-around-5 bg-white rounded-md w-100">
+        name = {{ car.name }}<br>
+        make = {{ car.make }}<br>
+        model = {{ car.model }}<br>
+        year = {{ car.year }}<br>
+        vin = {{ car.vin }}
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+    <!-- footer -->
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
+  </body>
+</html>

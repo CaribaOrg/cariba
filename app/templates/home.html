@@ -84,13 +84,13 @@
       >
         <div class="relative max-h-full w-full max-w-2xl">
           <!-- Modal content -->
-          <div class="relative rounded-lg bg-white shadow dark:bg-gray-700">
+          <div class="relative rounded-lg bg-white shadow dark:bg-white">
             <!-- Modal header -->
             <div
-              class="flex items-start justify-between rounded-t border-b p-5 dark:border-gray-600"
+              class="flex items-start justify-between rounded-t border-b p-5 dark:border-gray-400"
             >
               <h3
-                class="text-xl font-semibold text-gray-900 dark:text-white lg:text-2xl"
+                class="text-xl font-semibold text-gray-900 dark:text-black lg:text-2xl"
               >
                 Add Car
               </h3>
@@ -146,7 +146,7 @@
                 </div>
 
                 <div x-show="tab === 'fullDetails'">
-                  <form>
+                  <form id="fullDetails", method="POST", action="/addCar">
                     <!-- Full details form fields (name, model, year) -->
                     <div class="mb-4">
                       <label
@@ -157,11 +157,25 @@
                       <input
                         type="text"
                         id="carName"
-                        name="carName"
+                        name="name"
                         class="w-full border border-gray-300 p-2 rounded-md"
+                        required
                       />
                     </div>
-
+                    <div class="mb-4">
+                      <label
+                        for="carMake"
+                        class="block text-gray-600 text-sm font-medium mb-2"
+                        >Car Make:</label
+                      >
+                      <input
+                        type="text"
+                        id="carMake"
+                        name="make"
+                        class="w-full border border-gray-300 p-2 rounded-md"
+                        required
+                      />
+                    </div>
                     <div class="mb-4">
                       <label
                         for="carModel"
@@ -171,8 +185,9 @@
                       <input
                         type="text"
                         id="carModel"
-                        name="carModel"
+                        name="model"
                         class="w-full border border-gray-300 p-2 rounded-md"
+                        required
                       />
                     </div>
 
@@ -183,29 +198,32 @@
                         >Car Year:</label
                       >
                       <input
-                        type="text"
+                        type="number"
                         id="carYear"
-                        name="carYear"
+                        name="year"
                         class="w-full border border-gray-300 p-2 rounded-md"
+                        required
                       />
                     </div>
+                    <input type="submit" id="fullsubmit" value="Save" class="hidden">
                   </form>
                 </div>
 
                 <div x-show="tab === 'vinDetails'">
-                  <form>
+                  <form id="vinDetails", method="POST", action="/addCar">
                     <!-- VIN details form fields (VIN) -->
                     <div class="mb-4">
                       <label
-                        for="carName"
+                        for="carName2"
                         class="block text-gray-600 text-sm font-medium mb-2"
                         >Car Name:</label
                       >
                       <input
                         type="text"
-                        id="carName"
-                        name="carName"
+                        id="carName2"
+                        name="name"
                         class="w-full border border-gray-300 p-2 rounded-md"
+                        required
                       />
                     </div>
                     <div class="mb-4">
@@ -217,10 +235,12 @@
                       <input
                         type="text"
                         id="carVin"
-                        name="carVin"
+                        name="vin"
                         class="w-full border border-gray-300 p-2 rounded-md"
+                        required
                       />
                     </div>
+                    <input type="submit" id="vinsubmit" value="Save" class="hidden">
                   </form>
                 </div>
               </div>

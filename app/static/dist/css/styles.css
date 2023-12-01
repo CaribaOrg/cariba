@@ -29,6 +29,10 @@ body {
   margin-top: 7rem;
 }
 
+.m-around-5 {
+  margin: 5px;
+}
+
 .link {
   text-decoration: underline;
   color: #0088cc;

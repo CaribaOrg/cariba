@@ -27,7 +27,7 @@ class Car(BaseModel, Base):
     __tablename__ = 'cars'
     user_id = Column(String(128), ForeignKey('users.id'), nullable=False)
     user = relationship('User', back_populates='cars')
-    vin = Column(String(128), nullable=False)
+    vin = Column(String(128))
     name = Column(String(128))
     make = Column(String(128))
     model = Column(String(128))
