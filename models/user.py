@@ -101,3 +101,12 @@ class User(BaseModel, Base, UserMixin):
 
     def get_id(self):
         return self.id
+    
+    def is_authenticated(self):
+                return True
+
+    def is_active(self):
+            return self.active
+
+    def is_anonymous(self):
+            return False

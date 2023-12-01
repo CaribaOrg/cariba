@@ -14,7 +14,7 @@ from models.cart_item import CartItem
 #from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
-from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore
+from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
 from flask_mailman import Mail
 
 app = Flask(__name__)
@@ -123,18 +123,21 @@ def product_page(id):
 
 
 @app.route("/myCart")
-@auth_required()
+@login_required
 def my_cart():
     """Cart method"""
+    print("myCart ",current_user)
+
     cart = current_user.cart
     items = current_user.cart.cart_items
     return render_template("my_cart.html", current_user=current_user, items=items, cart=cart)
 
 
 @app.route('/add_to_cart/<uuid:product_id>/<int:quantity>', methods=['POST'])
-@auth_required()
+@login_required
 def add_to_cart(product_id, quantity=1):
     """add an element to the cart"""
+    print("add_to_cart", current_user)
     product = strg.session.query(Product).get(product_id)
     product.add_to_cart(current_user, quantity)
     strg.save()
@@ -142,9 +145,11 @@ def add_to_cart(product_id, quantity=1):
 
 
 @app.route('/remove_from_cart/<uuid:product_id>/<int:quantity>', methods=['POST'])
-@auth_required()
+@login_required
 def remove_from_cart(product_id, quantity=1):
     """remove an element from the cart"""
+    print("remove_from_cart", current_user)
+
     product = strg.session.query(Product).get(product_id)
     product.remove_from_cart(current_user, quantity)
     strg.save()
