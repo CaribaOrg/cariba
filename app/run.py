@@ -100,7 +100,12 @@ app.url_map.strict_slashes = False
 @app.route("/home")
 def index():
     categories = strg.search(cls=Category, parent_id=None)
-    popular = random.sample(supported_products(strg.all(Product)), 8)
+    popular_products = supported_products(strg.all(Product))
+    if not popular_products or len(popular_products) < 10:
+        sample_size = len(popular_products)
+    else:
+        sample_size = 10
+    popular = random.sample(popular_products, sample_size)
     return render_template("home.html", current_user=current_user, categories=categories, popular=popular)
 
 
@@ -108,7 +113,12 @@ def index():
 def product_page(id):
     # product = strg.search(cls=Product, id=id) // search needs a fix
     product = strg.session().query(Product).get(id)
-    popular = random.sample(supported_products(strg.all(Product)), 5)
+    popular_products = supported_products(strg.all(Product))
+    if not popular_products or len(popular_products) < 5:
+        sample_size = len(popular_products)
+    else:
+        sample_size = 5
+    popular = random.sample(popular_products, sample_size)
     return render_template("product_details.html", product=product, popular=popular, current_user=current_user)
 
 
@@ -173,7 +183,9 @@ def get_products(cat, prods):
     return prods
 
 def supported_products(prod_list):
-    if not current_user.is_authenticated or not current_user.cars:
+    if not isinstance(prod_list, list):
+        prod_list = [prod_list]
+    if not current_user.is_authenticated or len(current_user.cars) == 0:
         return prod_list
     support_list = []
     for car in current_user.cars:
@@ -199,6 +211,20 @@ def add_car():
 def garage():
     cars = current_user.cars
     return render_template('garage.html', cars=cars)
+
+@app.route("/search", methods=['POST'])
+def search():
+    search_dict = {
+            'cls': Product,
+            'case_sensitive': False,
+            'exact': False
+        }
+    search_dict['name'] = request.form.get('name')
+    products = strg.search(**search_dict)
+    if current_user.is_authenticated:
+        products = supported_products(products)
+    categories = strg.search(cls=Category, parent_id=None)
+    return render_template('search.html', products=products, search_input=request.form.get('name'), categories=categories)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)
