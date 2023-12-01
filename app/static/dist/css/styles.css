@@ -41,6 +41,10 @@ body {
   margin: 5px;
 }
 
+.min-w {
+  min-width: 288px;
+}
+
 .link {
   text-decoration: underline;
   color: #0088cc;

@@ -18,6 +18,34 @@
     {% import 'components/header.html' as header %} {{
     header.display_header(current_user) }}
     <section class="min-h-screen bg-darkPrimary pt-12 px-4 h-auto relative">
+      {% if cars|length == 0 %}
+      <h3 class="text-2xl text-center text-slate-300">Your garage is empty!</h3>
+      <div class="flex items-center my-8 py-8 px-4 max-md:flex-col gap-16">
+        <div class="border-2 border-white rounded-lg p-2">
+          <div class="border-2 border-primary rounded-lg">
+            <img
+              class="translate-x-14"
+              src="../static/images/ford.png"
+              alt="ford car image"
+              width="512px"
+            />
+          </div>
+        </div>
+        <div class="flex flex-col gap-3">
+          <div>
+            <h3 class="text-xl text-white">Find parts for your car</h3>
+            <p class="text-slate-400">
+              Add your vehicle and we will find the right parts for you!
+            </p>
+          </div>
+          <div>
+            <button onclick="openCarModal()" class="px-8 py-2 bg-primary">
+              <span class="font-medium text-white">Add a car</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      {% else %}
       <!-- add car -->
       <button
         onclick="openCarModal()"
@@ -37,15 +65,12 @@
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
       </button>
-      {% if cars|length == 0 %}
-      <h3 class="text-2xl text-center text-slate-300">Your garage is empty!</h3>
-      {% else %}
       <!-- spawn user's cars -->
       <div class="flex flex-wrap justify-center gap-3">
         {% for car in cars %}
         <!-- car cards -->
         {% import 'components/car_card.html' as carCard %} {{
-        carCard.car_card(car.name, car.make, car.model, car.year, car.vin) }}
+        carCard.car_card(car.name, car.make, car.model, car.year, car.vin, car.id) }}
         <!-- end for -->
         {%endfor %}
       </div>

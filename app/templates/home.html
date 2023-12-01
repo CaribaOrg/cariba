@@ -43,9 +43,15 @@
           </p>
         </div>
         <div>
+          {% if not current_user.is_authenticated %}
+          <button onclick="window.location.href = '/login'" class="px-8 py-2 bg-primary">
+            <span class="font-medium text-white">Add a car</span>
+          </button>
+          {% else %}
           <button onclick="openCarModal()" class="px-8 py-2 bg-primary">
             <span class="font-medium text-white">Add a car</span>
           </button>
+          {% endif %}
         </div>
       </div>
     </div>

@@ -206,6 +206,13 @@ def add_car():
     strg.save()
     return redirect(url_for('garage'))
 
+@app.route("/deleteCar/<uuid:car_id>")
+@login_required
+def delete_car(car_id):
+    car = strg.session().query(Car).get(car_id)
+    car.delete()
+    return redirect(url_for('garage'))
+
 @app.route("/myGarage")
 @login_required
 def garage():
