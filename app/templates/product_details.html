@@ -13,11 +13,25 @@
   </head>
   <body class="bg-white">
     {% import 'components/header.html' as header %} {{
-    header.display_header(current_user) }}
-
+      header.display_header(current_user) }}
+      <div class="flex flex-col">
+        {% if current_user.is_authenticated %}
+        {% for car in current_user.cars %}
+        {% if product.is_supported(car) %}
+        <div class="supported rounded-lg w-100 m-around-5">
+          Compatible with your {{ car.name }} ({{ car.make }} {{ car.model}})
+        </div>
+        {% else %}
+        <div class="unsupported rounded-lg w-100 m-around-5">
+          Not compatible with your {{ car.name }} ({{ car.make }} {{ car.model}})
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+      </div>
     <div
       class="my-8 py-8 mx-auto rounded-lg flex justify-center flex-wrap gap-3 min-h-[75vh] bg-white"
-    >
+    > 
       <div class="flex flex-col p-4 gap-2">
         <div class="w-72 h-72">
           <img

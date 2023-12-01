@@ -29,6 +29,18 @@ body {
   margin-top: 7rem;
 }
 
+.unsupported {
+  background-color: #FF0000;
+}
+
+.supported {
+  background-color: #00FF00;
+}
+
+.m-around-5 {
+  margin: 5px;
+}
+
 .link {
   text-decoration: underline;
   color: #0088cc;
@@ -85,4 +97,15 @@ body {
 #quantityCount::-webkit-outer-spin-button {
   -webkit-appearance: none; /* Webkit browsers */
   margin: 0; /* Removes the margin */
+}
+
+@media (max-width: 1024px) {
+  .max-md-minus-80 {
+    max-height: calc(100% - 80px);
+  }
+
+  .slideOut {
+    transition: transform 0.5s ease-in-out;
+    transform: translateX(-288px);
+  }
 }

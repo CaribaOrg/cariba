@@ -6,8 +6,9 @@ from flask_admin.contrib.sqla import ModelView
 import os
 from api import api
 from models import strg
-from models.user import User, Role
+from models.user import User
 from models.cart import Cart
+from models.car import Car
 from models.product import Product
 from models import strg
 from models.category import Category
@@ -84,6 +85,8 @@ def create_admin(app):
     admin.add_view(CustomView(User))
     admin.add_view(CustomView(Cart))
     admin.add_view(CustomView(Product))
+    admin.add_view(CustomView(Car))
+
 
 
 create_admin(app)
@@ -92,12 +95,11 @@ create_admin(app)
 app.register_blueprint(api, url_prefix='/api')
 app.url_map.strict_slashes = False
 
-
 @app.route("/")
 @app.route("/home")
 def index():
     categories = strg.search(cls=Category, parent_id=None)
-    popular = random.sample(strg.all(Product), 8)
+    popular = random.sample(supported_products(strg.all(Product)), 8)
     return render_template("home.html", current_user=current_user, categories=categories, popular=popular)
 
 
@@ -105,7 +107,7 @@ def index():
 def product_page(id):
     # product = strg.search(cls=Product, id=id) // search needs a fix
     product = strg.session().query(Product).get(id)
-    popular = random.sample(strg.all(Product), 5)
+    popular = random.sample(supported_products(strg.all(Product)), 5)
     return render_template("product_details.html", product=product, popular=popular, current_user=current_user)
 
 
@@ -138,13 +140,17 @@ def remove_from_cart(product_id, quantity=1):
     return jsonify({'success': True, 'cart_count': current_user.cart.total_items})
 
 
+@app.route('/categories', defaults={'category': None})
 @app.route('/categories/<category>')
 def categories(category):
     categories = strg.search(cls=Category, parent_id=None)
-    current_category = strg.session.query(
-        Category).filter_by(name=category).first()
-    n = getNumberProducts(current_category)
-    return render_template('categories.html', n_prod=n, current_user=current_user, current_category=current_category, categories=categories)
+    if category is None:
+        current_category = strg.session.query(Category).first()
+    else:
+        current_category = strg.session.query(
+            Category).filter_by(name=category).first()
+    prod_list = get_products(current_category, [])
+    return render_template('categories.html', prod_list=prod_list, current_user=current_user, current_category=current_category, categories=categories)
 
 
 @app.route('/faq')
@@ -158,10 +164,40 @@ def unauthorized(error):
     session['next'] = request.url
     return redirect(url_for('login'))
 
-def getNumberProducts(cat, n=0):
-    n = len(cat.products)
+
+def get_products(cat, prods):
+    prods.extend(supported_products(cat.products))
     for sub_cat in cat.children:
-        n += getNumberProducts(sub_cat)
-    return n
+        prods = get_products(sub_cat, prods)
+    return prods
+
+def supported_products(prod_list):
+    if not current_user.is_authenticated or not current_user.cars:
+        return prod_list
+    support_list = []
+    for car in current_user.cars:
+        for prod in prod_list:
+            if car.make.lower() in prod.support and prod not in support_list:
+                support_list.append(prod)
+    return support_list
+                
+        
+
+
+@app.route("/addCar", methods=['POST'])
+@login_required
+def add_car():
+    form_data = request.form.to_dict()
+    form_data['user_id'] = current_user.id
+    Car(**form_data)
+    strg.save()
+    return redirect(url_for('garage'))
+
+@app.route("/myGarage")
+@login_required
+def garage():
+    cars = current_user.cars
+    return render_template('garage.html', cars=cars)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

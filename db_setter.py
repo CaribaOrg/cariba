@@ -1,9 +1,10 @@
-#!/usr/bin/python3
+#!/root/.pyenv/shims/python
 
 from models import strg
 from models.category import Category
 from models.product import Product
 from models.user import User
+from models.car import Car
 import os
 import random
 
@@ -210,4 +211,11 @@ products = [globals()[name] for name in products_names]
 
 for _ in range(0, 50):
     random.choice(products).add_to_cart(random.choice(users), random.randint(1, 100))
+strg.save()         
+
+vins = ['YV1622FSXC2043336', '1GTHK53629F127465', '1GKKRREDXCJ367618', '2C4GM68404R510793', '1FUJA6CK07LX43602', 'JNKCA31A2YT209235', '1GCVKREH1FZ206466', '5FNRL5H92EB094910', 'WDBNG75J73A366238', '4C3AG42G14E146713', '1FDKF37G7VEB87285', '1GKFK63837J218001', '1LNHL9EK1FG600515', '1FMYU01141KD92514', '3TMJU62N55M002416', '4A4AR3AU7FE008355', 'WDDHF5KB6DA720745', '1FMDU73K95UA41752', '1GC1KVE8XFF118069', '3VWDX7AJ3CM342263', '2G1WG5E32D1241972', '1FMCU9J93DUA77183', '2G4WS52M2W1486966', 'JTEEP21A960159267', '1FBNE3BL2EDA25664', 'JHLRD1842XC024854', '5XXGN4A71DG153445', 'WBAKF9C58BE620116', 'JN8AZ1MW1EW529304']
+for user in users[1:-1]:
+    for i in range(1, random.randint(1, 5)):
+        Car(user_id=user.id, vin=random.choice(vins), name='car' + str(i))
+
 strg.save()         
