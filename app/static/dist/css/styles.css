@@ -29,6 +29,14 @@ body {
   margin-top: 7rem;
 }
 
+.unsupported {
+  background-color: #FF0000;
+}
+
+.supported {
+  background-color: #00FF00;
+}
+
 .m-around-5 {
   margin: 5px;
 }

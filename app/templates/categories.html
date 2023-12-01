@@ -90,7 +90,7 @@
           <h2 class="text-white text-3xl text-center">
             {{ current_category.name }}
           </h2>
-          <h3 class="text-white pl-8 text-2xl">{{n_prod }} products</h3>
+          <h3 class="text-white pl-8 text-2xl">{{ prod_list|length }} products</h3>
           <div class="flex flex-wrap gap-3 justify-start">
           {% for prod in prod_list %}
           {% import 'components/product_card.html' as product %}

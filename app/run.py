@@ -100,7 +100,7 @@ app.url_map.strict_slashes = False
 @app.route("/home")
 def index():
     categories = strg.search(cls=Category, parent_id=None)
-    popular = random.sample(strg.all(Product), 8)
+    popular = random.sample(supported_products(strg.all(Product)), 8)
     return render_template("home.html", current_user=current_user, categories=categories, popular=popular)
 
 
@@ -108,7 +108,7 @@ def index():
 def product_page(id):
     # product = strg.search(cls=Product, id=id) // search needs a fix
     product = strg.session().query(Product).get(id)
-    popular = random.sample(strg.all(Product), 5)
+    popular = random.sample(supported_products(strg.all(Product)), 5)
     return render_template("product_details.html", product=product, popular=popular, current_user=current_user)
 
 
@@ -150,9 +150,8 @@ def categories(category):
     else:
         current_category = strg.session.query(
             Category).filter_by(name=category).first()
-    prod_list = []
-    n = getNumberProducts(current_category, prod_list)
-    return render_template('categories.html', n_prod=n, prod_list=prod_list, current_user=current_user, current_category=current_category, categories=categories)
+    prod_list = get_products(current_category, [])
+    return render_template('categories.html', prod_list=prod_list, current_user=current_user, current_category=current_category, categories=categories)
 
 
 @app.route('/faq')
@@ -167,13 +166,23 @@ def unauthorized(error):
     return redirect(url_for('login'))
 
 
-def getNumberProducts(cat, prods):
-    n = len(cat.products)
-    prods.extend(cat.products)
+def get_products(cat, prods):
+    prods.extend(supported_products(cat.products))
     for sub_cat in cat.children:
-        n += getNumberProducts(sub_cat, prods)
-    return n
+        prods = get_products(sub_cat, prods)
+    return prods
 
+def supported_products(prod_list):
+    if not current_user.is_authenticated or not current_user.cars:
+        return prod_list
+    support_list = []
+    for car in current_user.cars:
+        for prod in prod_list:
+            if car.make.lower() in prod.support and prod not in support_list:
+                support_list.append(prod)
+    return support_list
+                
+        
 
 
 @app.route("/addCar", methods=['POST'])
