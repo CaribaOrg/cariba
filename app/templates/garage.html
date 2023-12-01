@@ -6,27 +6,57 @@
     <link rel="stylesheet" href="../static/dist/css/output.css" />
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/global.js"></script>
-    <title>Shopping Cart</title>
+    <script src="../static/scripts/addCar.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js"
+      defer
+    ></script>
+    <title>My Garage</title>
   </head>
 
   <body>
     {% import 'components/header.html' as header %} {{
     header.display_header(current_user) }}
-    <div class="min-h-screen bg-darkPrimary pt-12 h-auto">
+    <section class="min-h-screen bg-darkPrimary pt-12 px-4 h-auto relative">
+      <!-- add car -->
+      <button
+        onclick="openCarModal()"
+        class="flex items-center justify-center rounded-full w-16 h-16 absolute px-2 m-2 top-0 right-0 bg-primary hover:bg-blue-400"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-plus"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
       {% if cars|length == 0 %}
       <h3 class="text-2xl text-center text-slate-300">Your garage is empty!</h3>
       {% else %}
-      {% for car in cars %}
-      <div class="text-center m-around-5 bg-white rounded-md w-100">
-        name = {{ car.name }}<br>
-        make = {{ car.make }}<br>
-        model = {{ car.model }}<br>
-        year = {{ car.year }}<br>
-        vin = {{ car.vin }}
+      <!-- spawn user's cars -->
+      <div class="flex flex-wrap justify-center gap-3">
+        {% for car in cars %}
+        <!-- car cards -->
+        {% import 'components/car_card.html' as carCard %} {{
+        carCard.car_card(car.name, car.make, car.model, car.year, car.vin) }}
+        <!-- end for -->
+        {%endfor %}
       </div>
-      {% endfor %}
+
+      <!-- end if -->
       {% endif %}
-    </div>
+
+      <!-- add car modal -->
+      {% import 'components/car_modal.html' as car_modal %} {{
+      car_modal.carModal() }}
+    </section>
     <!-- footer -->
     {% import 'components/footer.html' as footer %} {{ footer.footer() }}
   </body>
