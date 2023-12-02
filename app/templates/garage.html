@@ -69,6 +69,8 @@
       <div class="flex flex-wrap justify-center gap-3">
         {% for car in cars %}
         <!-- car cards -->
+        {% import 'components/car_editing.html' as car_editing %} {{
+          car_editing.carEditing(car) }}
         {% import 'components/car_card.html' as carCard %} {{
         carCard.car_card(car.name, car.make, car.model, car.year, car.vin, car.id) }}
         <!-- end for -->
