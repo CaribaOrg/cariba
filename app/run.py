@@ -223,6 +223,14 @@ def garage():
     cars = current_user.cars
     return render_template('garage.html', cars=cars)
 
+
+@app.route("/checkout")
+@login_required
+def checkout():
+    cart = current_user.cart
+    items = current_user.cart.cart_items
+    return render_template("checkout.html", current_user=current_user, items=items, cart=cart)
+
 @app.route("/payments/<order_id>/capture", methods=["POST"])
 @login_required
 def capture_payment(order_id):  # Checks and confirms payment
