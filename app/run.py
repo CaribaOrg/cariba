@@ -12,7 +12,7 @@ from models.car import Car
 from models.product import Product
 from models import strg
 from models.category import Category
-from models.cart_item import CartItem
+from models.order import Order
 from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
@@ -87,6 +87,7 @@ def create_admin(app):
     admin.add_view(CustomView(Cart))
     admin.add_view(CustomView(Product))
     admin.add_view(CustomView(Car))
+    admin.add_view(CustomView(Order))
 
 
 
@@ -232,6 +233,12 @@ def search():
         products = supported_products(products)
     categories = strg.search(cls=Category, parent_id=None)
     return render_template('search.html', products=products, search_input=request.form.get('name'), categories=categories)
+
+@app.route("/myOrders")
+@login_required
+def orders():
+    orders = current_user.orders
+    return render_template('orders.html', orders=orders)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

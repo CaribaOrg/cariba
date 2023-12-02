@@ -26,7 +26,7 @@ class Address(BaseModel, Base):
     user = relationship('User', back_populates='address')
     street = Column(String(128), nullable=False)
     city = Column(String(128), nullable=False)
-    state_province = Column(String(128), nullable=False)
+    country = Column(String(128), nullable=False)
     zip_code = Column(Integer, nullable=False)
 
     def __init__(self, **kwargs):

@@ -4,6 +4,7 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
+import random
 
 
 class Order(BaseModel, Base):
