@@ -1,78 +1,48 @@
 from requests.auth import HTTPBasicAuth
 from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
 from flask_admin import Admin
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+#from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
-import os
-import json
 import requests
 from api import api
 from models import strg
-from models.user import User
+from models.user import User, Role
 from models.cart import Cart
 from models.car import Car
 from models.product import Product
 from models import strg
 from models.category import Category
 from models.order import Order
-from app.forms.user_forms import LoginForm, RegisterForm
+#from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
+from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
+from flask_mailman import Mail
 
 app = Flask(__name__)
 
-# Load configuration from a separate file (e.g., config.py)
 app.config.from_pyfile('config.py')
 
-login = LoginManager(app)
+# manage sessions per request - make sure connections are closed and returned
+app.teardown_appcontext(lambda exc: strg.session.close())
 
 
-@login.user_loader
+# Setup Flask-Security
+user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
+app.security = Security(app, user_datastore)
+mail = Mail(app)
+
+# login = LoginManager(app)
+
+
+@app.security.login_manager.user_loader
 def load_user(user_id):
     return strg.session.query(User).get(user_id)
-
-
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = strg.session.query(User).filter_by(
-            username=form.username.data).first()
-        if user:
-            if user.check_password(form.password.data):
-                # if user.password == form.password.data:
-                login_user(user, remember=form.rememberMe.data)
-                next_url = session.pop(
-                    'next', None) or url_for("index")
-                return redirect(next_url)
-        return "password or uesrname is incorrect"
-    return render_template("login.html", form=form)
-
-
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data,
-                    email=form.email.data,
-                    password=form.password.data)
-        if user:
-            return redirect(url_for('redirect_page'))
-        return "Something went wrong! Please try again later or contact support."
-    return render_template("register.html", form=form)
 
 
 @app.route("/redirect", methods=['GET'])
 def redirect_page():
     return render_template("redirect.html")
-
-
-@app.route("/logout", methods=['GET', 'POST'])
-def logout():
-    logout_user()
-    return redirect(url_for("index"))
-
 
 class myAdminView(ModelView):
     def is_accessible(self):
