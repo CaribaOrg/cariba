@@ -180,6 +180,17 @@ def add_car():
     strg.save()
     return redirect(url_for('garage'))
 
+@app.route("/editCar/<uuid:car_id>", methods=['POST'])
+@login_required
+def edit_car(car_id):
+    form_data = request.form.to_dict()
+    car = strg.session().query(Car).get(car_id)
+    for key, value in form_data.items():
+        if getattr(car, key) != value:
+            setattr(car, key, value)
+    strg.save()
+    return redirect(url_for('garage'))
+
 @app.route("/deleteCar/<uuid:car_id>")
 @login_required
 def delete_car(car_id):

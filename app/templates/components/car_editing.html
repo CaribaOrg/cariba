@@ -1,6 +1,6 @@
-{% macro carModal() %}
+{% macro carEditing(car) %}
 <div
-  id="carModal"
+  id="carEditing{{ car.id }}"
   class="w-full items-center justify-center bg-slate-500 absolute hidden"
 >
   <div
@@ -16,11 +16,11 @@
           <h3
             class="text-xl font-semibold text-gray-900 dark:text-black lg:text-2xl"
           >
-            Add Car
+            Edit Car Details
           </h3>
           <button
             type="button"
-            onclick="closeCarModal()"
+            onclick="closeCarEditing('{{ car.id }}')"
             class="ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <svg
@@ -70,7 +70,7 @@
             </div>
 
             <div x-show="tab === 'fullDetails'">
-              <form id="fullDetails" , method="POST" , action="/addCar">
+              <form id="fullDetails" , method="POST" , action="/editCar/{{ car.id }}">
                 <!-- Full details form fields (name, model, year) -->
                 <div class="mb-4">
                   <label
@@ -83,7 +83,7 @@
                     id="carName"
                     name="name"
                     class="w-full border border-gray-300 p-2 rounded-md"
-                    required
+                    value="{{ car.name }}"
                   />
                 </div>
                 <div class="mb-4">
@@ -97,8 +97,8 @@
                     id="carMake"
                     name="make"
                     class="w-full border border-gray-300 p-2 rounded-md"
-                    required
-                  />
+                    value="{{ car.make }}"
+                    />
                 </div>
                 <div class="mb-4">
                   <label
@@ -111,7 +111,7 @@
                     id="carModel"
                     name="model"
                     class="w-full border border-gray-300 p-2 rounded-md"
-                    required
+                    value="{{ car.model }}"
                   />
                 </div>
 
@@ -126,12 +126,12 @@
                     id="carYear"
                     name="year"
                     class="w-full border border-gray-300 p-2 rounded-md"
-                    required
+                    value="{{ car.year }}"
                   />
                 </div>
                 <input
                   type="submit"
-                  id="fullsubmitadd"
+                  id="fullsubmitedit{{ car.id }}"
                   value="Save"
                   class="hidden"
                 />
@@ -139,7 +139,7 @@
             </div>
 
             <div x-show="tab === 'vinDetails'">
-              <form id="vinDetails" , method="POST" , action="/addCar">
+              <form id="vinDetails" , method="POST" , action="/editCar/{{ car.id }}">
                 <!-- VIN details form fields (VIN) -->
                 <div class="mb-4">
                   <label
@@ -152,7 +152,7 @@
                     id="carName2"
                     name="name"
                     class="w-full border border-gray-300 p-2 rounded-md"
-                    required
+                    value="{{ car.name }}"
                   />
                 </div>
                 <div class="mb-4">
@@ -166,12 +166,12 @@
                     id="carVin"
                     name="vin"
                     class="w-full border border-gray-300 p-2 rounded-md"
-                    required
+                    value="{{ car.vin }}"
                   />
                 </div>
                 <input
                   type="submit"
-                  id="vinsubmitadd"
+                  id="vinsubmitedit{{ car.id }}"
                   value="Save"
                   class="hidden"
                 />
@@ -184,7 +184,7 @@
           class="flex items-center space-x-2 rtl:space-x-reverse rounded-b border-t border-gray-200 p-6"
         >
           <button
-            onclick="submitCarForm(true)"
+            onclick="submitCarForm(false, '{{ car.id }}')"
             type="button"
             class="rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-darkPrimary focus:outline-none focus:ring-4 focus:ring-blue-300"
           >
@@ -192,7 +192,7 @@
           </button>
           <button
             type="button"
-            onclick="closeCarModal()"
+            onclick="closeCarEditing('{{ car.id }}')"
             class="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-300"
           >
             Cancel
