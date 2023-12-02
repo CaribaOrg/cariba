@@ -191,9 +191,7 @@
             class="flex rounded-lg flex-col justify-start items-start bg-gray-50 w-full p-6 md:p-14"
           >
             <div>
-              <h1
-                class="text-2xl dark:text-white font-semibold leading-6 text-gray-800"
-              >
+              <h1 class="text-2xl font-semibold leading-6 text-gray-800">
                 Order Summary
               </h1>
             </div>
@@ -203,22 +201,14 @@
                         <p class="text-lg dark:text-gray-300 font-semibold leading-4 text-gray-600">20</p>
                     </div>-->
               <div class="flex justify-between w-full items-center">
-                <p class="text-lg dark:text-gray-300 leading-4 text-gray-600">
-                  Total Charges
-                </p>
-                <p
-                  class="text-lg dark:text-gray-300 font-semibold leading-4 text-gray-600"
-                >
+                <p class="text-lg leading-4 text-gray-600">Total Charges</p>
+                <p class="text-lg font-semibold leading-4 text-gray-600">
                   ${{ cart.total_price }}
                 </p>
               </div>
               <div class="flex justify-between w-full items-center">
-                <p class="text-lg dark:text-gray-300 leading-4 text-gray-600">
-                  Shipping charges
-                </p>
-                <p
-                  class="text-lg dark:text-gray-300 font-semibold leading-4 text-gray-600"
-                >
+                <p class="text-lg leading-4 text-gray-600">Shipping charges</p>
+                <p class="text-lg font-semibold leading-4 text-gray-600">
                   ${{ cart.shipping }}
                 </p>
               </div>
@@ -228,14 +218,10 @@
                     </div>-->
             </div>
             <div class="flex justify-between w-full items-center mt-16">
-              <p
-                class="text-xl dark:text-white font-semibold leading-4 text-gray-800"
-              >
+              <p class="text-xl font-semibold leading-4 text-gray-800">
                 Estimated Total
               </p>
-              <p
-                class="text-lg dark:text-white font-semibold leading-4 text-gray-800"
-              >
+              <p class="text-lg font-semibold leading-4 text-gray-800">
                 ${{ (cart.total_price + cart.shipping)|round(2) }}
               </p>
             </div>
