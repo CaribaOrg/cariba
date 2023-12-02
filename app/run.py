@@ -1,9 +1,12 @@
+from requests.auth import HTTPBasicAuth
 from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
 import os
+import json
+import requests
 from api import api
 from models import strg
 from models.user import User
@@ -13,6 +16,7 @@ from models.product import Product
 from models import strg
 from models.category import Category
 from models.cart_item import CartItem
+from models.order import Order
 from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
@@ -218,6 +222,48 @@ def delete_car(car_id):
 def garage():
     cars = current_user.cars
     return render_template('garage.html', cars=cars)
+
+@app.route("/payments/<order_id>/capture", methods=["POST"])
+@login_required
+def capture_payment(order_id):  # Checks and confirms payment
+    captured_payment = paypal_capture_function(order_id)
+    #print(captured_payment)
+    if is_approved_payment(captured_payment):
+        # Do something (for example Update user field)
+        user = current_user
+        cart_id = user.cart
+        order_status = captured_payment.get("status")
+        Order({"user_id":user.id, "cart_id": cart_id, "order_status":order_status})
+        strg.save()
+        # remove items from cart
+        
+        
+
+    return jsonify(captured_payment)
+ 
+ 
+def paypal_capture_function(order_id):
+    post_route = f"/v2/checkout/orders/{order_id}/capture"
+    paypal_capture_url = app.config["PAYPAL_API_URL"] + post_route
+    basic_auth = HTTPBasicAuth(app.config["PAYPAL_BUSINESS_CLIENT_ID"], app.config["PAYPAL_BUSINESS_SECRET"])
+    headers = {
+        "Content-Type": "application/json",
+    }
+    response = requests.post(url=paypal_capture_url, headers=headers, auth=basic_auth)
+    response.raise_for_status()
+    json_data = response.json()
+    return json_data
+ 
+def is_approved_payment(captured_payment):
+    status = captured_payment.get("status")
+    amount = captured_payment.get("purchase_units")[0].get("payments").get("captures")[0].get("amount").get("value")
+    currency_code = captured_payment.get("purchase_units")[0].get("payments").get("captures")[0].get("amount").get(
+        "currency_code")
+    print(f"Payment happened. Details: {status}, {amount}, {currency_code}")
+    if status == "COMPLETED":
+        return True
+    else:
+        return False
 
 @app.route("/search", methods=['POST'])
 def search():
