@@ -231,12 +231,15 @@ def capture_payment(order_id):  # Checks and confirms payment
     if is_approved_payment(captured_payment):
         # Do something (for example Update user field)
         user = current_user
-        cart_id = user.cart
+        cart_id = user.cart.id
         order_status = captured_payment.get("status")
-        Order({"user_id":user.id, "cart_id": cart_id, "order_status":order_status})
+        order = {"user_id":user.id, "cart_id": cart_id, "order_status": order_status}
+        print(order)
+        Order(**order)
         strg.save()
         # remove items from cart
-        
+        strg.session.query(CartItem).filter_by(cart_id=cart_id).delete()
+        strg.save()
         
 
     return jsonify(captured_payment)
