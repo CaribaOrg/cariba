@@ -22,10 +22,10 @@
     </style>
     {% import 'components/header.html' as header %} {{
     header.display_header(current_user) }}
-    <div class="min-h-screen bg-darkPrimary pt-12">
+    <div class="min-h-screen pt-12 bg-slate-50">
       <div class="pl-16">
         <p
-          class="text-3xl lg:text-4xl text-white font-semibold leading-7 lg:leading-9"
+          class="text-3xl lg:text-4xl text-darkPrimary font-semibold leading-7 lg:leading-9"
         >
           Check out
         </p>
@@ -33,7 +33,7 @@
       <div class="mt-2 pl-16">
         <a
           href="{{url_for('my_cart')}}"
-          class="text-base text-orange-300 leading-4 underline hover:text-slate-300"
+          class="text-base text-orange-500 leading-4 underline hover:text-slate-300"
           >Back to my cart</a
         >
       </div>
@@ -45,7 +45,7 @@
         >
           <div class="flex w-full flex-col justify-start items-start">
             <div class="">
-              <p class="text-xl font-semibold text-white leading-5">
+              <p class="text-xl font-semibold text-darkPrimary leading-5">
                 Shipping Details
               </p>
             </div>
@@ -53,25 +53,25 @@
               class="mt-8 flex flex-col justify-start items-start w-full space-y-8"
             >
               <input
-                class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-600 py-4 w-full"
+                class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
                 placeholder="First Name"
                 required
               />
               <input
-                class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-600 py-4 w-full"
+                class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
                 placeholder="Last Name"
                 required
               />
               <input
-                class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-600 py-4 w-full"
+                class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
                 placeholder="Address"
                 required
               />
               <input
-                class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-600 py-4 w-full"
+                class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
                 placeholder="Address (line 02)"
               />
@@ -81,7 +81,7 @@
                 <div class="relative w-full">
                   <input
                     id="cityField"
-                    class="focus:outline-none placeholder-gray-400 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full"
+                    class="focus:outline-none placeholder-gray-500 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full shadow-md"
                     type="text"
                     placeholder="City"
                     required
@@ -91,7 +91,7 @@
                 <div class="relative w-full">
                   <input
                     id="regionField"
-                    class="focus:outline-none placeholder-gray-400 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full"
+                    class="focus:outline-none placeholder-gray-500 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full shadow-md"
                     type="text"
                     placeholder="Region (optional)"
                   />
@@ -103,7 +103,7 @@
                 <div class="relative w-full">
                   <input
                     id="countryField"
-                    class="focus:outline-none placeholder-gray-400 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full"
+                    class="focus:outline-none placeholder-gray-500 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full shadow-md"
                     type="text"
                     placeholder="Country"
                     required
@@ -111,7 +111,7 @@
                 </div>
                 <div class="w-full">
                   <input
-                    class="focus:outline-none placeholder-gray-400 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full"
+                    class="focus:outline-none placeholder-gray-500 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full shadow-md"
                     type="text"
                     placeholder="Zip Code"
                     required
@@ -119,7 +119,7 @@
                 </div>
               </div>
               <input
-                class="focus:outline-none dark:text-gray-400 dark:bg-transparent dark:placeholder-gray-400 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base placeholder-gray-600 py-4 w-full"
+                class="focus:outline-none focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
                 placeholder="Phone Number"
                 required
@@ -181,14 +181,14 @@
             <div class="mt-4 flex justify-start items-center w-full">
               <a
                 href="{{url_for('my_cart')}}"
-                class="text-base text-orange-300 leading-4 underline hover:text-slate-300"
+                class="text-base text-orange-500 leading-4 underline hover:text-slate-300"
                 >Back to my cart</a
               >
             </div>
           </div>
 
           <div
-            class="flex rounded-lg flex-col justify-start items-start bg-gray-50 w-full p-6 md:p-14"
+            class="flex bg-white flex-col justify-start items-start b w-full p-6 md:p-14 shadow-md"
           >
             <div>
               <h1 class="text-2xl font-semibold leading-6 text-gray-800">
