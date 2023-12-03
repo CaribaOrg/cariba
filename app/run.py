@@ -13,6 +13,7 @@ from models.product import Product
 from models import strg
 from models.category import Category
 from models.order import Order
+from models.address import Address
 #from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
@@ -61,6 +62,7 @@ def create_admin(app):
     admin.add_view(CustomView(Product))
     admin.add_view(CustomView(Car))
     admin.add_view(CustomView(Order))
+    admin.add_view(CustomView(Address))
 
 
 

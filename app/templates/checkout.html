@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../static/dist/css/output.css" />
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
-    <script src="../static/scripts/global.js"></script>
+    <script src="../static/scripts/checkout.js"></script>
     <title>Checkout Cart</title>
   </head>
 
@@ -49,30 +49,35 @@
                 Shipping Details
               </p>
             </div>
-            <div
+            <form id="userDetails" onsubmit="toPayment(event, '{{ current_user.id }}')"
               class="mt-8 flex flex-col justify-start items-start w-full space-y-8"
+              id="userDetails"
             >
               <input
                 class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
+                name="first_name"
                 placeholder="First Name"
                 required
               />
               <input
                 class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
+                name="last_name"
                 placeholder="Last Name"
                 required
               />
               <input
                 class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
+                name="address1"
                 placeholder="Address"
                 required
               />
               <input
                 class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
+                name="address2"
                 placeholder="Address (line 02)"
               />
               <div
@@ -83,6 +88,7 @@
                     id="cityField"
                     class="focus:outline-none placeholder-gray-500 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full shadow-md"
                     type="text"
+                    name="city"
                     placeholder="City"
                     required
                   />
@@ -93,6 +99,7 @@
                     id="regionField"
                     class="focus:outline-none placeholder-gray-500 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full shadow-md"
                     type="text"
+                    name="region"
                     placeholder="Region (optional)"
                   />
                 </div>
@@ -105,6 +112,7 @@
                     id="countryField"
                     class="focus:outline-none placeholder-gray-500 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full shadow-md"
                     type="text"
+                    name="country"
                     placeholder="Country"
                     required
                   />
@@ -112,7 +120,8 @@
                 <div class="w-full">
                   <input
                     class="focus:outline-none placeholder-gray-500 focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base pt-4 pb-3 w-full shadow-md"
-                    type="text"
+                    type="number"
+                    name="zip_code"
                     placeholder="Zip Code"
                     required
                   />
@@ -121,18 +130,24 @@
               <input
                 class="focus:outline-none focus:ring-2 focus:ring-gray-500 px-2 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
+                name="phone"
                 placeholder="Phone Number"
                 required
               />
-            </div>
+              <input
+                type="submit"
+                id="submit"
+                class="mt-6 w-full rounded-md bg-primary py-1.5 font-medium text-blue-50 hover:bg-darkPrimary"
+              />
+            </form>
             <!-- Replace src value with your own sandbox Business account app client ID -->
             <script src="https://www.paypal.com/sdk/js?client-id=AX46bRFoOrSKtIJvRtTxqsZn2rt0S3mKrP-QO-OuBv4YoNto51rBXFsWRQzZL_BZEClkUOKQV7gm11V_&currency=USD"></script>
             <!-- Set up a container element for the button -->
             <div
               id="paypal-button-container"
-              class="mt-8 text-base font-medium leading-4 py-4 w-full md:w-4/12 lg:w-full text-white"
+              class="hidden mt-8 text-base font-medium leading-4 py-4 w-full md:w-4/12 lg:w-full text-white"
             ></div>
-            <script>
+            <script>    
               paypal
                 .Buttons({
                   // Sets up the transaction when a payment button is clicked
