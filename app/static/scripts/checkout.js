@@ -14,7 +14,10 @@ function toPayment(event, user_id) {
         body: JSON.stringify(user_dict)
       })
     var adrs_dict = {};
-    adrs_dict['address'] = formData.get('address1') + ' ' + formData.get('address2');
+    if (formData.get('address2'))
+        adrs_dict['address'] = formData.get('address1') + ' ' + formData.get('address2');
+    else
+        adrs_dict['address'] = formData.get('address1')
     adrs_dict['city'] = formData.get('city');
     if (formData.get('region'))
         adrs_dict['region'] = formData.get('region');
@@ -29,4 +32,5 @@ function toPayment(event, user_id) {
       })
     document.getElementById("userDetails").classList.add("hidden");
     document.getElementById("paypal-button-container").classList.remove("hidden");
+    document.getElementById('title').textContent = 'Payment Details'
 }

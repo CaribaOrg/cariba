@@ -129,13 +129,13 @@
           </h3>
           <div class="flex gap-3">
             <button
-              onclick="{{ 'buyNow(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('login') ~ '\'' }}"
+              onclick="{{ 'buyNow(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_cart') ~ '\'' }}"
               class="bg-primary text-white py-2 px-4 rounded-lg cursor-pointer"
             >
               Buy Now
             </button>
             <button
-              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('login') ~ '\'' }}"
+              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_cart') ~ '\'' }}"
               class="bg-darkPrimary text-white py-2 px-4 rounded-lg cursor-pointer"
             >
               Add to cart

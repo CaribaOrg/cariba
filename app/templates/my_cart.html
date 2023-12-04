@@ -30,13 +30,15 @@
         class="mx-auto max-w-5xl justify-center px-6 md:flex pb-8 md:space-x-6 xl:px-0"
       >
         {% if items|length == 0 %}
-        <h3 class="text-2xl text-slate-300">Your cart is empty!</h3>
-        <button
-          class="px-8 py-2 bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
-          onclick="window.location.href = '/categories'"
-          >
-          Shop Now
-        </button>
+        <div class="flex flex-row flex-wrap justify-center">
+          <h3 class="text-2xl text-slate-300">Your cart is empty!</h3>
+          <button
+            class="px-8 py-2 w-full bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
+            onclick="window.location.href = '/categories'"
+            >
+            Shop Now
+          </button>
+        </div>
         {% else %}
         <div class="rounded-lg md:w-2/3">
           {% for item in items %}

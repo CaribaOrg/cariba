@@ -45,7 +45,7 @@
         >
           <div class="flex w-full flex-col justify-start items-start">
             <div class="">
-              <p class="text-xl font-semibold text-darkPrimary leading-5">
+              <p id="title" class="text-xl font-semibold text-darkPrimary leading-5">
                 Shipping Details
               </p>
             </div>
@@ -58,6 +58,7 @@
                 type="text"
                 name="first_name"
                 placeholder="First Name"
+                value="{{ current_user.first_name if current_user.first_name is not none }}"
                 required
               />
               <input
@@ -65,6 +66,7 @@
                 type="text"
                 name="last_name"
                 placeholder="Last Name"
+                value="{{ current_user.last_name if current_user.last_name is not none }}"
                 required
               />
               <input
@@ -72,13 +74,14 @@
                 type="text"
                 name="address1"
                 placeholder="Address"
+                value="{{ current_user.address.address if current_user.address.address is not none }}"
                 required
               />
               <input
                 class="px-2 focus:outline-none focus:ring-2 focus:ring-gray-500 border-b border-gray-200 leading-4 text-base placeholder-gray-500 py-4 w-full shadow-md"
                 type="text"
                 name="address2"
-                placeholder="Address (line 02)"
+                placeholder="Address Line 02 (Optional)"
               />
               <div
                 class="flex justify-between flex-col sm:flex-row w-full items-start space-y-8 sm:space-y-0 sm:space-x-8"
@@ -90,6 +93,7 @@
                     type="text"
                     name="city"
                     placeholder="City"
+                    value="{{ current_user.address.city if current_user.address.city is not none }}"
                     required
                   />
                 </div>
@@ -101,6 +105,7 @@
                     type="text"
                     name="region"
                     placeholder="Region (optional)"
+                    value="{{ current_user.address.region if current_user.address.region is not none }}"
                   />
                 </div>
               </div>
@@ -114,6 +119,7 @@
                     type="text"
                     name="country"
                     placeholder="Country"
+                    value="{{ current_user.address.country if current_user.address.country is not none }}"
                     required
                   />
                 </div>
@@ -123,6 +129,7 @@
                     type="number"
                     name="zip_code"
                     placeholder="Zip Code"
+                    value="{{ current_user.address.zip_code if current_user.address.zip_code is not none }}"
                     required
                   />
                 </div>
@@ -132,6 +139,7 @@
                 type="text"
                 name="phone"
                 placeholder="Phone Number"
+                value="{{ current_user.phone if current_user.phone is not none }}"
                 required
               />
               <input
@@ -185,8 +193,10 @@
                           "paypal-button-container"
                         );
                         element.innerHTML =
-                          "<h3>Thank you for your payment!</h3>";
+                          "<h3 class='text-base'>Thank you for your payment!</h3>";
                         // Or go to another URL:  actions.redirect('thank_you.html');
+                        const cart = document.getElementById('cart_items_count')
+                        cart.textContent = 0
                       });
                   },
                 })
@@ -195,9 +205,9 @@
             <!--<button class="focus:outline-none focus:ring-2 dark:bg-gray-800 dark:text-white focus:ring-gray-500 focus:ring-offset-2 mt-8 text-base font-medium focus:ring-2 focus:ring-ocus:ring-gray-800 leading-4 hover:bg-black py-4 w-full md:w-4/12 lg:w-full text-white bg-gray-800">Proceed to payment</button>-->
             <div class="mt-4 flex justify-start items-center w-full">
               <a
-                href="{{url_for('my_cart')}}"
+                href="{{url_for('orders')}}"
                 class="text-base text-orange-500 leading-4 underline hover:text-slate-300"
-                >Back to my cart</a
+                >Go to my orders</a
               >
             </div>
           </div>
