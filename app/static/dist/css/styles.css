@@ -30,11 +30,23 @@ body {
 }
 
 .unsupported {
-  background-color: #ff0000;
+  background-color: #ff6f6f;
+  border-color: #ff0000;
 }
 
 .supported {
-  background-color: #00ff00;
+  background-color: #80fc80;
+  border-color: #00ff00;
+}
+
+.unsupported, .supported {
+  border-width: 2px;
+  border-radius: 0.3rem;
+  padding: 5px;
+  margin: 5px;
+  margin-right: 200px;
+  margin-left: 200px;
+  max-width: 25rem;
 }
 
 .m-around-5 {

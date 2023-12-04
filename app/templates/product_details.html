@@ -14,15 +14,15 @@
   <body class="bg-white">
     {% import 'components/header.html' as header %} {{
       header.display_header(current_user) }}
-      <div class="flex flex-col">
+      <div class="flex flex-row flex-wrap justify-center w-full">
         {% if current_user.is_authenticated %}
         {% for car in current_user.cars %}
         {% if product.is_supported(car) %}
-        <div class="supported rounded-lg w-100 m-around-5">
+        <div class="supported">
           Compatible with your {{ car.name }} ({{ car.make }} {{ car.model}})
         </div>
         {% else %}
-        <div class="unsupported rounded-lg w-100 m-around-5">
+        <div class="unsupported">
           Not compatible with your {{ car.name }} ({{ car.make }} {{ car.model}})
         </div>
         {% endif %}
@@ -135,7 +135,7 @@
               Buy Now
             </button>
             <button
-              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_cart') ~ '\'' }}"
+              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_art') ~ '\'' }}"
               class="bg-darkPrimary text-white py-2 px-4 rounded-lg cursor-pointer"
             >
               Add to cart
