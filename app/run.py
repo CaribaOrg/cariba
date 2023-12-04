@@ -320,5 +320,11 @@ def about():
     return render_template("about.html")
 
 
+@app.errorhandler(404)
+def notfound():
+    """Handle the error 404"""
+    return render_template("404.html")
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

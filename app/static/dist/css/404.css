@@ -1,0 +1,26 @@
+.error-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: flicker 3s infinite alternate;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+    filter: brightness(100%);
+  }
+  25%,
+  75% {
+    opacity: 1;
+    filter: brightness(90%) hue-rotate(5deg);
+  }
+  50% {
+    opacity: 0;
+    filter: brightness(80%) hue-rotate(-5deg);
+  }
+}
