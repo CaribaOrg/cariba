@@ -1,5 +1,22 @@
 <!-- account dropdown macro -->
 {% macro display_drop(current_user) %}
+{% if current_user.is_authenticated %}
+<script>
+  function initialize_notifications() {
+    let since = 0;
+    setInterval(async function() {
+      const response = await fetch('{{ url_for("notifications") }}?since=' + since);
+      const notifications = await response.json();
+      for (let i = 0; i < notifications.length; i++) {
+        if (notifications[i].name == 'unread_message_count')
+          set_message_count(notifications[i].data);
+        since = notifications[i].timestamp;
+      }
+    }, 10000);
+  }
+  document.addEventListener('DOMContentLoaded', initialize_notifications);
+</script>
+{% endif %}
 <div
   class="account_drop absolute top-2 right-6 w-64 h-80 bg-gray-200 rounded-3xl py-3 px-4"
 >
@@ -33,9 +50,22 @@
     <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
       <a href="/myGarage" class="flex w-full pl-2">Garage</a>
     </li>
+    {% if current_user.is_authenticated %}
     <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
-      <a href="/messages" class="flex w-full pl-2">Messages</a>
+        <a href="{{ url_for('messages') }}" class="flex w-full pl-2">
+          Messages
+          {% set unread_message_count = current_user.unread_message_count() %}
+          <div class="bg-white flex rounded-full px-3 items-center" style="visibility: {% if unread_message_count %}visible
+          {% else %}hidden {% endif %};">
+          <span id="message_count" class="text-darkPrimary text-sm"
+                style="visibility: {% if unread_message_count %}visible
+                                    {% else %}hidden {% endif %};">
+                  {{ unread_message_count }}
+          </span>
+        </div>
+        </a>
     </li>
+    {% endif %}
     <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
       <a href="/account" class="flex w-full pl-2">Account</a>
     </li>
@@ -46,4 +76,5 @@
     </li>
   </ul>
 </div>
+
 {% endmacro %}

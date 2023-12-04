@@ -99,3 +99,10 @@ function removeFromCart(product_id, item_quantity, buttonCaller, inCart) {
             console.error('Error adding item to cart:', error);
         });
 }
+
+// messaging stuff
+function set_message_count(n) {
+    const count = document.getElementById('message_count');
+    count.innerText = n;
+    count.style.visibility = n ? 'visible' : 'hidden';
+  }

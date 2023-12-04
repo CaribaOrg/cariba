@@ -1,5 +1,5 @@
 from requests.auth import HTTPBasicAuth
-from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
+from flask import Flask, flash, render_template, redirect, url_for, request, session, g, jsonify
 from flask_admin import Admin
 #from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
@@ -17,8 +17,11 @@ from models.address import Address
 #from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
-from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
+from flask_security import Security, current_user, SQLAlchemySessionUserDatastore, login_required
 from flask_mailman import Mail
+from app.forms.message_form import MessageForm
+from models.notification import Message, Notification
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -169,8 +172,6 @@ def supported_products(prod_list):
             if car.make.lower() in prod.support and prod not in support_list:
                 support_list.append(prod)
     return support_list
-                
-        
 
 
 @app.route("/addCar", methods=['POST'])
@@ -247,6 +248,59 @@ def is_approved_payment(captured_payment):
         return True
     else:
         return False
+
+@app.route('/send_message/', methods=['GET', 'POST'])
+@app.route('/send_message/<uuid:id>', methods=['GET', 'POST'])
+@login_required
+def send_message(id=None):
+    send_to_all = False
+    user = strg.session.query(User).filter_by(id=id).first()
+    if user is None:
+        send_to_all = True
+    form = MessageForm()
+    if form.validate_on_submit():
+        if send_to_all:
+            for one_user in User.query.all():
+                Message(author=current_user, recipient=one_user,
+                      body=form.message.data)
+                strg.save()
+                one_user.add_notification('unread_message_count',
+                              one_user.unread_message_count())
+                strg.save()
+        else:
+            Message(author=current_user, recipient=user,
+                      body=form.message.data)
+            strg.save()
+            user.add_notification('unread_message_count',
+                                user.unread_message_count())
+            strg.save()
+        
+        flash('Your message has been sent.')
+        return redirect(url_for('index'))
+    return render_template('send_message.html', title='Send Message',
+                           form=form, recipient=id)
+
+
+@app.route('/messages')
+@login_required
+def messages():
+    current_user.last_message_read_time = datetime.utcnow()
+    current_user.add_notification('unread_message_count', 0)
+    strg.save()
+    messages = current_user.messages_received#.order_by(Message.updated_at.desc())
+    return render_template('messages.html', messages=messages)
+
+@app.route('/notifications')
+@login_required
+def notifications():
+    since = request.args.get('since', 0.0, type=float)
+    query = strg.session.query(Notification).filter(Notification.updated_at > since).order_by(Notification.updated_at.asc())
+    notifications = strg.session.scalars(query)
+    return [{
+        'name': n.name,
+        'data': n.get_data(),
+        'updated_at': n.updated_at
+    } for n in notifications]
 
 @app.route("/search", methods=['POST'])
 def search():
