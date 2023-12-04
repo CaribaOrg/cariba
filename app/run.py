@@ -19,6 +19,8 @@ from models.custom_view import CustomView
 import random
 from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
 from flask_mailman import Mail, EmailMessage
+from functools import wraps
+
 
 
 app = Flask(__name__)
@@ -33,6 +35,7 @@ app.teardown_appcontext(lambda exc: strg.session.close())
 user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
 app.security = Security(app, user_datastore)
 mail = Mail(app)
+
 
 # login = LoginManager(app)
 
@@ -52,7 +55,7 @@ class myAdminView(ModelView):
         return current_user.is_authenticated
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for("login"))
+        return redirect(url_for("security.login"))
 
 
 def create_admin(app):
@@ -72,6 +75,16 @@ create_admin(app)
 # Register API blueprint
 app.register_blueprint(api, url_prefix='/api')
 app.url_map.strict_slashes = False
+
+
+def login_required(f):
+   @wraps(f)
+   def decorated_function(*args, **kwargs):
+       if not current_user.is_authenticated:
+           flash("Please login to access this page.", "Info")
+           return redirect(url_for('security.login'))
+       return f(*args, **kwargs)
+   return decorated_function
 
 
 @app.route("/")
@@ -147,13 +160,6 @@ def faq():
     return render_template('faq.html')
 
 
-@app.errorhandler(401)
-def unauthorized(error):
-    """Handle unauthorized access to redirect to login page"""
-    session['next'] = request.url
-    return redirect(url_for('login'))
-
-
 def get_products(cat, prods):
     prods.extend(supported_products(cat.products))
     for sub_cat in cat.children:
@@ -216,6 +222,8 @@ def garage():
 def checkout():
     cart = current_user.cart
     items = current_user.cart.cart_items
+    if len(items) == 0:
+        return redirect(url_for('my_cart'))
     return render_template("checkout.html", current_user=current_user, items=items, cart=cart)
 
 
