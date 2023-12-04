@@ -321,9 +321,9 @@ def about():
 
 
 @app.errorhandler(404)
-def notfound():
+def notfound(error):
     """Handle the error 404"""
-    return render_template("404.html")
+    return render_template("404.html"), 404
 
 
 if __name__ == '__main__':
