@@ -18,11 +18,11 @@
   </div>
   <div class="text-gray-600">
     <span class="text-slate-700">Status:</span> <span></span>
-    <span class="font-bold">status</span>
+    <span class="font-bold">{{ order.order_status }}</span>
   </div>
   <div class="text-gray-600">
     <span class="text-slate-700">Shipping information:</span>
-    <span class="font-bold">{{ order.user.address.street }}, {{ order.user.address.city }}, {{ order.user.address.country }}</span>
+    <span class="font-bold">{{ order.user.address.address }}, {{ order.user.address.city }}, {{ order.user.address.country }}</span>
   </div>
 </div>
 {% endmacro %}

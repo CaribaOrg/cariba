@@ -30,7 +30,7 @@
       </div>
       {% else %}
       <!-- spawn user's cars -->
-      <div class="flex justify-center gap-3">
+      <div class="flex flex-row flex-wrap justify-center gap-3">
         {% for order in orders %}
         <!-- car cards -->
         {% import 'components/order_card.html' as orderCard %} {{
