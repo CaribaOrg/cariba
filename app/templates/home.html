@@ -44,7 +44,10 @@
         </div>
         <div>
           {% if not current_user.is_authenticated %}
-          <button onclick="window.location.href = '/login'" class="px-8 py-2 bg-primary">
+          <button
+            onclick="window.location.href = '/login'"
+            class="px-8 py-2 bg-primary"
+          >
             <span class="font-medium text-white">Add a car</span>
           </button>
           {% else %}
@@ -74,19 +77,27 @@
     <!-- popular products -->
     <section class="flex flex-col p-4 gap-4">
       <h2 class="text-white text-3xl">Popular products</h2>
-      <div class="flex flex-wrap justify-around gap-3 justify-start">
+      <div class="flex flex-wrap gap-3 justify-start">
         {% if popular|length == 0%}
-        <p class="text-white">No product is compatible with any of the cars in your garage, make sure your car information is correct</p> 
-        {% else %}
-        {% for prod in popular %} {% import 'components/product_card.html' as
-        product %} {{ product.product_card(prod, current_user) }} {% endfor %}
-        {% endif %}
+        <p class="text-white">
+          No product is compatible with any of the cars in your garage, make
+          sure your car information is correct
+        </p>
+        {% else %} {% for prod in popular %} {% import
+        'components/product_card.html' as product %} {{
+        product.product_card(prod, current_user) }} {% endfor %} {% endif %}
       </div>
     </section>
 
     <!-- add car modal -->
     {% import 'components/car_modal.html' as car_modal %} {{
     car_modal.carModal() }}
+
+    <!-- Flash message container -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% set flashType, message = messages[0] %} {% import
+    'components/flash_notification.html' as notif %} {{
+    notif.notification(flashType, message) }} {% endif %} {% endwith %}
 
     <!-- footer -->
     {% import 'components/footer.html' as footer %} {{ footer.footer() }}

@@ -1,7 +1,7 @@
 from requests.auth import HTTPBasicAuth
-from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
+from flask import Flask, render_template, redirect, url_for, request, session, jsonify, flash
 from flask_admin import Admin
-#from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+# from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
 import requests
 from api import api
@@ -13,11 +13,12 @@ from models.product import Product
 from models import strg
 from models.category import Category
 from models.order import Order
-#from app.forms.user_forms import LoginForm, RegisterForm
+from app.forms.user_forms import SubscriptionForm
 from models.custom_view import CustomView
 import random
 from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
-from flask_mailman import Mail
+from flask_mailman import Mail, EmailMessage
+
 
 app = Flask(__name__)
 
@@ -44,6 +45,7 @@ def load_user(user_id):
 def redirect_page():
     return render_template("redirect.html")
 
+
 class myAdminView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated
@@ -63,12 +65,12 @@ def create_admin(app):
     admin.add_view(CustomView(Order))
 
 
-
 create_admin(app)
 
 # Register API blueprint
 app.register_blueprint(api, url_prefix='/api')
 app.url_map.strict_slashes = False
+
 
 @app.route("/")
 @app.route("/home")
@@ -156,6 +158,7 @@ def get_products(cat, prods):
         prods = get_products(sub_cat, prods)
     return prods
 
+
 def supported_products(prod_list):
     if not isinstance(prod_list, list):
         prod_list = [prod_list]
@@ -167,8 +170,6 @@ def supported_products(prod_list):
             if car.make.lower() in prod.support and prod not in support_list:
                 support_list.append(prod)
     return support_list
-                
-        
 
 
 @app.route("/addCar", methods=['POST'])
@@ -179,6 +180,7 @@ def add_car():
     Car(**form_data)
     strg.save()
     return redirect(url_for('garage'))
+
 
 @app.route("/editCar/<uuid:car_id>", methods=['POST'])
 @login_required
@@ -191,12 +193,14 @@ def edit_car(car_id):
     strg.save()
     return redirect(url_for('garage'))
 
+
 @app.route("/deleteCar/<uuid:car_id>")
 @login_required
 def delete_car(car_id):
     car = strg.session().query(Car).get(car_id)
     car.delete()
     return redirect(url_for('garage'))
+
 
 @app.route("/myGarage")
 @login_required
@@ -212,32 +216,37 @@ def checkout():
     items = current_user.cart.cart_items
     return render_template("checkout.html", current_user=current_user, items=items, cart=cart)
 
+
 @app.route("/payments/<order_id>/capture", methods=["POST"])
 @login_required
 def capture_payment(order_id):  # Checks and confirms payment
     captured_payment = paypal_capture_function(order_id)
-    #print(captured_payment)
+    # print(captured_payment)
     if is_approved_payment(captured_payment):
         # Do something (for example Update user field)
         current_user.cart.checkout(captured_payment.get("status"))
     return jsonify(captured_payment)
- 
- 
+
+
 def paypal_capture_function(order_id):
     post_route = f"/v2/checkout/orders/{order_id}/capture"
     paypal_capture_url = app.config["PAYPAL_API_URL"] + post_route
-    basic_auth = HTTPBasicAuth(app.config["PAYPAL_BUSINESS_CLIENT_ID"], app.config["PAYPAL_BUSINESS_SECRET"])
+    basic_auth = HTTPBasicAuth(
+        app.config["PAYPAL_BUSINESS_CLIENT_ID"], app.config["PAYPAL_BUSINESS_SECRET"])
     headers = {
         "Content-Type": "application/json",
     }
-    response = requests.post(url=paypal_capture_url, headers=headers, auth=basic_auth)
+    response = requests.post(url=paypal_capture_url,
+                             headers=headers, auth=basic_auth)
     response.raise_for_status()
     json_data = response.json()
     return json_data
- 
+
+
 def is_approved_payment(captured_payment):
     status = captured_payment.get("status")
-    amount = captured_payment.get("purchase_units")[0].get("payments").get("captures")[0].get("amount").get("value")
+    amount = captured_payment.get("purchase_units")[0].get(
+        "payments").get("captures")[0].get("amount").get("value")
     currency_code = captured_payment.get("purchase_units")[0].get("payments").get("captures")[0].get("amount").get(
         "currency_code")
     print(f"Payment happened. Details: {status}, {amount}, {currency_code}")
@@ -246,13 +255,14 @@ def is_approved_payment(captured_payment):
     else:
         return False
 
+
 @app.route("/search", methods=['POST'])
 def search():
     search_dict = {
-            'cls': Product,
-            'case_sensitive': False,
-            'exact': False
-        }
+        'cls': Product,
+        'case_sensitive': False,
+        'exact': False
+    }
     search_dict['name'] = request.form.get('name')
     products = strg.search(**search_dict)
     if current_user.is_authenticated:
@@ -260,11 +270,39 @@ def search():
     categories = strg.search(cls=Category, parent_id=None)
     return render_template('search.html', products=products, search_input=request.form.get('name'), categories=categories)
 
+
 @app.route("/myOrders")
 @login_required
 def orders():
     orders = current_user.orders
     return render_template('orders.html', orders=orders)
+
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    """Subscribe to the newsletter endpoint"""
+    email = request.form.get('email')
+    # Send a confirmation email
+    emailSent = send_confirmation_email(email)
+    if emailSent:
+        flash('Subscription successful! Check your email for confirmation.', "Success")
+    else:
+        flash('Something went wrong, please try again later.', "Error")
+    return redirect(url_for('index'))
+
+
+def send_confirmation_email(email):
+    """send a confirmation email for successful subscription"""
+    try:
+        subject, from_email, to = 'Subscription Confirmation', 'noreply@fuzzfoo.tech', email
+        html_content = '<h1>Thank you for subscribing to our newsletter!</h1> <p>Cariba Team</p>'
+        msg = EmailMessage(subject, html_content, from_email, [to])
+        msg.content_subtype = "html"
+        msg.send()
+        return True
+    except Exception:
+        return False
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

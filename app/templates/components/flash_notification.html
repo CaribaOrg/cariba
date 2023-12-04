@@ -1,0 +1,16 @@
+{% macro notification(flashType, message) %}
+<div
+  class="flash-message fixed z-20 top-32 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex shadow-md gap-6 rounded-lg overflow-hidden divide-x max-w-2xl bg-gray-500 text-gray-100"
+>
+  <div class="flex flex-1 flex-col p-4 border-l-8 {{ flashType }}">
+    <span class="text-2xl {{ flashType }}">{{ flashType }}</span>
+    <span class="text-xs text-gray-100">{{ message }}</span>
+  </div>
+  <button
+    onclick="closeFlashMessage(this)"
+    class="px-4 flex items-center text-xs uppercase tracki text-gray-100"
+  >
+    Dismiss
+  </button>
+</div>
+{% endmacro %}

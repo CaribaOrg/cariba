@@ -30,11 +30,11 @@ body {
 }
 
 .unsupported {
-  background-color: #FF0000;
+  background-color: #ff0000;
 }
 
 .supported {
-  background-color: #00FF00;
+  background-color: #00ff00;
 }
 
 .m-around-5 {
@@ -112,4 +112,22 @@ body {
     transition: transform 0.5s ease-in-out;
     transform: translateX(-288px);
   }
+}
+
+/* error flash */
+.Error {
+  border-color: rgb(239, 68, 68);
+  color: rgb(239, 68, 68);
+}
+
+/* success flash */
+.Success {
+  border-color: rgb(34, 197, 94);
+  color: rgb(34, 197, 94);
+}
+
+/* info flash */
+.Info {
+  border-color: rgb(59, 130, 246);
+  color: rgb(59, 130, 246);
 }
