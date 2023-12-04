@@ -56,6 +56,7 @@ class User(BaseModel, Base, UserMixin):
     first_name = Column(String(255), nullable=True)
     last_name = Column(String(255), nullable=True)
     email = Column(String(255), unique=True)
+    phone = Column(Integer)
     username = Column(String(255), unique=True, nullable=True)
     password = Column(String(255), nullable=False)
     last_login_at = Column(DateTime())
@@ -84,6 +85,7 @@ class User(BaseModel, Base, UserMixin):
 
     def __init__(self, **kwargs):
         from models.cart import Cart
+        from models.address import Address
         '''
         Initialize a new instance of the User class.
 
@@ -94,6 +96,9 @@ class User(BaseModel, Base, UserMixin):
         cart_dict = {'user_id': self.id}
         crt = Cart(**cart_dict)
         crt.save()
+        address_dict = {'user_id': self.id}
+        address = Address(**address_dict)
+        address.save()
 
     def check_password(self, password):
         password = md5(password.encode()).hexdigest()

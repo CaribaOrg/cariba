@@ -13,7 +13,8 @@ from models.product import Product
 from models import strg
 from models.category import Category
 from models.order import Order
-from app.forms.user_forms import SubscriptionForm
+from models.address import Address
+# from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
 from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
@@ -63,6 +64,7 @@ def create_admin(app):
     admin.add_view(CustomView(Product))
     admin.add_view(CustomView(Car))
     admin.add_view(CustomView(Order))
+    admin.add_view(CustomView(Address))
 
 
 create_admin(app)
