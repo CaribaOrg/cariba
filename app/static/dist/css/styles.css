@@ -33,6 +33,10 @@ body {
   margin-top: 7rem;
 }
 
+.m-3 {
+  margin: 2.5rem;
+}
+
 .unsupported {
   background-color: #ff6f6f;
   border-color: #ff0000;

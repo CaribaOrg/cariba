@@ -45,11 +45,6 @@ def load_user(user_id):
     return strg.session.query(User).get(user_id)
 
 
-@app.route("/redirect", methods=['GET'])
-def redirect_page():
-    return render_template("redirect.html")
-
-
 class myAdminView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated
@@ -286,6 +281,22 @@ def search():
 def orders():
     orders = current_user.orders
     return render_template('orders.html', orders=orders)
+
+
+@app.route("/account", methods=['GET', 'POST'])
+@login_required
+def account():
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        for key, value in form_data.items():
+            if hasattr(current_user.address, key):
+                setattr(current_user.address, key, value)
+            else:
+                setattr(current_user, key, value)
+        strg.save()
+        flash('Information saved successfully', 'Success')
+        return redirect(url_for('account'))
+    return render_template('account.html', user=current_user)
 
 
 @app.route('/subscribe', methods=['POST'])
