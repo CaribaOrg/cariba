@@ -46,3 +46,11 @@ function addToCart2(product_id, addToCartButton) {
             console.error('Error adding item to cart:', error);
         });
 }
+
+// tooltip handler
+function showTooltip() {
+    document.getElementById("tooltip").classList.remove("hidden");
+}
+function hideTooltip(flag) {
+    document.getElementById("tooltip").classList.add("hidden");
+}

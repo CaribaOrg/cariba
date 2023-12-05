@@ -1,4 +1,4 @@
-function submitCarForm(add, id='') {
+function submitCarForm(add, id = '') {
     const carTabs = document.getElementById('carTabs');
     const activeTab = carTabs.__x.$data.tab;
     if (activeTab === "fullDetails") {

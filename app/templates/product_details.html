@@ -13,59 +13,45 @@
   </head>
   <body class="bg-white">
     {% import 'components/header.html' as header %} {{
-      header.display_header(current_user) }}
-      <div class="flex flex-row flex-wrap justify-center w-full">
-        {% if current_user.is_authenticated %}
-        {% for car in current_user.cars %}
-        {% if product.is_supported(car) %}
-        <div class="supported">
-          Compatible with your {{ car.name }} ({{ car.make }} {{ car.model}})
-        </div>
-        {% else %}
-        <div class="unsupported">
-          Not compatible with your {{ car.name }} ({{ car.make }} {{ car.model}})
-        </div>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-      </div>
+    header.display_header(current_user) }}
+
     <div
       class="my-8 py-8 mx-auto rounded-lg flex justify-center flex-wrap gap-3 min-h-[75vh] bg-white"
-    > 
-      <div class="flex flex-col p-4 gap-2">
-        <div class="w-72 h-72">
+    >
+      <div class="flex flex-col p-4 gap-1 sm:gap-2">
+        <div class="sm:w-72 sm:h-72 w-60 h-60">
           <img
             id="big_image"
             src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
-            class="border-[1px] w-72 h-72 object-contain border-slate-700"
+            class="border-[1px] sm:w-72 sm:h-72 w-60 h-60 object-contain border-black"
           />
         </div>
 
-        <div id="imgs_holder" class="flex gap-2 justify-between">
+        <div id="imgs_holder" class="flex justify-between sm:w-72 w-60">
           <img
-            class="w-16 h-16 border-[1px] border-slate-700 object-contain cursor-pointer"
+            class="sm:w-16 sm:h-16 w-12 h-12 border-[1px] border-black object-contain cursor-pointer"
             id="image_1"
             src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
             width="64px"
           />
           <img
-            class="w-16 h-16 border-[1px] border-slate-700 object-contain cursor-pointer"
+            class="sm:w-16 sm:h-16 w-12 h-12 border-[1px] border-black object-contain cursor-pointer"
             id="image_2"
             src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
             width="64px"
           />
           <img
-            class="w-16 h-16 border-[1px] border-slate-700 object-contain cursor-pointer"
+            class="sm:w-16 sm:h-16 w-12 h-12 border-[1px] border-black object-contain cursor-pointer"
             id="image_3"
             src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
             width="64px"
           />
           <img
-            class="w-16 h-16 border-[1px] border-slate-700 object-contain cursor-pointer"
+            class="sm:w-16 sm:h-16 w-12 h-12 border-[1px] border-black object-contain cursor-pointer"
             id="image_4"
             src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
             alt="car oil"
@@ -73,11 +59,97 @@
           />
         </div>
       </div>
-      <div class="p-4">
-        <h3 class="text-xl w-100 font-semibold">{{ product.name }}</h3>
-        <ul class="my-2 pl-2 w-100 py-1 border-y-2 border-slate-300">
+      <div class="flex flex-col p-4">
+        <h3 class="text-xl max-w-lg font-semibold">{{ product.name }}</h3>
+        <ul class="my-2 pl-2 max-w-lg py-1 border-y-2 border-slate-300">
           {{ product.description }}
         </ul>
+        <!--compatibility tooltip start-->
+        {% if current_user.is_authenticated %}
+        <div class="flex flex-row pb-2">
+          <span class="pr-2">Compatibility</span>
+          <a
+            tabindex="0"
+            aria-label="tooltip"
+            role="link"
+            class="focus:outline-none focus:ring-gray-300 rounded-full focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative"
+            onmouseover="showTooltip()"
+            onfocus="showTooltip()"
+            onmouseout="hideTooltip()"
+          >
+            <div class="cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="flex-shrink-0 w-6 h-6 text-green-600"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                ></path>
+              </svg>
+            </div>
+            <div
+              id="tooltip"
+              role="tooltip"
+              class="z-20 -mt-12 w-48 sm:w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-800 p-4 rounded hidden"
+            >
+              <svg
+                class="absolute left-0 -ml-2 bottom-0 top-0 h-full"
+                width="9px"
+                height="16px"
+                viewBox="0 0 9 16"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <g
+                  id="Page-1"
+                  stroke="none"
+                  stroke-width="1"
+                  fill="none"
+                  fill-rule="evenodd"
+                >
+                  <g
+                    id="Tooltips-"
+                    transform="translate(-874.000000, -1029.000000)"
+                    fill="#2D3748"
+                  >
+                    <g
+                      id="Group-3-Copy-16"
+                      transform="translate(850.000000, 975.000000)"
+                    >
+                      <g
+                        id="Group-2"
+                        transform="translate(24.000000, 0.000000)"
+                      >
+                        <polygon
+                          id="Triangle"
+                          transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
+                          points="4.5 57.5 12.5 66.5 -3.5 66.5"
+                        ></polygon>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+              <p class="text-sm text-white pb-1">Compatible with:</p>
+              {% for car in current_user.cars %} {% if product.is_supported(car)
+              %}
+              <!-- spawn compatible cars -->
+              <p class="text-xs font-bold leading-4 text-white">
+                <span>- </span>{{ car.name }} ({{ car.make }})
+              </p>
+              {% endif %} {% endfor %}
+            </div>
+          </a>
+        </div>
+        <!--compatibility tooltip end-->
+        {% endif %}
         <div
           class="my-1 pl-2 py-1 flex flex-col border-b-2 border-slate-300 gap-4"
           action="/submit_form"
@@ -85,15 +157,7 @@
         >
           <div class="flex items-center gap-2">
             <label for="quantityInput">Quantity:</label>
-            <!-- <input
-              class="text-right p-1 border-[1px] border-black rounded-lg"
-              type="number"
-              id="quantityInput"
-              name="quantity"
-              value="1"
-              min="1"
-              max="100"
-            /> -->
+
             <div class="flex items-center border-gray-100">
               <span
                 id="decreaseQuantity"
@@ -122,7 +186,6 @@
               / {{ product.quantity }} left
             </p>
           </div>
-
           <h3 class="">
             Price:
             <span class="text-primary text-2xl">{{ product.price }}$</span>
@@ -135,7 +198,7 @@
               Buy Now
             </button>
             <button
-              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_art') ~ '\'' }}"
+              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_cart') ~ '\'' }}"
               class="bg-darkPrimary text-white py-2 px-4 rounded-lg cursor-pointer"
             >
               Add to cart
@@ -229,11 +292,13 @@
       <h2 class="text-black text-3xl">Popular products</h2>
       <div class="flex flex-wrap justify-around gap-6 justify-start">
         {% if popular|length == 0%}
-        <p class="text-gray-900">No product is compatible with any of the cars in your garage, make sure your car information is correct</p> 
-        {% else %}
-        {% for prod in popular %} {% import 'components/product_card.html' as
-        product %} {{ product.product_card(prod, current_user) }} {% endfor %}
-        {% endif %}
+        <p class="text-gray-900">
+          No product is compatible with any of the cars in your garage, make
+          sure your car information is correct
+        </p>
+        {% else %} {% for prod in popular %} {% import
+        'components/product_card.html' as product %} {{
+        product.product_card(prod, current_user) }} {% endfor %} {% endif %}
       </div>
     </section>
     {% import 'components/footer.html' as footer %} {{ footer.footer() }}
