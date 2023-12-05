@@ -330,6 +330,13 @@ def about():
     """About us page."""
     return render_template("about.html")
 
+@app.route("/buyAgain/<uuid:order_id>")
+def buy_again(order_id):
+    """order again"""
+    order = strg.session().query(Order).get(order_id)
+    for item in order.cart.cart_items:
+        item.product.add_to_cart(current_user, item.quantity)
+    return redirect(url_for('my_cart'))
 
 @app.errorhandler(404)
 def notfound(error):
