@@ -1,73 +1,48 @@
-from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
+from requests.auth import HTTPBasicAuth
+from flask import Flask, render_template, redirect, url_for, request, session, jsonify, flash
 from flask_admin import Admin
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, current_user, login_user, logout_user, login_required
+# from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
-import os
+import requests
 from api import api
 from models import strg
-from models.user import User
+from models.user import User, Role
 from models.cart import Cart
 from models.car import Car
 from models.product import Product
 from models import strg
 from models.category import Category
-from models.cart_item import CartItem
-from app.forms.user_forms import LoginForm, RegisterForm
+from models.order import Order
+from models.address import Address
+# from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
 import random
+from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
+from flask_mailman import Mail, EmailMessage
+from functools import wraps
+
+
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 
-# Load configuration from a separate file (e.g., config.py)
 app.config.from_pyfile('app/config.py')
-login = LoginManager(app)
+
+# manage sessions per request - make sure connections are closed and returned
+app.teardown_appcontext(lambda exc: strg.session.close())
 
 
-@login.user_loader
+# Setup Flask-Security
+user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
+app.security = Security(app, user_datastore)
+mail = Mail(app)
+
+
+# login = LoginManager(app)
+
+
+@app.security.login_manager.user_loader
 def load_user(user_id):
     return strg.session.query(User).get(user_id)
-
-
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = strg.session.query(User).filter_by(
-            username=form.username.data).first()
-        if user:
-            if user.check_password(form.password.data):
-                # if user.password == form.password.data:
-                login_user(user, remember=form.rememberMe.data)
-                next_url = session.pop(
-                    'next', None) or url_for("index")
-                return redirect(next_url)
-        return "password or uesrname is incorrect"
-    return render_template("login.html", form=form)
-
-
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data,
-                    email=form.email.data,
-                    password=form.password.data)
-        if user:
-            return redirect(url_for('redirect_page'))
-        return "Something went wrong! Please try again later or contact support."
-    return render_template("register.html", form=form)
-
-
-@app.route("/redirect", methods=['GET'])
-def redirect_page():
-    return render_template("redirect.html")
-
-
-@app.route("/logout", methods=['GET', 'POST'])
-def logout():
-    logout_user()
-    return redirect(url_for("index"))
 
 
 class myAdminView(ModelView):
@@ -75,7 +50,7 @@ class myAdminView(ModelView):
         return current_user.is_authenticated
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for("login"))
+        return redirect(url_for("security.login"))
 
 
 def create_admin(app):
@@ -86,7 +61,8 @@ def create_admin(app):
     admin.add_view(CustomView(Cart))
     admin.add_view(CustomView(Product))
     admin.add_view(CustomView(Car))
-
+    admin.add_view(CustomView(Order))
+    admin.add_view(CustomView(Address))
 
 
 create_admin(app)
@@ -95,11 +71,27 @@ create_admin(app)
 app.register_blueprint(api, url_prefix='/api')
 app.url_map.strict_slashes = False
 
+
+def login_required(f):
+   @wraps(f)
+   def decorated_function(*args, **kwargs):
+       if not current_user.is_authenticated:
+           flash("Please login to access this page.", "Info")
+           return redirect(url_for('security.login'))
+       return f(*args, **kwargs)
+   return decorated_function
+
+
 @app.route("/")
 @app.route("/home")
 def index():
     categories = strg.search(cls=Category, parent_id=None)
-    popular = random.sample(supported_products(strg.all(Product)), 8)
+    popular_products = supported_products(strg.all(Product))
+    if not popular_products or len(popular_products) < 10:
+        sample_size = len(popular_products)
+    else:
+        sample_size = 10
+    popular = random.sample(popular_products, sample_size)
     return render_template("home.html", current_user=current_user, categories=categories, popular=popular)
 
 
@@ -107,7 +99,12 @@ def index():
 def product_page(id):
     # product = strg.search(cls=Product, id=id) // search needs a fix
     product = strg.session().query(Product).get(id)
-    popular = random.sample(supported_products(strg.all(Product)), 5)
+    popular_products = supported_products(strg.all(Product))
+    if not popular_products or len(popular_products) < 5:
+        sample_size = len(popular_products)
+    else:
+        sample_size = 5
+    popular = random.sample(popular_products, sample_size)
     return render_template("product_details.html", product=product, popular=popular, current_user=current_user)
 
 
@@ -158,21 +155,17 @@ def faq():
     return render_template('faq.html')
 
 
-@app.errorhandler(401)
-def unauthorized(error):
-    """Handle unauthorized access to redirect to login page"""
-    session['next'] = request.url
-    return redirect(url_for('login'))
-
-
 def get_products(cat, prods):
     prods.extend(supported_products(cat.products))
     for sub_cat in cat.children:
         prods = get_products(sub_cat, prods)
     return prods
 
+
 def supported_products(prod_list):
-    if not current_user.is_authenticated or not current_user.cars:
+    if not isinstance(prod_list, list):
+        prod_list = [prod_list]
+    if not current_user.is_authenticated or len(current_user.cars) == 0:
         return prod_list
     support_list = []
     for car in current_user.cars:
@@ -180,8 +173,6 @@ def supported_products(prod_list):
             if car.make.lower() in prod.support and prod not in support_list:
                 support_list.append(prod)
     return support_list
-                
-        
 
 
 @app.route("/addCar", methods=['POST'])
@@ -193,11 +184,158 @@ def add_car():
     strg.save()
     return redirect(url_for('garage'))
 
+
+@app.route("/editCar/<uuid:car_id>", methods=['POST'])
+@login_required
+def edit_car(car_id):
+    form_data = request.form.to_dict()
+    car = strg.session().query(Car).get(car_id)
+    for key, value in form_data.items():
+        if getattr(car, key) != value:
+            setattr(car, key, value)
+    strg.save()
+    return redirect(url_for('garage'))
+
+
+@app.route("/deleteCar/<uuid:car_id>")
+@login_required
+def delete_car(car_id):
+    car = strg.session().query(Car).get(car_id)
+    car.delete()
+    return redirect(url_for('garage'))
+
+
 @app.route("/myGarage")
 @login_required
 def garage():
     cars = current_user.cars
     return render_template('garage.html', cars=cars)
+
+
+@app.route("/checkout")
+@login_required
+def checkout():
+    cart = current_user.cart
+    items = current_user.cart.cart_items
+    if len(items) == 0:
+        return redirect(url_for('my_cart'))
+    return render_template("checkout.html", current_user=current_user, items=items, cart=cart)
+
+
+@app.route("/payments/<order_id>/capture", methods=["POST"])
+@login_required
+def capture_payment(order_id):  # Checks and confirms payment
+    captured_payment = paypal_capture_function(order_id)
+    # print(captured_payment)
+    if is_approved_payment(captured_payment):
+        # Do something (for example Update user field)
+        current_user.cart.checkout(captured_payment.get("status"))
+    return jsonify(captured_payment)
+
+
+def paypal_capture_function(order_id):
+    post_route = f"/v2/checkout/orders/{order_id}/capture"
+    paypal_capture_url = app.config["PAYPAL_API_URL"] + post_route
+    basic_auth = HTTPBasicAuth(
+        app.config["PAYPAL_BUSINESS_CLIENT_ID"], app.config["PAYPAL_BUSINESS_SECRET"])
+    headers = {
+        "Content-Type": "application/json",
+    }
+    response = requests.post(url=paypal_capture_url,
+                             headers=headers, auth=basic_auth)
+    response.raise_for_status()
+    json_data = response.json()
+    return json_data
+
+
+def is_approved_payment(captured_payment):
+    status = captured_payment.get("status")
+    amount = captured_payment.get("purchase_units")[0].get(
+        "payments").get("captures")[0].get("amount").get("value")
+    currency_code = captured_payment.get("purchase_units")[0].get("payments").get("captures")[0].get("amount").get(
+        "currency_code")
+    print(f"Payment happened. Details: {status}, {amount}, {currency_code}")
+    if status == "COMPLETED":
+        return True
+    else:
+        return False
+
+
+@app.route("/search", methods=['POST'])
+def search():
+    search_dict = {
+        'cls': Product,
+        'case_sensitive': False,
+        'exact': False
+    }
+    search_dict['name'] = request.form.get('name')
+    products = strg.search(**search_dict)
+    if current_user.is_authenticated:
+        products = supported_products(products)
+    categories = strg.search(cls=Category, parent_id=None)
+    return render_template('search.html', products=products, search_input=request.form.get('name'), categories=categories)
+
+
+@app.route("/myOrders")
+@login_required
+def orders():
+    orders = current_user.orders
+    return render_template('orders.html', orders=orders)
+
+
+@app.route("/account", methods=['GET', 'POST'])
+@login_required
+def account():
+    if request.method == 'POST':
+        form_data = request.form.to_dict()
+        for key, value in form_data.items():
+            if hasattr(current_user.address, key):
+                setattr(current_user.address, key, value)
+            else:
+                setattr(current_user, key, value)
+        strg.save()
+        flash('Information saved successfully', 'Success')
+        return redirect(url_for('account'))
+    return render_template('account.html', user=current_user)
+
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    """Subscribe to the newsletter endpoint"""
+    email = request.form.get('email')
+    # Send a confirmation email
+    emailSent = send_confirmation_email(email)
+    if emailSent:
+        flash('Subscription successful! Check your email for confirmation.', "Success")
+    else:
+        flash('Something went wrong, please try again later.', "Error")
+    return redirect(url_for('index'))
+
+
+def send_confirmation_email(email):
+    """send a confirmation email for successful subscription"""
+    try:
+        subject, from_email, to = 'Subscription Confirmation', 'noreply@fuzzfoo.tech', email
+        html_content = '<h1>Thank you for subscribing to our newsletter!</h1> <p>Cariba Team</p>'
+        msg = EmailMessage(subject, html_content, from_email, [to])
+        msg.content_subtype = "html"
+        msg.send()
+        return True
+    except Exception:
+        return False
+
+
+@app.route("/about")
+def about():
+    """About us page."""
+    return render_template("about.html")
+
+
+@app.errorhandler(404)
+def notfound(error):
+    """Handle the error 404"""
+    return render_template("404.html"), 404
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

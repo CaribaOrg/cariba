@@ -6,6 +6,7 @@
       <ul class="pl-2">
         <li class="text-white">Help</li>
         <a href="/faq"><li class="text-white">FAQ</li></a>
+        <a href="/about"><li class="text-white">About Us</li></a>
       </ul>
     </div>
     <div class="h-full">
@@ -69,7 +70,13 @@
       <p class="font-light text-white mb-2">
         Receive the latest updates and exclusive offers.
       </p>
-      <form action="submit" class="w-full" class="flex justify-center pl-2">
+      <form
+        id="subscribeForm"
+        action="/subscribe"
+        method="post"
+        class="w-full"
+        class="flex justify-center pl-2"
+      >
         <input
           class="p-2 outline-none"
           type="email"
@@ -77,11 +84,13 @@
           id="newsletter_email"
           required
         />
-        <input
+        <button
+          id="newsletter_email"
           class="bg-primary text-white p-2"
-          type="submit"
-          value="Subscribe"
-        />
+          onclick="newsletterForm()"
+        >
+          Subscribe
+        </button>
       </form>
     </div>
   </div>

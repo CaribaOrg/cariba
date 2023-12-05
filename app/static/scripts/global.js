@@ -99,3 +99,37 @@ function removeFromCart(product_id, item_quantity, buttonCaller, inCart) {
             console.error('Error adding item to cart:', error);
         });
 }
+
+// subscribe to the newsletter
+function newsletterForm() {
+    var email = document.getElementById('newsletter_email').value;
+
+    // Create an XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST', '/subscribe', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    // Define the callback function when the request is complete
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            // Successful response, handle it accordingly
+            console.log(xhr.responseText);
+            // You might want to update the UI or show a success message here
+        } else {
+            // Request failed, handle errors
+            console.error('Form submission failed');
+        }
+    };
+
+    // Prepare the data to be sent (in this case, a simple email parameter)
+    var formData = 'email=' + encodeURIComponent(email);
+
+    // Send the request
+    xhr.send(formData);
+}
+
+// close flash
+function closeFlashMessage(button) {
+    button.closest('.flash-message').remove();
+}

@@ -13,7 +13,7 @@ user_model = api_restx.model('User', {
     'last_name': fields.String(required=False, description='Last name of the user'),
     'password': fields.String(required=True, description='Password of the user'),
     'email': fields.String(required=True, description='email of the user'),
-    'is_active': fields.Boolean(required=False, description='Is the user active?'),
+    'active': fields.Boolean(required=False, description='Is the user active?'),
     'role': fields.String(required=False, description='Role', default='user'),
 })
 
@@ -231,6 +231,40 @@ class UserOrder(Resource):
             orders['cart_info'] = cart_dict
         orders_dict['orders'] = orders_list
         return jsonify(orders_dict)
+    
+address_model = api_restx.model('Address', {
+    'address': fields.String(required=True, description='Address'),
+    'city': fields.String(required=True, description='City'),
+    'region': fields.String(required=False, description='Region'),
+    'country': fields.String(required=False, description='Country'),
+    'zip_code': fields.Integer(required=False, description='Zip coder')
+})
+
+class UserAddress(Resource):
+    @api_restx.response(200, 'Successful operation')
+    def get(self, user_id):
+        user = strg.search(cls=User, id=user_id)
+        if not user:
+            return 'None found', 404
+        address_dict = user.address.dictify()
+        address_dict.pop('user_id')
+        return jsonify(address_dict)
+    
+    @api_restx.expect(address_model)
+    @api_restx.response(200, 'Successful operation')
+    def put(self, user_id):
+        user = strg.search(cls=User, id=user_id)
+        if not user:
+            return {'error': 'None found'}, 404
+        data = request.get_json()
+        if not data:
+            return {'error': 'Invalid request format, expected JSON'}, 400
+        ignore_list = ['id', 'created_at', 'updated_at', 'user_id', 'user']
+        for key, value in data.items():
+            if key not in ignore_list:
+                setattr(user.address, key, value)
+        user.address.save()
+        return jsonify(user.address.dictify())
 
 
 api_restx.add_resource(Users, '/users')
@@ -240,3 +274,4 @@ api_restx.add_resource(UserGarage, '/users/<user_id>/garage')
 api_restx.add_resource(GarageUser, '/users/<user_id>/garage/<car_id>')
 api_restx.add_resource(UserOrder, '/users/<user_id>/orders')
 api_restx.add_resource(UserCheckout, '/users/<user_id>/checkout')
+api_restx.add_resource(UserAddress, '/users/<user_id>/address')

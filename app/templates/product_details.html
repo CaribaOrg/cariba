@@ -14,15 +14,15 @@
   <body class="bg-white">
     {% import 'components/header.html' as header %} {{
       header.display_header(current_user) }}
-      <div class="flex flex-col">
+      <div class="flex flex-row flex-wrap justify-center w-full">
         {% if current_user.is_authenticated %}
         {% for car in current_user.cars %}
         {% if product.is_supported(car) %}
-        <div class="supported rounded-lg w-100 m-around-5">
+        <div class="supported">
           Compatible with your {{ car.name }} ({{ car.make }} {{ car.model}})
         </div>
         {% else %}
-        <div class="unsupported rounded-lg w-100 m-around-5">
+        <div class="unsupported">
           Not compatible with your {{ car.name }} ({{ car.make }} {{ car.model}})
         </div>
         {% endif %}
@@ -129,13 +129,13 @@
           </h3>
           <div class="flex gap-3">
             <button
-              onclick="{{ 'buyNow(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('login') ~ '\'' }}"
+              onclick="{{ 'buyNow(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_cart') ~ '\'' }}"
               class="bg-primary text-white py-2 px-4 rounded-lg cursor-pointer"
             >
               Buy Now
             </button>
             <button
-              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('login') ~ '\'' }}"
+              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_art') ~ '\'' }}"
               class="bg-darkPrimary text-white py-2 px-4 rounded-lg cursor-pointer"
             >
               Add to cart
@@ -227,9 +227,13 @@
     <!-- popular products -->
     <section class="flex flex-col p-8 gap-4">
       <h2 class="text-black text-3xl">Popular products</h2>
-      <div class="flex flex-wrap gap-6 justify-start">
+      <div class="flex flex-wrap justify-around gap-6 justify-start">
+        {% if popular|length == 0%}
+        <p class="text-gray-900">No product is compatible with any of the cars in your garage, make sure your car information is correct</p> 
+        {% else %}
         {% for prod in popular %} {% import 'components/product_card.html' as
         product %} {{ product.product_card(prod, current_user) }} {% endfor %}
+        {% endif %}
       </div>
     </section>
     {% import 'components/footer.html' as footer %} {{ footer.footer() }}

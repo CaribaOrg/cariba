@@ -43,9 +43,18 @@
           </p>
         </div>
         <div>
+          {% if not current_user.is_authenticated %}
+          <button
+            onclick="window.location.href = '/login'"
+            class="px-8 py-2 bg-primary"
+          >
+            <span class="font-medium text-white">Add a car</span>
+          </button>
+          {% else %}
           <button onclick="openCarModal()" class="px-8 py-2 bg-primary">
             <span class="font-medium text-white">Add a car</span>
           </button>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -69,205 +78,26 @@
     <section class="flex flex-col p-4 gap-4">
       <h2 class="text-white text-3xl">Popular products</h2>
       <div class="flex flex-wrap gap-3 justify-start">
-        {% for prod in popular %} {% import 'components/product_card.html' as
-        product %} {{ product.product_card(prod, current_user) }} {% endfor %}
+        {% if popular|length == 0%}
+        <p class="text-white">
+          No product is compatible with any of the cars in your garage, make
+          sure your car information is correct
+        </p>
+        {% else %} {% for prod in popular %} {% import
+        'components/product_card.html' as product %} {{
+        product.product_card(prod, current_user) }} {% endfor %} {% endif %}
       </div>
     </section>
 
     <!-- add car modal -->
-    <div
-      id="carModal"
-      class="w-full items-center justify-center bg-slate-500 absolute hidden"
-    >
-      <div
-        class="fixed left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-60 backdrop-filter backdrop-blur-sm z-50 h-screen max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
-      >
-        <div class="relative max-h-full w-full max-w-2xl">
-          <!-- Modal content -->
-          <div class="relative rounded-lg bg-white shadow dark:bg-white">
-            <!-- Modal header -->
-            <div
-              class="flex items-start justify-between rounded-t border-b p-5 dark:border-gray-400"
-            >
-              <h3
-                class="text-xl font-semibold text-gray-900 dark:text-black lg:text-2xl"
-              >
-                Add Car
-              </h3>
-              <button
-                type="button"
-                onclick="closeCarModal()"
-                class="ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                <svg
-                  class="h-3 w-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 14"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                  />
-                </svg>
-                <span class="sr-only">Close modal</span>
-              </button>
-            </div>
-            <!-- Modal body -->
-            <div class="space-y-6 p-6">
-              <p>
-                If you know your car's VIN (Vehicle Identification Number),
-                please switch to the "Car VIN" tab.
-              </p>
-              <div
-                id="carTabs"
-                x-data="{ tab: 'fullDetails' }"
-                class="w-full mx-auto bg-white rounded-md"
-              >
-                <div class="flex flex-row mb-6">
-                  <button
-                    @click="tab = 'fullDetails'"
-                    :class="{ 'text-primary': tab === 'fullDetails', 'border-primary': tab === 'fullDetails'}"
-                    class="flex items-center flex-shrink-0 px-5 py-2 border-b-4 font-bold"
-                  >
-                    Car Details
-                  </button>
-                  <button
-                    @click="tab = 'vinDetails'"
-                    :class="{ 'text-primary': tab === 'vinDetails', 'border-primary': tab === 'vinDetails' }"
-                    class="flex items-center flex-shrink-0 px-5 py-2 border-b-4 font-bold"
-                  >
-                    Car VIN
-                  </button>
-                </div>
+    {% import 'components/car_modal.html' as car_modal %} {{
+    car_modal.carModal() }}
 
-                <div x-show="tab === 'fullDetails'">
-                  <form id="fullDetails", method="POST", action="/addCar">
-                    <!-- Full details form fields (name, model, year) -->
-                    <div class="mb-4">
-                      <label
-                        for="carName"
-                        class="block text-gray-600 text-sm font-medium mb-2"
-                        >Car Name:</label
-                      >
-                      <input
-                        type="text"
-                        id="carName"
-                        name="name"
-                        class="w-full border border-gray-300 p-2 rounded-md"
-                        required
-                      />
-                    </div>
-                    <div class="mb-4">
-                      <label
-                        for="carMake"
-                        class="block text-gray-600 text-sm font-medium mb-2"
-                        >Car Make:</label
-                      >
-                      <input
-                        type="text"
-                        id="carMake"
-                        name="make"
-                        class="w-full border border-gray-300 p-2 rounded-md"
-                        required
-                      />
-                    </div>
-                    <div class="mb-4">
-                      <label
-                        for="carModel"
-                        class="block text-gray-600 text-sm font-medium mb-2"
-                        >Car Model:</label
-                      >
-                      <input
-                        type="text"
-                        id="carModel"
-                        name="model"
-                        class="w-full border border-gray-300 p-2 rounded-md"
-                        required
-                      />
-                    </div>
-
-                    <div class="mb-4">
-                      <label
-                        for="carYear"
-                        class="block text-gray-600 text-sm font-medium mb-2"
-                        >Car Year:</label
-                      >
-                      <input
-                        type="number"
-                        id="carYear"
-                        name="year"
-                        class="w-full border border-gray-300 p-2 rounded-md"
-                        required
-                      />
-                    </div>
-                    <input type="submit" id="fullsubmit" value="Save" class="hidden">
-                  </form>
-                </div>
-
-                <div x-show="tab === 'vinDetails'">
-                  <form id="vinDetails", method="POST", action="/addCar">
-                    <!-- VIN details form fields (VIN) -->
-                    <div class="mb-4">
-                      <label
-                        for="carName2"
-                        class="block text-gray-600 text-sm font-medium mb-2"
-                        >Car Name:</label
-                      >
-                      <input
-                        type="text"
-                        id="carName2"
-                        name="name"
-                        class="w-full border border-gray-300 p-2 rounded-md"
-                        required
-                      />
-                    </div>
-                    <div class="mb-4">
-                      <label
-                        for="carVin"
-                        class="block text-gray-600 text-sm font-medium mb-2"
-                        >VIN (Vehicle Identification Number):</label
-                      >
-                      <input
-                        type="text"
-                        id="carVin"
-                        name="vin"
-                        class="w-full border border-gray-300 p-2 rounded-md"
-                        required
-                      />
-                    </div>
-                    <input type="submit" id="vinsubmit" value="Save" class="hidden">
-                  </form>
-                </div>
-              </div>
-            </div>
-            <!-- Modal footer -->
-            <div
-              class="flex items-center space-x-2 rtl:space-x-reverse rounded-b border-t border-gray-200 p-6"
-            >
-              <button
-                onclick="submitCarForm()"
-                type="button"
-                class="rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-darkPrimary focus:outline-none focus:ring-4 focus:ring-blue-300"
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                onclick="closeCarModal()"
-                class="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-300"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Flash message container -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% set flashType, message = messages[0] %} {% import
+    'components/flash_notification.html' as notif %} {{
+    notif.notification(flashType, message) }} {% endif %} {% endwith %}
 
     <!-- footer -->
     {% import 'components/footer.html' as footer %} {{ footer.footer() }}

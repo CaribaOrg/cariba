@@ -24,10 +24,11 @@ class Address(BaseModel, Base):
     __tablename__ = 'addresses'
     user_id = Column(String(128), ForeignKey('users.id'))
     user = relationship('User', back_populates='address')
-    street = Column(String(128), nullable=False)
-    city = Column(String(128), nullable=False)
-    state_province = Column(String(128), nullable=False)
-    zip_code = Column(Integer, nullable=False)
+    address = Column(String(2048))
+    city = Column(String(128))
+    region = Column(String(128))
+    country = Column(String(128))
+    zip_code = Column(Integer)
 
     def __init__(self, **kwargs):
         '''

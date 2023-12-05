@@ -21,6 +21,10 @@ body {
   width: 40rem;
 }
 
+.w-20 {
+  width: 5rem;
+}
+
 .h-50 {
   height: 8rem;
 }
@@ -29,16 +33,36 @@ body {
   margin-top: 7rem;
 }
 
+.m-3 {
+  margin: 2.5rem;
+}
+
 .unsupported {
-  background-color: #FF0000;
+  background-color: #ff6f6f;
+  border-color: #ff0000;
 }
 
 .supported {
-  background-color: #00FF00;
+  background-color: #80fc80;
+  border-color: #00ff00;
+}
+
+.unsupported, .supported {
+  border-width: 2px;
+  border-radius: 0.3rem;
+  padding: 5px;
+  margin: 5px;
+  margin-right: 200px;
+  margin-left: 200px;
+  max-width: 25rem;
 }
 
 .m-around-5 {
   margin: 5px;
+}
+
+.min-w {
+  min-width: 288px;
 }
 
 .link {
@@ -108,4 +132,22 @@ body {
     transition: transform 0.5s ease-in-out;
     transform: translateX(-288px);
   }
+}
+
+/* error flash */
+.Error {
+  border-color: rgb(239, 68, 68);
+  color: rgb(239, 68, 68);
+}
+
+/* success flash */
+.Success {
+  border-color: rgb(34, 197, 94);
+  color: rgb(34, 197, 94);
+}
+
+/* info flash */
+.Info {
+  border-color: rgb(59, 130, 246);
+  color: rgb(59, 130, 246);
 }

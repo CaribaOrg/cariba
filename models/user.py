@@ -53,18 +53,20 @@ class User(BaseModel, Base, UserMixin):
 
     '''
     __tablename__ = 'users'
-    username = Column(String(255), unique=True, nullable=False)
     first_name = Column(String(255), nullable=True)
     last_name = Column(String(255), nullable=True)
+    email = Column(String(255), unique=True)
+    phone = Column(Integer)
+    username = Column(String(255), unique=True, nullable=True)
     password = Column(String(255), nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
-    is_active = Column(Boolean, default=True)
-    last_login_at = Column(DateTime(), nullable=True)
-    current_login_at = Column(DateTime(), nullable=True)
-    last_login_ip = Column(String(100), nullable=True)
-    current_login_ip = Column(String(100), nullable=True)
+    last_login_at = Column(DateTime())
+    current_login_at = Column(DateTime())
+    last_login_ip = Column(String(100))
+    current_login_ip = Column(String(100))
     login_count = Column(Integer)
-    confirmed_at = Column(DateTime(), nullable=True)
+    active = Column(Boolean())
+    fs_uniquifier = Column(String(64), unique=True, nullable=False)
+    confirmed_at = Column(DateTime())
     roles = relationship('Role', secondary='roles_users',
                          backref=backref('users', lazy='dynamic'))
     address = relationship('Address',
@@ -83,6 +85,7 @@ class User(BaseModel, Base, UserMixin):
 
     def __init__(self, **kwargs):
         from models.cart import Cart
+        from models.address import Address
         '''
         Initialize a new instance of the User class.
 
@@ -93,6 +96,9 @@ class User(BaseModel, Base, UserMixin):
         cart_dict = {'user_id': self.id}
         crt = Cart(**cart_dict)
         crt.save()
+        address_dict = {'user_id': self.id}
+        address = Address(**address_dict)
+        address.save()
 
     def check_password(self, password):
         password = md5(password.encode()).hexdigest()
@@ -100,3 +106,12 @@ class User(BaseModel, Base, UserMixin):
 
     def get_id(self):
         return self.id
+    
+    def is_authenticated(self):
+                return True
+
+    def is_active(self):
+            return self.active
+
+    def is_anonymous(self):
+            return False

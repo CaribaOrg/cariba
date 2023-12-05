@@ -10,7 +10,12 @@
         of car <span class="text-primary">batteries</span>
       </span>
       <div class="w-full">
-        {% import 'components/shop_now_btn.html' as btn%} {{ btn.shop_now() }}
+        <button
+        class="px-8 py-2 bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
+        onclick="window.location.href = '/categories'"
+        >
+        Shop Now
+        </button>
       </div>
     </div>
     <div class="w-full relative z-1">

@@ -13,9 +13,10 @@
       />
     </a>
     <!-- search bar -->
-    <form id="search_bar" class="flex h-10 max-md:hidden">
+    <form id="search_bar" class="flex h-10 max-md:hidden", method="POST", action="/search">
       <input
         id="search_input"
+        name="name"
         type="text"
         placeholder="Search Cariba"
         class="px-3 py-2 rounded-l-lg w-96 focus:outline-none"

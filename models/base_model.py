@@ -5,8 +5,6 @@ from datetime import datetime
 from typing import Any
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from hashlib import md5
-import models
 import uuid
 
 time = "%Y-%m-%dT%H:%M:%S"
@@ -39,11 +37,6 @@ class BaseModel:
         for key, value in kwargs.items():
             setattr(self, key, value)
         self.save()
-
-    def __setattr__(self, name, value):
-        if name == "password":
-            value = md5(value.encode()).hexdigest()
-        super().__setattr__(name, value)
         
     def save(self):
         ''' Save the current instance to the storage db. '''
@@ -59,8 +52,8 @@ class BaseModel:
 
     def dictify(self):
         dictified = self.__dict__.copy()
-        dictified["created_at"] = dictified["created_at"].strftime(time)
-        dictified["updated_at"] = dictified["updated_at"].strftime(time)
+        dictified.pop("created_at", None)
+        dictified.pop("updated_at", None)
         dictified.pop('_sa_instance_state', None)
         dictified.pop('password', None)
         return dictified

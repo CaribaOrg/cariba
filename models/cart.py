@@ -39,7 +39,7 @@ class Cart(BaseModel, Base):
         '''
         super().__init__(**kwargs)
 
-    def checkout(self):
+    def checkout(self, order_status):
         '''
         Checkout the items in the cart, creating an order and
         resetting the cart.
@@ -53,7 +53,8 @@ class Cart(BaseModel, Base):
             return None
         order_dict = {
                 'user_id': self.user_id,
-                'cart_id': self.id
+                'cart_id': self.id,
+                "order_status": order_status
                 }
         order = Order(**order_dict)
         order.save()
