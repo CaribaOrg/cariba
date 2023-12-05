@@ -99,8 +99,8 @@ class Product(BaseModel, Base):
         for item in user.cart.cart_items:
             if self.id == item.product.id:
                 if item.quantity <= quantity:
-                    item.delete()
                     user.cart.cart_items.remove(item)
+                    item.delete()
                     user.cart.total_price -= round(item.quantity * self.price, 2)
                     user.cart.total_items -= item.quantity
                     user.save()
