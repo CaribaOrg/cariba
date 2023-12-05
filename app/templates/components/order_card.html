@@ -1,0 +1,28 @@
+{% macro order_card(order) %}
+<div class="flex flex-col p-4 bg-white rounded-md shadow-md">
+  <div class="text-gray-600">
+    <span class="text-slate-700">Date:</span>
+    <span class="font-bold">{{ order.created_at }}</span>
+  </div>
+  <div class="text-gray-600">
+    <span class="text-slate-700">Number of products:</span>
+    <span class="font-bold">{{ order.cart.cart_items|length }}</span>
+  </div>
+  <div class="text-gray-600">
+    <span class="text-slate-700">Order Total:</span>
+    <span class="font-bold">${{ (order.cart.total_price + order.cart.shipping)|round(2) }}</span>
+  </div>
+  <div class="flex flex-wrap justify-around gap-3 justify-start">
+    {% for item in order.cart.cart_items %} {% import 'components/product_card_no_button.html' as
+    product %} {{ product.product_card_no_button(item.product) }} {% endfor %}
+  </div>
+  <div class="text-gray-600">
+    <span class="text-slate-700">Status:</span> <span></span>
+    <span class="font-bold">{{ order.order_status }}</span>
+  </div>
+  <div class="text-gray-600">
+    <span class="text-slate-700">Shipping information:</span>
+    <span class="font-bold">{{ order.user.address.address }}, {{ order.user.address.city }}, {{ order.user.address.country }}</span>
+  </div>
+</div>
+{% endmacro %}
