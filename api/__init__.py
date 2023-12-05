@@ -11,4 +11,5 @@ from api.user import *
 from api.order import *
 from api.category import *
 from api.part import *
+from api.notification import *
 from api.api_swagger import *

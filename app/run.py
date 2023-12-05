@@ -262,7 +262,7 @@ def send_message(id=None):
         if send_to_all:
             for one_user in User.query.all():
                 Message(author=current_user, recipient=one_user,
-                      body=form.message.data)
+                      body=form.message.data, title=form.title.data)
                 strg.save()
                 one_user.add_notification('unread_message_count',
                               one_user.unread_message_count())
@@ -288,7 +288,7 @@ def messages():
     current_user.add_notification('unread_message_count', 0)
     strg.save()
     messages = current_user.messages_received#.order_by(Message.updated_at.desc())
-    return render_template('messages.html', messages=messages)
+    return render_template('messages.html', messages=messages, current_user=current_user)
 
 @app.route('/notifications')
 @login_required

@@ -23,9 +23,11 @@ class Message(BaseModel, Base):
         - 'recipient': Represents the associated cart.
     '''
     __tablename__ = 'messages'
+    title = Column(String(555), nullable=False)
     body = Column(String(2555), nullable=False)
     sender_id = Column(String(128), ForeignKey('users.id'))
     recipient_id = Column(String(128), ForeignKey('users.id'))
+    message_label = Column(String(128), nullable=False, default="notifications")
     
     author = relationship('User',
         foreign_keys='Message.sender_id',

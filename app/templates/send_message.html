@@ -4,6 +4,7 @@
             <form action="{{ url_for('send_message') }}" method="post" name="message">
                 <div>
                     {{ form.hidden_tag() }}
+                    {{ form.title }}
                     {{ form.message }}
                     {{ form.submit }}
                 </div>

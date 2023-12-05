@@ -1,6 +1,30 @@
-<table>
-    <tr valign="top">
-        <td>Image</td>
-        <td>Author: {{ post.author.username }} <br>{{ post.body }}</td>
-    </tr>
-</table>
+<div
+                    @click="fetchPost({{ post.body }})"
+                    class="flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
+                    :class="{ 'bg-gray-200/80': viewedPosts[item.data.id], 'bg-blue-200': postContent !== null && postContent.id === item.data.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.data.id }"
+                  >
+                    <div>
+                      <input type="checkbox" />
+                    </div>
+                    <div>-</div>
+                    <div>
+                      <div class="w-36 max-w-36">
+                        <p
+                          class="line-clamp-1 text-sm"
+                          x-text="{{ post.author.username }}"
+                        ></p>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <p
+                        class="line-clamp-1 text-sm"
+                        x-text="{{ post.author.username }}"
+                      ></p>
+                    </div>
+                    <div>
+                      <p
+                        class="text-sm"
+                        x-text="{{ post.created_at }}"
+                      ></p>
+                    </div>
+                  </div>
