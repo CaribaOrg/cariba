@@ -22,6 +22,7 @@ from flask_mailman import Mail
 from app.forms.message_form import MessageForm
 from models.notification import Message, Notification
 from datetime import datetime
+from flask_ckeditor import CKEditor
 
 app = Flask(__name__)
 
@@ -35,6 +36,7 @@ app.teardown_appcontext(lambda exc: strg.session.close())
 user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
 app.security = Security(app, user_datastore)
 mail = Mail(app)
+ckeditor = CKEditor(app)
 
 # login = LoginManager(app)
 

@@ -11,6 +11,7 @@
     <link href="https://cdn.tailwindcss.com" rel="stylesheet">
     <!-- BEGIN: Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio,line-clamp"></script>
+    {{ ckeditor.load() }}
     <!-- END: Tailwind -->
 
     <!-- BEGIN: Alpinejs -->
@@ -21,70 +22,71 @@
         postContent: null,
         postContentComments: null,
         sidebarExtended: true,
-        currentSubreddit: "all",
-        subreddits: [
+        CurrentLabel: "all",
+        label: [
           "all",
           "notifications",
           "payments",
           "features",
           "alerts",
         ],
-        subredditIcons: [
+        labelIcons: [
           "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/inbox_fill_baseline_p900_20dp.png",
           "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/star_baseline_nv700_20dp.png",
           "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/schedule_baseline_nv700_20dp.png",
           "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/send_baseline_nv700_20dp.png",
           "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/draft_baseline_nv700_20dp.png",
         ],
-        altSubredditIcons:
+        altLabelIcons:
           "https://www.gstatic.com/images/icons/material/system/1x/flag_gm_blue_20dp.png",
 
-        subredditItems: [],
-        subredditLoaded: false,
-        viewedPosts: {},
+        labelItems: [],
+        labelLoaded: false,
+        viewedMessages: {},
 
         init() {
           this.loaded = true;
-          this.changeSubreddit(this.subreddits[0]);
+          this.changeLabel(this.label[0]);
         },
 
-        addSubreddit() {
-          let subreddit = prompt("Enter a subreddit name");
-          if (subreddit) this.subreddits.push(subreddit);
+        addMessage() {
+          let label = prompt("Enter a label name");
+          if (label) this.label.push(label);
         },
 
-        changeSubreddit(subreddit) {
-          this.currentSubreddit = subreddit;
-          this.fetchSubreddit(subreddit);
+        changeLabel(label) {
+          this.CurrentLabel = label;
+          this.fetchLabel(label);
         },
 
-        fetchSubreddit(subreddit) {
-          this.subredditLoaded = false;
-          this.subredditItems = [];
-          fetch(`api/messages/{{ current_user.id }}/${subreddit}`)
+        fetchLabel(label) {
+          this.labelLoaded = false;
+          this.labelItems = [];
+          fetch(`api/messages/{{ current_user.id }}/${label}`)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
-              this.subredditItems = data;
-              this.subredditLoaded = true;
+              this.labelItems = data;
+              this.labelLoaded = true;
             });
         },
 
-        fetchPost(postData) {
-          this.postContent = postData;
-          this.fetchPostComments(postData.body);
-          this.viewedPosts[postData.id] = true;
+        fetchMessage(messageData) {
+          this.postContent = messageData;
+          this.fetchPostBody(messageData.body);
+          this.viewedMessages[messageData.id] = true;
         },
 
-        fetchPostComments(postId) {
+        fetchPostBody(messageId) {
           this.postContentComments = [];
-          this.postContentComments = postId;
+          this.postContentComments = messageId;
         },
       });
     </script>
     <!-- END: Alpinejs -->
 </head>
 <body class="w-full h-screen overflow-hidden flex items-center" style="background: #edf2f7;">
+  
     <main x-data="GmailKit" class="w-full">
       <template x-if="loaded">
         <div class="h-screen flex">
@@ -115,8 +117,12 @@
           <!-- BEGIN: Sidebar -->
           <template x-if="sidebarExtended">
             <aside class="w-64 bg-gray-50 h-screen py-3 px-6">
-              <button
-                @click="addSubreddit"
+              
+
+              <div x-data="{ modelOpen: false }">
+
+                <button
+                @click="modelOpen =!modelOpen"
                 class="px-3 py-3 bg-cyan-400/30 rounded-xl my-6 flex flex-row space-x-4 items-center"
               >
                 <div
@@ -127,23 +133,103 @@
                 ></div>
                 <p class="text-sm pr-4">Compose Message</p>
               </button>
+            
+                <div x-show="modelOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div class="flex items-end justify-center min-h-screen px-4 text-center md:items-center sm:block sm:p-0">
+                        <div x-cloak @click="modelOpen = false" x-show="modelOpen" 
+                            x-transition:enter="transition ease-out duration-300 transform"
+                            x-transition:enter-start="opacity-0" 
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-200 transform"
+                            x-transition:leave-start="opacity-100" 
+                            x-transition:leave-end="opacity-0"
+                            class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-40" aria-hidden="true"
+                        ></div>
+            
+                        <div x-cloak x-show="modelOpen" 
+                            x-transition:enter="transition ease-out duration-300 transform"
+                            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                            x-transition:leave="transition ease-in duration-200 transform"
+                            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
+                            x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                            class="inline-block w-full max-w-xl p-8 my-20 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl 2xl:max-w-2xl"
+                        >
+                            <div class="flex items-center justify-between space-x-4">
+                                <h1 class="text-xl font-medium text-black-800 ">Compose Message</h1>
+            
+                                <button @click="modelOpen = false" class="text-black-600 focus:outline-none hover:text-black-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+            
+                            <p class="mt-2 text-sm text-black-500 ">
+                                Compose a message below
+                            </p>
+            
+                            <form class="mt-5">
+
+                              <div class="mt-4">
+                                <div class="mt-4 space-y-5">
+                                    <div class="flex items-center space-x-3 cursor-pointer" x-data="{ show: true }" @click="show =!show">
+                                        <div class="relative w-10 h-5 transition duration-200 ease-linear rounded-full"
+                                            :class="[show ? 'bg-indigo-500' : 'bg-gray-300']">
+                                            <label for="show"
+                                                @click="show =!show"
+                                                class="absolute left-0 w-5 h-5 mb-2 transition duration-100 ease-linear transform bg-white border-2 rounded-full cursor-pointer"
+                                                :class="[show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']"></label>
+                                            <input type="checkbox" name="show" class="hidden w-full h-full rounded-full appearance-none active:outline-none focus:outline-none"/>
+                                        </div>
+        
+                                        <p class="text-black-500">Send to All</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                                <div>
+                                    <label for="user name" class="block text-sm text-black-700 capitalize dark:text-black-200">Title</label>
+                                    <input placeholder="Arthur Melo" type="text" class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                                </div>
+
+                                <div>
+                                  <label for="user name" class="block text-sm text-black-700 capitalize dark:text-black-200">Label</label>
+                                  <input placeholder="Arthur Melo" type="text" class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                              </div>
+            
+                                <div>
+                                    <label for="email" class="block text-sm text-black-700 capitalize dark:text-black-200">Message Body</label>
+                                    {{ ckeditor.create() }}
+                                </div>
+                                
+                                <div class="flex justify-end mt-6">
+                                    <button type="button" class="px-3 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-500 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">
+                                        Compose Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
               <div class="flex flex-col space-y-0">
-                <template x-for="(subreddit, index) in subreddits">
+                <template x-for="(label, index) in label">
                   <div
-                    @click="changeSubreddit(subreddit)"
+                    @click="changeLabel(label)"
                     class="flex items-center space-x-2 rounded-full py-2 px-4 cursor-pointer"
-                    :class="{ 'bg-blue-200/80 font-bold': subreddit === currentSubreddit, 'hover:bg-gray-200/80': subreddit !== currentSubreddit }"
+                    :class="{ 'bg-blue-200/80 font-bold': label === CurrentLabel, 'hover:bg-gray-200/80': label !== CurrentLabel }"
                   >
                     <div class="w-4 h-4 rounded-full">
                       <img
-                        :src="(subredditIcons.length <= index) ? altSubredditIcons : subredditIcons[index]"
+                        :src="(labelIcons.length <= index) ? altLabelIcons : labelIcons[index]"
                         alt="Subreddit Icon"
                       />
                     </div>
                     <div
-                      class="text-sm font-medium text-gray-700"
-                      x-text="subreddit"
+                      class="text-sm font-medium text-black-700"
+                      x-text="label"
                     ></div>
                   </div>
                 </template>
@@ -254,11 +340,11 @@
             <div class="flex flex-row flex-1 overflow-y-auto">
               <!-- BEGIN: List posts -->
               <div class="h-full max–h-full flex-1 overflow-y-scroll">
-                <template x-for="item in subredditItems">
+                <template x-for="item in labelItems">
                   <div
-                    @click="fetchPost(item)"
+                    @click="fetchMessage(item)"
                     class="flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
-                    :class="{ 'bg-gray-200/80': viewedPosts[item.id], 'bg-blue-200': postContent !== null && postContent.id === item.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.id }"
+                    :class="{ 'bg-gray-200/80': viewedMessages[item.id], 'bg-blue-200': postContent !== null && postContent.id === item.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.id }"
                   >
                     <div>
                       <input type="checkbox" />
@@ -293,11 +379,8 @@
               <article class="flex-1 bg-white overflow-y-scroll">
                 <template x-if="postContent === null">
                   <div class="p-8">
-                    <p>Welcome to GmailKit!</p>
-                    <i class="italic"
-                      >Select a subreddit to get started. You can add subreddits
-                      by clicking the "Compose" button</i
-                    >
+                    <p>No Message Selected!</p>
+                    
                   </div>
                 </template>
                 <template x-if="postContent !== null">
@@ -305,7 +388,8 @@
                     <h1 class="text-xl" x-text="postContent.title"></h1>
                     <div>
                       <div
-                        class="px-[0.25rem] rounded bg-neutral-200 text-gray-800 text-xs w-fit"
+                        class="px-[0.25rem] rounded bg-neutral-200 text-black-800 text-xs w-fit"
+                        x-text="postContent.label"
                       >
                         Inbox
                       </div>
@@ -325,7 +409,7 @@
                             x-text="postContent.author"
                           ></p>
                         </div>
-                        <div><p class="text-xs text-gray-700">to me</p></div>
+                        <div><p class="text-xs text-black-700">to me</p></div>
                       </div>
                       <div
                         class="flex-1 flex flex-col justify-between items-end py-2"
@@ -333,7 +417,7 @@
                         <div class="flex flex-row items-center space-x-2">
                           <div>
                             <p
-                              class="text-gray-500 text-xs"
+                              class="text-black-500 text-xs"
                               x-text="postContent.created"
                             ></p>
                           </div>
@@ -384,8 +468,11 @@
               <!-- END: Post content -->
             </div>
           </div>
+          
         </div>
+        
       </template>
+     
       <template x-if="!loaded">
         <div class="h-screen flex justify-center items-center">
           <div
@@ -395,7 +482,6 @@
       </template>
       
     </main>
-    <!-- footer -->
     
 </body>
 </html>
