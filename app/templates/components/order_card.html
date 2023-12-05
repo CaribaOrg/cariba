@@ -1,28 +1,68 @@
 {% macro order_card(order) %}
-<div class="flex flex-col p-4 bg-white rounded-md shadow-md">
-  <div class="text-gray-600">
-    <span class="text-slate-700">Date:</span>
-    <span class="font-bold">{{ order.created_at }}</span>
+<div class="flex flex-col flex-wrap bg-white w-full rounded-lg p-2 sm:p-4">
+  <div
+    class="flex justify-between bg-slate-100 rounded-t-lg p-1 max-md:flex-col"
+  >
+    <div class="text-black">
+      <span class="text-slate-500">Order ID:</span>
+      <span class="font-bold">{{ order.id }}</span>
+      <span
+        class="text-xs bg-slate-600 text-white px-1 rounded-sm -translate-x-1 translate-y-1"
+      >
+        COPY
+      </span>
+    </div>
+    <div class="text-black">
+      <span class="text-slate-500">Date:</span>
+      <span class="font-bold">{{ order.created_at }}</span>
+    </div>
   </div>
-  <div class="text-gray-600">
-    <span class="text-slate-700">Number of products:</span>
+  <div class="text-black">
+    <span class="text-slate-500">Number of products:</span>
     <span class="font-bold">{{ order.cart.cart_items|length }}</span>
   </div>
-  <div class="text-gray-600">
-    <span class="text-slate-700">Order Total:</span>
-    <span class="font-bold">${{ (order.cart.total_price + order.cart.shipping)|round(2) }}</span>
+  <div class="text-black">
+    <span class="text-slate-500">Order Total:</span>
+    <span class="font-bold"
+      >${{ (order.cart.total_price + order.cart.shipping)|round(2) }}</span
+    >
   </div>
-  <div class="flex flex-wrap justify-around gap-3 justify-start">
-    {% for item in order.cart.cart_items %} {% import 'components/product_card_no_button.html' as
-    product %} {{ product.product_card_no_button(item.product) }} {% endfor %}
+  <div class="text-right text-gray-600">
+    <!-- <span class="text-slate-500">Status:</span> <span></span> -->
+    <span class="text-white font-bold px-1 rounded-md {{ order.order_status }}"
+      >{{ order.order_status }}</span
+    >
   </div>
-  <div class="text-gray-600">
-    <span class="text-slate-700">Status:</span> <span></span>
-    <span class="font-bold">{{ order.order_status }}</span>
-  </div>
-  <div class="text-gray-600">
-    <span class="text-slate-700">Shipping information:</span>
-    <span class="font-bold">{{ order.user.address.address }}, {{ order.user.address.city }}, {{ order.user.address.country }}</span>
-  </div>
+  <details class="text-slate-900 px-2">
+    <summary class="py-2 font-bold outline-none cursor-pointer">
+      Products
+    </summary>
+    <div class="flex flex-col w-full gap-1 px-6 pb-4">
+      {% for item in order.cart.cart_items %}
+      <div class="flex items-center px-2 py-1 justify-between bg-slate-50">
+        <div class="flex items-center gap-1">
+          <img
+            src="{{ url_for('static', filename='images/pics/' + item.product.icon + '.jpg') }}"
+            alt="{{ item.product.name }}"
+            class="w-[40px] h-[40px] object-contain rounded-t-lg"
+          />
+          <div class="w-[70%]">
+            <a href="{{ url_for('product_page', id=item.product.id) }}">
+              <h3
+                class="pt-2 text-sm leading-normal font-semibold font-palanquin text-clip"
+              >
+                {{ item.product.name }}
+              </h3>
+            </a>
+          </div>
+        </div>
+        <div class="w-[10%] text-right">
+          <span>{{ item.product.price }}$ x ({{ item.quantity }})</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </details>
 </div>
+<!-- and up -->
 {% endmacro %}

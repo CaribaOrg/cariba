@@ -23,19 +23,27 @@
     {% import 'components/header.html' as header %} {{
     header.display_header(current_user) }}
     <div class="min-h-screen bg-darkPrimary pt-12">
-      <h1 class="pb-10 text-center text-3xl font-bold text-white">
+      <h1 class="pb-10 text-center text-2xl sm:text-4xl font-bold text-white">
         Shopping Cart
       </h1>
       <div
         class="mx-auto max-w-5xl justify-center px-6 md:flex pb-8 md:space-x-6 xl:px-0"
       >
         {% if items|length == 0 %}
-        <div class="flex flex-row flex-wrap justify-center">
+        <div class="flex flex-col flex-wrap justify-center text-center">
+          <div class="flex justify-center">
+            <img
+              src="../static/images/empty_cart.png"
+              alt="teenager in a shopping cart"
+              width="300px"
+            />
+          </div>
+
           <h3 class="text-2xl text-slate-300">Your cart is empty!</h3>
           <button
             class="px-8 py-2 w-full bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
             onclick="window.location.href = '/categories'"
-            >
+          >
             Shop Now
           </button>
         </div>
@@ -144,12 +152,12 @@
             </div>
           </div>
           <a href="{{url_for('checkout')}}">
-          <button
-            class="mt-6 w-full rounded-md bg-primary py-1.5 font-medium text-blue-50 hover:bg-darkPrimary"
-          >
-            Check out
-          </button>
-        </a>
+            <button
+              class="mt-6 w-full rounded-md bg-primary py-1.5 font-medium text-blue-50 hover:bg-darkPrimary"
+            >
+              Check out
+            </button>
+          </a>
         </div>
         {% endif %}
       </div>

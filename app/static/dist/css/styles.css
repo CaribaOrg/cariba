@@ -47,7 +47,8 @@ body {
   border-color: #00ff00;
 }
 
-.unsupported, .supported {
+.unsupported,
+.supported {
   border-width: 2px;
   border-radius: 0.3rem;
   padding: 5px;
@@ -150,4 +151,12 @@ body {
 .Info {
   border-color: rgb(59, 130, 246);
   color: rgb(59, 130, 246);
+}
+
+/* order status */
+.COMPLETED {
+  background-color: rgb(34, 197, 94);
+}
+.PENDING {
+  background-color: rgb(249, 115, 22);
 }
