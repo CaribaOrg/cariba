@@ -66,6 +66,18 @@ body {
   min-width: 288px;
 }
 
+.min-w-2 {
+  min-width: 30rem;
+}
+
+.max-w-2 {
+  max-width: 60rem;
+}
+
+.mr {
+  margin-right: 25px;
+}
+
 .link {
   text-decoration: underline;
   color: #0088cc;
