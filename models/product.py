@@ -2,6 +2,7 @@
 ''' This is a module for Product '''
 
 from models.base_model import BaseModel, Base
+from models.wishlist import WishlistItem
 from sqlalchemy import Column, String, ForeignKey, Float, Integer, JSON
 from sqlalchemy.orm import relationship
 import random
@@ -113,3 +114,19 @@ class Product(BaseModel, Base):
                 item.save()
                 user.save()
                 return
+
+    def add_to_wishlist(self, user):
+        wl_item = WishlistItem(user_id=user.id, product_id=self.id)
+        wl_item.save()
+        
+    def remove_from_wishlist(self, user):
+        from models import strg
+        wl_item = strg.search(user_id=user.id, product_id=self.id)
+        wl_item.delete()
+        strg.save()
+        
+    def is_in_wishlist(self, user):
+        from models import strg
+        if strg.search(cls=WishlistItem, user_id=user.id, product_id=self.id):
+            return True
+        return False

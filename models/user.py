@@ -2,7 +2,7 @@
 ''' This is a module for User and Authentication'''
 
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Boolean, DateTime, Column, Integer, ForeignKey
+from sqlalchemy import Column, String, Boolean, DateTime, Column, Integer, ForeignKey, JSON
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.mutable import MutableList
 from hashlib import md5
@@ -27,7 +27,6 @@ class Role(BaseModel, Base, RoleMixin):
     name = Column(String(80), unique=True)
     description = Column(String(255))
     permissions = Column(MutableList.as_mutable(AsaList()), nullable=True)
-
 
 class User(BaseModel, Base, UserMixin):
     '''
@@ -82,6 +81,9 @@ class User(BaseModel, Base, UserMixin):
     orders = relationship('Order',
                           back_populates='user',
                           cascade='all, delete-orphan')
+    wishlist_items = relationship('WishlistItem', 
+                                  uselist=True,
+                                  back_populates='user')
 
     def __init__(self, **kwargs):
         from models.cart import Cart

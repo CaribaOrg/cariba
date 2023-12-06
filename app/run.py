@@ -13,6 +13,7 @@ from models.product import Product
 from models import strg
 from models.category import Category
 from models.order import Order
+from models.wishlist import WishlistItem
 from models.address import Address
 # from app.forms.user_forms import LoginForm, RegisterForm
 from models.custom_view import CustomView
@@ -63,6 +64,7 @@ def create_admin(app):
     admin.add_view(CustomView(Car))
     admin.add_view(CustomView(Order))
     admin.add_view(CustomView(Address))
+    admin.add_view(CustomView(WishlistItem))
 
 
 create_admin(app)
@@ -105,7 +107,12 @@ def product_page(id):
     else:
         sample_size = 5
     popular = random.sample(popular_products, sample_size)
-    return render_template("product_details.html", product=product, popular=popular, current_user=current_user)
+    supported_cars = []
+    if current_user.is_authenticated:
+        for car in current_user.cars:
+            if product.is_supported(car):
+                supported_cars.append(car)
+    return render_template("product_details.html", product=product, popular=popular, current_user=current_user, supported_cars=supported_cars)
 
 
 @app.route("/myCart")
@@ -331,12 +338,32 @@ def about():
     return render_template("about.html")
 
 @app.route("/buyAgain/<uuid:order_id>")
+@login_required
 def buy_again(order_id):
     """order again"""
     order = strg.session().query(Order).get(order_id)
     for item in order.cart.cart_items:
         item.product.add_to_cart(current_user, item.quantity)
     return redirect(url_for('my_cart'))
+
+@app.route("/wishlist")
+@login_required
+def wishlist():
+    return render_template("wishlist.html", current_user=current_user)
+
+@app.route("/add_to_wishlist/<uuid:id>", methods=['POST'])
+@login_required
+def add_to_wishlist(id):
+    product = strg.session().query(Product).get(id)
+    product.add_to_wishlist(current_user)
+    return '', 200
+
+@app.route("/remove_from_wishlist/<uuid:id>", methods=['POST'])
+@login_required
+def remove_from_wishlist(id):
+    product = strg.session().query(Product).get(id)
+    product.remove_from_wishlist(current_user)
+    return '', 200
 
 @app.errorhandler(404)
 def notfound(error):
