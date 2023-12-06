@@ -331,13 +331,10 @@
       function toggleHearts() {
         var fullHeart = document.getElementById('fullHeart');
         var outlineHeart = document.getElementById('outlineHeart');
-        console.log('called')
-        {% if product.is_in_wishlist(current_user) %}
-          console.log('belong')
+        {% if current_user.is_authenticated and product.is_in_wishlist(current_user) %}
           fullHeart.classList.remove("hidden");
           outlineHeart.classList.add("hidden");
         {% else %}
-          console.log('belong NOT')
           fullHeart.classList.add("hidden");
           outlineHeart.classList.remove("hidden");
         {% endif %}
