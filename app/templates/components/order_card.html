@@ -1,28 +1,52 @@
 {% macro order_card(order) %}
 <div class="flex flex-col flex-wrap bg-white w-full rounded-lg p-2 sm:p-4">
   <div
-    class="flex justify-between bg-slate-100 rounded-t-lg p-1 max-md:flex-col"
+    class="flex justify-between bg-slate-100 rounded-t-lg p-1 max-md:flex-col max-sm:gap-2"
   >
-    <div class="text-black">
-      <span class="text-slate-500">Order ID:</span>
-      <span class="font-bold">{{ order.id }}</span>
-      <span
-        class="text-xs bg-slate-600 text-white px-1 rounded-sm -translate-x-1 translate-y-1"
+    <div class="text-black sm:inline-flex items-center text-sm sm:text-base">
+      <span class="text-slate-500 pr-1 text-xs sm:text-sm md:text-base"
+        >Order ID:</span
       >
-        COPY
-      </span>
+      <div class="sm:inline-flex">
+        <span id="orderID" class="font-bold bg-transparent text-sm"
+          >{{ order.id }}</span
+        >
+        <span
+          id="copyBtn"
+          class="ml-2 cursor-pointer"
+          onclick="copyToClipboard()"
+        >
+          <img
+            src="../../static/images/copy.png"
+            alt="copy to clipboard"
+            width="24px"
+            class="inline"
+          />
+          <img
+            src="../../static/images/check.png"
+            alt="copy to clipboard"
+            width="24px"
+            class="inline hidden"
+          />
+        </span>
+      </div>
     </div>
-    <div class="text-black">
-      <span class="text-slate-500">Date:</span>
+
+    <div class="text-black text-sm sm:text-base">
+      <span class="text-slate-500 text-xs sm:text-sm md:text-base">Date:</span>
       <span class="font-bold">{{ order.created_at }}</span>
     </div>
   </div>
-  <div class="text-black">
-    <span class="text-slate-500">Number of products:</span>
+  <div class="text-black text-sm sm:text-base">
+    <span class="text-slate-500 text-xs sm:text-sm md:text-base"
+      >Number of products:</span
+    >
     <span class="font-bold">{{ order.cart.cart_items|length }}</span>
   </div>
-  <div class="text-black">
-    <span class="text-slate-500">Order Total:</span>
+  <div class="text-black text-sm sm:text-base">
+    <span class="text-slate-500 text-xs sm:text-sm md:text-base"
+      >Order Total:</span
+    >
     <span class="font-bold"
       >${{ (order.cart.total_price + order.cart.shipping)|round(2) }}</span
     >
@@ -34,7 +58,9 @@
     >
   </div>
   <details class="text-slate-900 px-2">
-    <summary class="py-2 font-bold outline-none cursor-pointer">
+    <summary
+      class="py-2 font-bold outline-none cursor-pointer text-sm sm:text-base"
+    >
       Products
     </summary>
     <div class="flex flex-col w-full gap-1 px-6 pb-4">
@@ -44,9 +70,9 @@
           <img
             src="{{ url_for('static', filename='images/pics/' + item.product.icon + '.jpg') }}"
             alt="{{ item.product.name }}"
-            class="w-[40px] h-[40px] object-contain rounded-t-lg"
+            class="w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] object-contain rounded-t-lg"
           />
-          <div class="w-[70%]">
+          <div class="w-[70%] text-xs sm:text-base">
             <a href="{{ url_for('product_page', id=item.product.id) }}">
               <h3
                 class="pt-2 text-sm leading-normal font-semibold font-palanquin text-clip"
@@ -56,7 +82,7 @@
             </a>
           </div>
         </div>
-        <div class="w-[10%] text-right">
+        <div class="w-[10%] text-right text-xs sm:text-base">
           <span>{{ item.product.price }}$ x ({{ item.quantity }})</span>
         </div>
       </div>

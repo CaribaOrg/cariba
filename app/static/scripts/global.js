@@ -133,3 +133,36 @@ function newsletterForm() {
 function closeFlashMessage(button) {
     button.closest('.flash-message').remove();
 }
+
+// copy to clipboard
+function copyToClipboard() {
+    // Get the text content of the span
+    var textToCopy = document.getElementById('orderID').innerText;
+
+    // Create a temporary textarea element
+    var tempInput = document.createElement('textarea');
+
+    // Set the value of the temporary textarea to the text content
+    tempInput.value = textToCopy;
+
+    // Append the temporary textarea to the document
+    document.body.appendChild(tempInput);
+
+    // Select the text in the textarea
+    tempInput.select();
+    tempInput.setSelectionRange(0, 99999); /* For mobile devices */
+
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(tempInput.value);
+
+    // Remove the temporary textarea
+    document.body.removeChild(tempInput);
+
+    var copyButton = document.getElementById("copyBtn");
+    copyButton.children[0].classList.add("hidden")
+    copyButton.children[1].classList.remove("hidden")
+    setTimeout(function () {
+        copyButton.children[0].classList.remove("hidden")
+        copyButton.children[1].classList.add("hidden")
+    }, 2000); // Reset button text after 2 seconds (adjust as needed)
+}
