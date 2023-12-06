@@ -10,6 +10,7 @@ from models.cart_item import CartItem
 from models.category import Category
 from models.product import Product
 from models.order import Order
+from models.wishlist import WishlistItem
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from os import getenv
@@ -52,7 +53,8 @@ class Storage:
         from models.category import Category
         from models.product import Product
         from models.order import Order
-        
+        from models.wishlist import WishlistItem
+
         Base.query = self.__session.query_property()
         Base.metadata.create_all(bind=self.__engine)
 
@@ -66,7 +68,7 @@ class Storage:
                 If not provided, the method retrieves all objects
         '''
         if cls is None:
-            cls = [User, Address, Car, Cart, CartItem, Category, Product, Order]
+            cls = [User, Address, Car, Cart, CartItem, Category, Product, Order, WishlistItem]
             query = []
             for c in cls:
                 query.extend(self.__session.query(c).all())

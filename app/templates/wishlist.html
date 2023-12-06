@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/global.js"></script>
+    <title>Shopping Cart</title>
+  </head>
+
+  <body>
+    {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
+    <div class="min-h-screen bg-darkPrimary pt-12">
+      <h1 class="pb-10 text-center text-2xl sm:text-4xl font-bold text-white">
+        Wishlist
+      </h1>
+      <div
+        class="mx-auto max-w-5xl justify-center px-6 md:flex pb-8 md:space-x-6 xl:px-0"
+      >
+        {% if current_user.wishlist_items is none or current_user.wishlist_items|length == 0 %}
+        <div class="flex flex-col flex-wrap justify-center text-center">
+          <div class="flex justify-center">
+            <img
+              src="../static/images/empty_cart.png"
+              alt="teenager in a shopping cart"
+              width="300px"
+            />
+          </div>
+
+          <h3 class="text-2xl text-slate-300">Your wishlist is empty!</h3>
+          <button
+            class="px-8 py-2 w-full bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
+            onclick="window.location.href = '/categories'"
+          >
+            Shop Now
+          </button>
+        </div>
+        {% else %}
+        <div class="flex flex-col justify-center gap-3">
+          {% for item in current_user.wishlist_items %}
+          {% import 'components/product_card.html' as product %} {{
+            product.product_card(item.product, current_user) }}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <!-- footer -->
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
+  </body>
+</html>

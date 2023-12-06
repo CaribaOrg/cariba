@@ -78,6 +78,11 @@ body {
   margin-right: 25px;
 }
 
+.hover\:bg-darkerPrimary:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 143 187 / var(--tw-bg-opacity));
+}
+
 .link {
   text-decoration: underline;
   color: #0088cc;
