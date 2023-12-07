@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/global.js"></script>
     <script src="../static/scripts/addCar.js"></script>
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+
     <!-- BEGIN: Tailwind -->
-    <script src="https://cdn.tailwindcss.com?plugins=aspect-ratio,line-clamp"></script>
+    
     {{ ckeditor.load() }}
     <!-- END: Tailwind -->
 
@@ -42,16 +42,63 @@
 
         labelItems: [],
         labelLoaded: false,
-        viewedMessages: {},
+        
 
         init() {
           this.loaded = true;
           this.changeLabel(this.label[0]);
         },
 
-        addMessage() {
-          let label = prompt("Enter a label name");
-          if (label) this.label.push(label);
+        composeMessagesForm() {
+          return {
+            formData: {
+              send_all: "",
+              author: "",
+              recipient: "",
+              title: "",
+              label: "",
+              body: "",
+            },
+            formMessage: "",
+            submitForm() {
+              console.log(JSON.stringify(this.formData));
+              this.formMessage = "";
+              fetch(`api/send_messages`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+                body: JSON.stringify(this.formData),
+              })
+                .then((response) => {
+                  this.formData.send_all =  true;
+                  this.formData.author = "{{ current_user.username }}";
+                  this.formData.recipient = "";
+                  this.formData.title = "";
+                  this.formData.label = "";
+                  this.formData.body = "";
+                  this.formMessage = response;
+                  CKEDITOR.instances.body.setData('');
+                })
+                .catch((response) => {
+                  this.formMessage = response;
+                });
+            },
+          };
+        },
+
+        getSentMessages() {
+          this.CurrentLabel = "sent_messages";
+          this.labelLoaded = false;
+          this.labelItems = [];
+          fetch(`api/sent_messages/{{ current_user.id }}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+              this.labelItems = data;
+              this.labelLoaded = true;
+            });
         },
 
         changeLabel(label) {
@@ -65,7 +112,7 @@
           fetch(`api/messages/{{ current_user.id }}/${label}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                
               this.labelItems = data;
               this.labelLoaded = true;
             });
@@ -74,7 +121,6 @@
         fetchMessage(messageData) {
           this.postContent = messageData;
           this.fetchPostBody(messageData.body);
-          this.viewedMessages[messageData.id] = true;
         },
 
         fetchPostBody(messageId) {
@@ -169,42 +215,72 @@
                                 Compose a message below
                             </p>
             
-                            <form class="mt-5">
+                            <form class="mt-5" x-data="composeMessagesForm()" @submit.prevent="submitForm">
 
                               <div class="mt-4">
                                 <div class="mt-4 space-y-5">
-                                    <div class="flex items-center space-x-3 cursor-pointer" x-data="{ show: true }" @click="show =!show">
+                                    <div class="flex items-center space-x-3 cursor-pointer" x-data="{ show: true }">
                                         <div class="relative w-10 h-5 transition duration-200 ease-linear rounded-full"
                                             :class="[show ? 'bg-indigo-500' : 'bg-gray-300']">
                                             <label for="show"
                                                 @click="show =!show"
                                                 class="absolute left-0 w-5 h-5 mb-2 transition duration-100 ease-linear transform bg-white border-2 rounded-full cursor-pointer"
                                                 :class="[show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']"></label>
-                                            <input type="checkbox" name="show" class="hidden w-full h-full rounded-full appearance-none active:outline-none focus:outline-none"/>
+                                            <input type="checkbox" name="show" x-model="formData.send_all=show" class="hidden w-full h-full rounded-full appearance-none active:outline-none focus:outline-none"/>
                                         </div>
         
                                         <p class="text-black-500">Send to All</p>
+                                        <div x-show="!show" :class="[!show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']">
+                                          <label for="recipient" class="block text-sm text-black-700 capitalize dark:text-black-200" >Recipient</label>
+                                          <input name="recipient" 
+                                          placeholder="Arthur Melo" 
+                                          type="text" 
+                                          x-model="formData.recipient"
+                                          class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                                      </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="flex items-center space-x-3 cursor-pointer" x-data="{ username: '{{ current_user.username }}' }">
+                                <input name="author" type="hidden"  value="{{ current_user.username }}" x-model="formData.author=username">
+                            </div>
 
                                 <div>
-                                    <label for="user name" class="block text-sm text-black-700 capitalize dark:text-black-200">Title</label>
-                                    <input placeholder="Arthur Melo" type="text" class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                                    <label for="title" class="block text-sm text-black-700 capitalize dark:text-black-200">Title</label>
+                                    <input name="title" 
+                                    placeholder="Title" 
+                                    type="text"
+                                    requried x-model="formData.title"
+                                    class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
                                 </div>
 
                                 <div>
-                                  <label for="user name" class="block text-sm text-black-700 capitalize dark:text-black-200">Label</label>
-                                  <input placeholder="Arthur Melo" type="text" class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                                  <label for="label" class="block text-sm text-black-700 capitalize dark:text-black-200">Label</label>
+                                  <input 
+                                  name="label" 
+                                  placeholder="notifications"
+                                  requried x-model="formData.label"
+                                  type="text" 
+                                  class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
                               </div>
             
                                 <div>
-                                    <label for="email" class="block text-sm text-black-700 capitalize dark:text-black-200">Message Body</label>
-                                    {{ ckeditor.create() }}
+                                    <label for="body" class="block text-sm text-black-700 capitalize dark:text-black-200">Message Body</label>
+                                    <textarea 
+                                    name="body" 
+                                    id="body" 
+                                    requried x-model="formData.body"
+                                    x-init="
+      CKEDITOR.replace('body');
+      CKEDITOR.instances.body.on('change', function() {
+        $dispatch('input', this.getData());
+      });"
+  
+                                    ></textarea>
                                 </div>
                                 
                                 <div class="flex justify-end mt-6">
-                                    <button type="button" class="px-3 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-500 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">
+                                    <button type="submit" class="px-3 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-500 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">
                                         Compose Message
                                     </button>
                                 </div>
@@ -233,6 +309,21 @@
                     ></div>
                   </div>
                 </template>
+                <div
+                    @click="getSentMessages()"
+                    class="flex items-center space-x-2 rounded-full py-2 px-4 cursor-pointer"
+                    :class="{ 'bg-blue-200/80 font-bold': 'sent_messages' === CurrentLabel, 'hover:bg-gray-200/80': 'sent_messages' !== CurrentLabel }"
+                  >
+                    <div class="w-4 h-4 rounded-full">
+                      <img
+                        src="https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/send_baseline_nv700_20dp.png"
+                        alt="Subreddit Icon"
+                      />
+                    </div>
+                    <div
+                      class="text-sm font-medium text-black-700"
+                    >Created Messages</div>
+                  </div>
               </div>
 
              
@@ -246,94 +337,27 @@
                 header.display_header(current_user) }}
             <!-- BEGIN: Prelist actions -->
             <div class="w-full flex flex-row items-center p-4">
+              
+                  Messages <span class="pl-4" x-text="labelItems.length"></span>
+                  {% set unread_message_count = current_user.unread_message_count() %}
+                  <div class="bg-white flex rounded-full px-3 items-center" style="visibility: {% if unread_message_count %}visible
+                  {% else %}hidden {% endif %};">
+                  <span id="message_count" class="text-darkPrimary text-sm"
+                        style="visibility: {% if unread_message_count %}visible
+                                            {% else %}hidden {% endif %};">
+                          {{ unread_message_count }}
+                  </span>
+                </div>
+           <!--
               <div>
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/check_box_outline_blank_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
-              <div class="pr-4">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/arrow_drop_down_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
-              <div class="pr-4">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/archive_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
-              <div class="pr-4">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/report_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
-              <div class="pr-6 border-r border-gray-200">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/delete_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
-              <div class="pl-6 pr-4">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/mail_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
-              <div class="pr-4">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/schedule_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
-              <div class="pr-6 border-r border-gray-200">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/add_task_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
-              <div class="pl-6 pr-4">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/drive_file_move_outline_baseline_nv700_20dp.png');
-                  "
-                ></div>
+                  <input type="checkbox" />
               </div>
               <div class="pl-4">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/label_baseline_nv700_20dp.png');
-                  "
-                ></div>
+                <svg class="w-4 h-4 text-black-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
+                </svg>
               </div>
-              <div class="pl-4">
-                <div
-                  class="w-5 h-5 bg-contain bg-no-repeat"
-                  style="
-                    background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/more_vert_baseline_nv700_20dp.png');
-                  "
-                ></div>
-              </div>
+            -->
             </div>
             <!-- END: Prelist actions -->
             <!-- END: Menu bar -->
@@ -344,12 +368,13 @@
                   <div
                     @click="fetchMessage(item)"
                     class="flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
-                    :class="{ 'bg-gray-200/80': viewedMessages[item.id], 'bg-blue-200': postContent !== null && postContent.id === item.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.id }"
+                    :class="{ 'bg-blue-200': postContent !== null && postContent.id === item.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.id }"
                   >
+                  <!--
                     <div>
                       <input type="checkbox" />
                     </div>
-                    
+                    -->
                     <div>
                       <div class="w-36 max-w-36">
                         <p
@@ -420,33 +445,23 @@
                               class="text-black-500 text-xs"
                               x-text="postContent.created"
                             ></p>
+                            
                           </div>
+                          <!--
                           <div>
-                            <div
-                              class="w-4 h-4 bg-no-repeat bg-contain"
-                              style="
-                                background-image: url('https://www.gstatic.com/images/icons/material/system_gm/1x/star_border_black_20dp.png');
-                              "
-                            ></div>
+                            <svg class="w-4 h-4 text-black-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                              <path d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z"/>
+                              <path d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z"/>
+                            </svg>
                           </div>
 
                           <div>
-                            <div
-                              class="w-4 h-4 bg-no-repeat bg-contain"
-                              style="
-                                background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/reply_baseline_nv700_20dp.png');
-                              "
-                            ></div>
+                            <svg class="w-4 h-4 text-black-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
+                            </svg>
                           </div>
-
-                          <div>
-                            <div
-                              class="w-4 h-4 bg-no-repeat bg-contain"
-                              style="
-                                background-image: url('//ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/more_vert_baseline_nv700_20dp.png');
-                              "
-                            ></div>
-                          </div>
+                          
+                        -->
                         </div>
                         <div>
                           <p
@@ -456,10 +471,10 @@
                         </div>
                       </div>
                     </div>
-                    <p
+                    <div
                       class="text-sm text-black-500 pl-14"
-                      x-text="postContent.body"
-                    ></p>
+                      x-html="postContent.body"
+                    ></div>
 
                     
                   </div>
@@ -482,6 +497,5 @@
       </template>
       
     </main>
-    
 </body>
 </html>

@@ -1,1 +1,2 @@
-misc/env_setup.sh
+*.pyc
+
