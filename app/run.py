@@ -21,6 +21,9 @@ import random
 from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
 from flask_mailman import Mail, EmailMessage
 from functools import wraps
+from models.notification import Message, Notification
+from datetime import datetime
+from flask_ckeditor import CKEditor
 
 
 
@@ -36,6 +39,8 @@ app.teardown_appcontext(lambda exc: strg.session.close())
 user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
 app.security = Security(app, user_datastore)
 mail = Mail(app)
+ckeditor = CKEditor(app)
+
 
 
 # login = LoginManager(app)
@@ -370,6 +375,26 @@ def notfound(error):
     """Handle the error 404"""
     return render_template("404.html"), 404
 
+@app.route('/messages')
+@login_required
+def messages():
+    current_user.last_message_read_time = datetime.utcnow()
+    current_user.add_notification('unread_message_count', 0)
+    strg.save()
+    messages = current_user.messages_received#.order_by(Message.updated_at.desc())
+    return render_template('messages.html', messages=messages, current_user=current_user)
+
+@app.route('/notifications')
+@login_required
+def notifications():
+    since = request.args.get('since', 0.0, type=float)
+    query = strg.session.query(Notification).filter(Notification.updated_at > since).order_by(Notification.updated_at.asc())
+    notifications = strg.session.scalars(query)
+    return [{
+        'name': n.name,
+        'data': n.get_data(),
+        'updated_at': n.updated_at
+    } for n in notifications]
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

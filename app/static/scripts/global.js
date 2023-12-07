@@ -166,3 +166,10 @@ function copyToClipboard() {
         copyButton.children[1].classList.add("hidden")
     }, 2000); // Reset button text after 2 seconds (adjust as needed)
 }
+
+// messaging stuff
+function set_message_count(n) {
+    const count = document.getElementById('message_count');
+    count.innerText = n;
+    count.style.visibility = n ? 'visible' : 'hidden';
+  }

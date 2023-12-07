@@ -54,6 +54,8 @@ class Storage:
         from models.product import Product
         from models.order import Order
         from models.wishlist import WishlistItem
+        from models.notification import Message, Notification
+
 
         Base.query = self.__session.query_property()
         Base.metadata.create_all(bind=self.__engine)
@@ -190,6 +192,8 @@ class Storage:
         from models.category import Category
         from models.product import Product
         from models.order import Order
+        from models.wishlist import WishlistItem
+        from models.notification import Message, Notification
         
         Base.metadata.create_all(bind=self.__engine)
 

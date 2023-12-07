@@ -1,12 +1,15 @@
 #!/usr/bin/python3
 ''' This is a module for User and Authentication'''
-
+import json
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Boolean, DateTime, Column, Integer, ForeignKey, JSON
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.mutable import MutableList
 from hashlib import md5
 from flask_security import UserMixin, RoleMixin, AsaList
+from models.notification import Message, Notification
+from datetime import datetime
+
 
 
 class RolesUsers(Base):
@@ -66,6 +69,7 @@ class User(BaseModel, Base, UserMixin):
     active = Column(Boolean())
     fs_uniquifier = Column(String(64), unique=True, nullable=False)
     confirmed_at = Column(DateTime())
+    last_message_read_time = Column(DateTime())
     roles = relationship('Role', secondary='roles_users',
                          backref=backref('users', lazy='dynamic'))
     address = relationship('Address',
@@ -84,7 +88,26 @@ class User(BaseModel, Base, UserMixin):
     wishlist_items = relationship('WishlistItem', 
                                   uselist=True,
                                   back_populates='user')
+    messages_sent= relationship('Message',
+        foreign_keys='Message.sender_id', back_populates='author')
+    messages_received = relationship('Message',
+        foreign_keys='Message.recipient_id', back_populates='recipient')
+    notifications = relationship('Notification', back_populates='user')
 
+    def unread_message_count(self):
+        from models import strg
+        last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
+        number_of_unread = strg.session.query(Message).filter_by(recipient_id=self.id).filter(Message.updated_at > last_read_time).count()
+        return number_of_unread
+    
+    def add_notification(self, name, data):
+        from models import strg
+        strg.session.query(Notification).filter_by(name=name).delete()
+        strg.save()
+        n = Notification(name=name, payload_json=json.dumps(data), user=self)
+        strg.save()
+        return n
+    
     def __init__(self, **kwargs):
         from models.cart import Cart
         from models.address import Address
