@@ -1,1 +1,11 @@
 *.pyc
+.gitignore
+__pycache__
+*~
+my_env
+venv2
+.vscode
+node_modules
+my_setup.sh
+.gitignore
+package-lock.json
