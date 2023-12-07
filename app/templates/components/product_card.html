@@ -15,7 +15,7 @@
   >
     <svg
       class="hidden"
-      id="fullHeart"
+      id="fullHeart{{ product.id }}"
       width="36px"
       height="36px"
       viewBox="0 0 24 24"
@@ -38,7 +38,7 @@
     </svg>
     <svg
       class=""
-      id="outlineHeart"
+      id="outlineHeart{{ product.id }}"
       width="36px"
       height="36px"
       viewBox="0 0 24 24"
@@ -93,4 +93,43 @@
     </button>
   </div>
 </div>
+<script>
+  function toggleHearts() {
+    var fullHeart = document.getElementById('fullHeart{{ product.id }}');
+    var outlineHeart = document.getElementById('outlineHeart{{ product.id }}');
+    {% if current_user.is_authenticated and product.is_in_wishlist(current_user) %}
+      fullHeart.classList.remove("hidden");
+      outlineHeart.classList.add("hidden");
+    {% else %}
+      fullHeart.classList.add("hidden");
+      outlineHeart.classList.remove("hidden");
+    {% endif %}
+    }
+  toggleHearts();
+
+  document.getElementById('outlineHeart{{ product.id }}').addEventListener('click', function() {
+    fetch('/add_to_favourites/{{ product.id }}', {
+      method: 'POST',
+     })
+      .then(response => response.text())
+      .then(data => JSON.parse(data || '{}'))
+      .then(function() {
+        document.getElementById('fullHeart{{ product.id }}').classList.remove("hidden")
+        document.getElementById('outlineHeart{{ product.id }}').classList.add("hidden");
+      })
+      .catch(error => console.error('There has been a problem:', error));
+    });
+   document.getElementById('fullHeart{{ product.id }}').addEventListener('click', function() {
+    fetch('/remove_from_favourites/{{ product.id }}', {
+      method: 'POST',
+     })
+     .then(response => response.text())
+     .then(data => JSON.parse(data || '{}'))
+     .then(function() {
+      document.getElementById('outlineHeart{{ product.id }}').classList.remove("hidden")
+      document.getElementById('fullHeart{{ product.id }}').classList.add("hidden");
+    })
+     .catch(error => console.error('There has been a problem:', error));
+  });
+</script>
 {% endmacro %}
