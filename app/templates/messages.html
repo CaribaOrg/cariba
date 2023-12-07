@@ -72,6 +72,7 @@
                 body: JSON.stringify(this.formData),
               })
                 .then((response) => {
+                  this.modelOpen = false;
                   this.formData.send_all =  true;
                   this.formData.author = "{{ current_user.username }}";
                   this.formData.recipient = "";
