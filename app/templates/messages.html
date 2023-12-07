@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/global.js"></script>
+    <script src="../static/scripts/addCar.js"></script>
+
+    <!-- BEGIN: Tailwind -->
+    
+    {{ ckeditor.load() }}
+    <!-- END: Tailwind -->
+
+    <!-- BEGIN: Alpinejs -->
+    <script defer src="https://unpkg.com/alpinejs"></script>
+    <script>
+      const GmailKit = () => ({
+        loaded: false,
+        postContent: null,
+        postContentComments: null,
+        sidebarExtended: true,
+        CurrentLabel: "all",
+        label: [
+          "all",
+          "notifications",
+          "payments",
+          "features",
+          "alerts",
+        ],
+        labelIcons: [
+          "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/inbox_fill_baseline_p900_20dp.png",
+          "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/star_baseline_nv700_20dp.png",
+          "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/schedule_baseline_nv700_20dp.png",
+          "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/send_baseline_nv700_20dp.png",
+          "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/draft_baseline_nv700_20dp.png",
+        ],
+        altLabelIcons:
+          "https://www.gstatic.com/images/icons/material/system/1x/flag_gm_blue_20dp.png",
+
+        labelItems: [],
+        labelLoaded: false,
+        
+
+        init() {
+          this.loaded = true;
+          this.changeLabel(this.label[0]);
+        },
+
+        composeMessagesForm() {
+          return {
+            formData: {
+              send_all: "",
+              author: "",
+              recipient: "",
+              title: "",
+              label: "",
+              body: "",
+            },
+            formMessage: "",
+            submitForm() {
+              console.log(JSON.stringify(this.formData));
+              this.formMessage = "";
+              fetch(`api/send_messages`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+                body: JSON.stringify(this.formData),
+              })
+                .then((response) => {
+                  this.modelOpen = false;
+                  this.formData.send_all =  true;
+                  this.formData.author = "{{ current_user.username }}";
+                  this.formData.recipient = "";
+                  this.formData.title = "";
+                  this.formData.label = "";
+                  this.formData.body = "";
+                  this.formMessage = response;
+                  CKEDITOR.instances.body.setData('');
+                })
+                .catch((response) => {
+                  this.formMessage = response;
+                });
+            },
+          };
+        },
+
+        getSentMessages() {
+          this.CurrentLabel = "sent_messages";
+          this.labelLoaded = false;
+          this.labelItems = [];
+          fetch(`api/sent_messages/{{ current_user.id }}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+              this.labelItems = data;
+              this.labelLoaded = true;
+            });
+        },
+
+        changeLabel(label) {
+          this.CurrentLabel = label;
+          this.fetchLabel(label);
+        },
+
+        fetchLabel(label) {
+          this.labelLoaded = false;
+          this.labelItems = [];
+          fetch(`api/messages/{{ current_user.id }}/${label}`)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+
+              this.labelItems = data;
+              this.labelLoaded = true;
+            });
+        },
+
+        fetchMessage(messageData) {
+          this.postContent = messageData;
+          this.fetchPostBody(messageData.body);
+        },
+
+        fetchPostBody(messageId) {
+          this.postContentComments = [];
+          this.postContentComments = messageId;
+        },
+      });
+    </script>
+    <!-- END: Alpinejs -->
+</head>
+<body class="w-full h-screen overflow-hidden flex items-center" style="background: #edf2f7;">
+  
+    <main x-data="GmailKit" class="w-full">
+      <template x-if="loaded">
+        <div class="h-screen flex">
+          <!-- BEGIN: Navbar -->
+          <nav
+            class="w-16 h-full bg-[#eaf1fb] flex flex-col items-center space-y-4 py-2"
+          >
+            <button
+              @click="sidebarExtended = !sidebarExtended"
+              class="flex items-center justify-center hover:bg-[#dae1eb] rounded-full w-12 h-12"
+            >
+              <svg focusable="false" viewBox="0 0 24 24" class="w-6 h-6">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+              </svg>
+            </button>
+
+            <button>
+              <div
+                class="w-12 h-8 rounded-full bg-blue-200/50 mx-auto bg-center bg-no-repeat"
+                style="
+                  background-image: url('https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/mail_fill_baseline_p900_20dp.png');
+                "
+              ></div>
+              <p class="text-xs">Message</p>
+            </button>
+          </nav>
+          <!-- END: Navbar -->
+          <!-- BEGIN: Sidebar -->
+          <template x-if="sidebarExtended">
+            <aside class="w-64 bg-gray-50 h-screen py-3 px-6">
+              
+
+              <div x-data="{ modelOpen: false }">
+
+                <button
+                @click="modelOpen =!modelOpen"
+                class="px-3 py-3 bg-cyan-400/30 rounded-xl my-6 flex flex-row space-x-4 items-center"
+              >
+                <div
+                  class="w-6 h-6 object-fill bg-no-repeat"
+                  style="
+                    background-image: url('https://www.gstatic.com/images/icons/material/system_gm/1x/create_black_24dp.png');
+                  "
+                ></div>
+                <p class="text-sm pr-4">Compose Message</p>
+              </button>
+            
+                <div x-show="modelOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div class="flex items-end justify-center min-h-screen px-4 text-center md:items-center sm:block sm:p-0">
+                        <div x-cloak @click="modelOpen = false" x-show="modelOpen" 
+                            x-transition:enter="transition ease-out duration-300 transform"
+                            x-transition:enter-start="opacity-0" 
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-200 transform"
+                            x-transition:leave-start="opacity-100" 
+                            x-transition:leave-end="opacity-0"
+                            class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-40" aria-hidden="true"
+                        ></div>
+            
+                        <div x-cloak x-show="modelOpen" 
+                            x-transition:enter="transition ease-out duration-300 transform"
+                            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                            x-transition:leave="transition ease-in duration-200 transform"
+                            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
+                            x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                            class="inline-block w-full max-w-xl p-8 my-20 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl 2xl:max-w-2xl"
+                        >
+                            <div class="flex items-center justify-between space-x-4">
+                                <h1 class="text-xl font-medium text-black-800 ">Compose Message</h1>
+            
+                                <button @click="modelOpen = false" class="text-black-600 focus:outline-none hover:text-black-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+            
+                            <p class="mt-2 text-sm text-black-500 ">
+                                Compose a message below
+                            </p>
+            
+                            <form class="mt-5" x-data="composeMessagesForm()" @submit.prevent="submitForm">
+
+                              <div class="mt-4">
+                                <div class="mt-4 space-y-5">
+                                    <div class="flex items-center space-x-3 cursor-pointer" x-data="{ show: true }">
+                                        <div class="relative w-10 h-5 transition duration-200 ease-linear rounded-full"
+                                            :class="[show ? 'bg-indigo-500' : 'bg-gray-300']">
+                                            <label for="show"
+                                                @click="show =!show"
+                                                class="absolute left-0 w-5 h-5 mb-2 transition duration-100 ease-linear transform bg-white border-2 rounded-full cursor-pointer"
+                                                :class="[show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']"></label>
+                                            <input type="checkbox" name="show" x-model="formData.send_all=show" class="hidden w-full h-full rounded-full appearance-none active:outline-none focus:outline-none"/>
+                                        </div>
+        
+                                        <p class="text-black-500">Send to All</p>
+                                        <div x-show="!show" :class="[!show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']">
+                                          <label for="recipient" class="block text-sm text-black-700 capitalize dark:text-black-200" >Recipient</label>
+                                          <input name="recipient" 
+                                          placeholder="Arthur Melo" 
+                                          type="text" 
+                                          x-model="formData.recipient"
+                                          class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3 cursor-pointer" x-data="{ username: '{{ current_user.username }}' }">
+                                <input name="author" type="hidden"  value="{{ current_user.username }}" x-model="formData.author=username">
+                            </div>
+
+                                <div>
+                                    <label for="title" class="block text-sm text-black-700 capitalize dark:text-black-200">Title</label>
+                                    <input name="title" 
+                                    placeholder="Title" 
+                                    type="text"
+                                    requried x-model="formData.title"
+                                    class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                                </div>
+
+                                <div>
+                                  <label for="label" class="block text-sm text-black-700 capitalize dark:text-black-200">Label</label>
+                                  <input 
+                                  name="label" 
+                                  placeholder="notifications"
+                                  requried x-model="formData.label"
+                                  type="text" 
+                                  class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                              </div>
+            
+                                <div>
+                                    <label for="body" class="block text-sm text-black-700 capitalize dark:text-black-200">Message Body</label>
+                                    <textarea 
+                                    name="body" 
+                                    id="body" 
+                                    requried x-model="formData.body"
+                                    x-init="
+      CKEDITOR.replace('body');
+      CKEDITOR.instances.body.on('change', function() {
+        $dispatch('input', this.getData());
+      });"
+  
+                                    ></textarea>
+                                </div>
+                                
+                                <div class="flex justify-end mt-6">
+                                    <button type="submit" class="px-3 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-500 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">
+                                        Compose Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+              <div class="flex flex-col space-y-0">
+                <template x-for="(label, index) in label">
+                  <div
+                    @click="changeLabel(label)"
+                    class="flex items-center space-x-2 rounded-full py-2 px-4 cursor-pointer"
+                    :class="{ 'bg-blue-200/80 font-bold': label === CurrentLabel, 'hover:bg-gray-200/80': label !== CurrentLabel }"
+                  >
+                    <div class="w-4 h-4 rounded-full">
+                      <img
+                        :src="(labelIcons.length <= index) ? altLabelIcons : labelIcons[index]"
+                        alt="Subreddit Icon"
+                      />
+                    </div>
+                    <div
+                      class="text-sm font-medium text-black-700"
+                      x-text="label"
+                    ></div>
+                  </div>
+                </template>
+                <div
+                    @click="getSentMessages()"
+                    class="flex items-center space-x-2 rounded-full py-2 px-4 cursor-pointer"
+                    :class="{ 'bg-blue-200/80 font-bold': 'sent_messages' === CurrentLabel, 'hover:bg-gray-200/80': 'sent_messages' !== CurrentLabel }"
+                  >
+                    <div class="w-4 h-4 rounded-full">
+                      <img
+                        src="https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/send_baseline_nv700_20dp.png"
+                        alt="Subreddit Icon"
+                      />
+                    </div>
+                    <div
+                      class="text-sm font-medium text-black-700"
+                    >Created Messages</div>
+                  </div>
+              </div>
+
+             
+            </aside>
+          </template>
+          <!-- END: Sidebar -->
+
+          <div class="flex-1 h-screen max-h-screen flex flex-col">
+            <!-- BEGIN: Menu bar -->
+            {% import 'components/header.html' as header %} {{
+                header.display_header(current_user) }}
+            <!-- BEGIN: Prelist actions -->
+            <div class="w-full flex flex-row items-center p-4">
+              
+                  Messages <span class="pl-4" x-text="labelItems.length"></span>
+                  {% set unread_message_count = current_user.unread_message_count() %}
+                  <div class="bg-white flex rounded-full px-3 items-center" style="visibility: {% if unread_message_count %}visible
+                  {% else %}hidden {% endif %};">
+                  <span id="message_count" class="text-darkPrimary text-sm"
+                        style="visibility: {% if unread_message_count %}visible
+                                            {% else %}hidden {% endif %};">
+                          {{ unread_message_count }}
+                  </span>
+                </div>
+           <!--
+              <div>
+                  <input type="checkbox" />
+              </div>
+              <div class="pl-4">
+                <svg class="w-4 h-4 text-black-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
+                </svg>
+              </div>
+            -->
+            </div>
+            <!-- END: Prelist actions -->
+            <!-- END: Menu bar -->
+            <div class="flex flex-row flex-1 overflow-y-auto">
+              <!-- BEGIN: List posts -->
+              <div class="h-full max–h-full flex-1 overflow-y-scroll">
+                <template x-for="item in labelItems">
+                  <div
+                    @click="fetchMessage(item)"
+                    class="flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
+                    :class="{ 'bg-blue-200': postContent !== null && postContent.id === item.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.id }"
+                  >
+                  <!--
+                    <div>
+                      <input type="checkbox" />
+                    </div>
+                    -->
+                    <div>
+                      <div class="w-36 max-w-36">
+                        <p
+                          class="line-clamp-1 text-sm"
+                          x-text="item.author"
+                        ></p>
+                      </div>
+                    </div>
+                    <div class="flex-1">
+                      <p
+                        class="line-clamp-1 text-sm"
+                        x-text="item.title"
+                      ></p>
+                    </div>
+                    <div>
+                      <p
+                        class="text-sm"
+                        x-text="item.created"
+                      ></p>
+                    </div>
+                  </div>
+                </template>
+              </div>
+              <!-- END: List posts -->
+
+              <!-- BEGIN: Post content -->
+              <article class="flex-1 bg-white overflow-y-scroll">
+                <template x-if="postContent === null">
+                  <div class="p-8">
+                    <p>No Message Selected!</p>
+                    
+                  </div>
+                </template>
+                <template x-if="postContent !== null">
+                  <div class="px-8">
+                    <h1 class="text-xl" x-text="postContent.title"></h1>
+                    <div>
+                      <div
+                        class="px-[0.25rem] rounded bg-neutral-200 text-black-800 text-xs w-fit"
+                        x-text="postContent.label"
+                      >
+                        Inbox
+                      </div>
+                    </div>
+                    <div class="flex flex-row space-x-4 items-center">
+                      <div class="w-10 h-10">
+                        <img
+                          :src="postContent.thumbnail"
+                          onerror="this.src = 'https://lh3.googleusercontent.com/a/default-user=s40-p'"
+                          class="rounded-full object-cover w-10 h-10 aspect-square"
+                        />
+                      </div>
+                      <div class="flex flex-col justify-between py-2">
+                        <div>
+                          <p
+                            class="font-medium text-sm"
+                            x-text="postContent.author"
+                          ></p>
+                        </div>
+                        <div><p class="text-xs text-black-700">to me</p></div>
+                      </div>
+                      <div
+                        class="flex-1 flex flex-col justify-between items-end py-2"
+                      >
+                        <div class="flex flex-row items-center space-x-2">
+                          <div>
+                            <p
+                              class="text-black-500 text-xs"
+                              x-text="postContent.created"
+                            ></p>
+                            
+                          </div>
+                          <!--
+                          <div>
+                            <svg class="w-4 h-4 text-black-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                              <path d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z"/>
+                              <path d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z"/>
+                            </svg>
+                          </div>
+
+                          <div>
+                            <svg class="w-4 h-4 text-black-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
+                            </svg>
+                          </div>
+                          
+                        -->
+                        </div>
+                        <div>
+                          <p
+                            class="font-medium text-sm opacity-0"
+                            x-text="postContent.author"
+                          ></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="text-sm text-black-500 pl-14"
+                      x-html="postContent.body"
+                    ></div>
+
+                    
+                  </div>
+                </template>
+              </article>
+              <!-- END: Post content -->
+            </div>
+          </div>
+          
+        </div>
+        
+      </template>
+     
+      <template x-if="!loaded">
+        <div class="h-screen flex justify-center items-center">
+          <div
+            class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"
+          ></div>
+        </div>
+      </template>
+      
+    </main>
+</body>
+</html>

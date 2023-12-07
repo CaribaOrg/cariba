@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/global.js"></script>
+    <script src="../static/scripts/categories.js"></script>
+
+    <title>{{ search_input }}</title>
+  </head>
+
+  <body class="bg-darkPrimary">
+    <!-- header macro -->
+    {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
+
+    <div class="flex">
+      <aside
+        id="categoryNav"
+        class="slideOut py-6 px-2 w-64 bg-white max-lg:w-72 max-lg:px-8 max-lg:fixed max-lg:left-0 max-lg:top-16 max-md:top-24 max-lg:pt-8 max-lg:h-screen max-lg:overflow-y-scroll max-md-minus-80"
+      >
+        <div class="space-y-8 text-sm">
+          <h2 class="text-darkPrimary text-xl text-center font-bold">
+            Categories
+          </h2>
+          <!-- main categories -->
+          {% for catego in categories %} {% if catego.parent_id is none %}
+          <div class="space-y-2">
+            <a
+                class="text-sm font-bold uppercase text-slate-900"
+                href="/categories/{{ catego.name }}"
+                >{{ catego.name }}</a
+              >
+            <!-- sub categories -->
+            <div class="flex flex-col pl-1 space-y-1">
+              {% for sub_catego in catego.children %}
+              <a
+                class="text-sm text-slate-700 font-medium"
+                rel="noopener noreferrer"
+                href="/categories/{{ sub_catego.name }}"
+                >{{ sub_catego.name }}</a
+              >
+              <!-- sub sub categories -->
+              <div class="flex flex-col pl-2 text-slate-600 space-y-1">
+                {% for sub_sub_catego in sub_catego.children %}
+                <a
+                  class="text-sm"
+                  rel="noopener noreferrer"
+                  href="/categories/{{ sub_sub_catego.name }}"
+                  >{{ sub_sub_catego.name }}</a
+                >
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %} {% endfor %}
+        </div>
+      </aside>
+      <div
+        id="showCategories"
+        class="hidden slideOut max-lg:block max-lg:fixed max-lg:left-72 lg:top-20 md:top-24 border-4 border-black rounded-r-full bg-primary py-2 pl-4 pr-6 text-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+          class="hidden w-5 h-5 fill-current text-white"
+        >
+          <rect width="64" height="352" x="96" y="80"></rect>
+          <rect width="64" height="352" x="240" y="80"></rect>
+          <rect width="64" height="352" x="384" y="80"></rect>
+        </svg>
+        <!-- hamburger open -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+          class="w-5 h-5 fill-current text-white"
+        >
+          <rect width="352" height="64" x="80" y="96"></rect>
+          <rect width="352" height="64" x="80" y="240"></rect>
+          <rect width="352" height="64" x="80" y="384"></rect>
+        </svg>
+      </div>
+      <div class="w-full">
+        <!-- popular products -->
+        <section class="flex flex-col p-4 gap-4 pb-28">
+          <h2 class="text-white text-3xl text-center">
+            Search results for "{{ search_input }}"
+          </h2>
+          <h3 class="text-white pl-8 text-2xl">{{ products|length }} products</h3>
+          <div class="flex flex-wrap gap-3 justify-start">
+          {% for prod in products %}
+          {% import 'components/product_card.html' as product %}
+          {{ product.product_card(prod, current_user) }}
+          {% endfor %}
+          </div>
+        </section>
+      </div>
+    </div>
+    <!-- footer -->
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
+  </body>
+</html>

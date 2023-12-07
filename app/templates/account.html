@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/global.js"></script>
+    <script src="../static/scripts/addCar.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js"
+      defer
+    ></script>
+    <title>My account</title>
+  </head>
+
+  <body>
+    <!-- Flash message container -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% set flashType, message = messages[0] %} {% import
+      'components/flash_notification.html' as notif %} {{
+      notif.notification(flashType, message) }} {% endif %} {% endwith %}
+    {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
+    <section class="flex justify-center min-h-screen bg-white pt-12 px-4 h-auto relative">
+      <form class="w-100", method="POST" , action="/account">
+        <div class="mb-4">
+          <label
+            for="username"
+            class="block text-gray-600 text-sm font-medium mb-2"
+            >Username:</label
+          >
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="w-full border border-gray-900 p-2 rounded-md"
+            placeholder="Username"
+            value="{{ user.username }}"
+            disabled
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="first_name"
+            class="block text-gray-600 text-sm font-medium mb-2"
+            >First name:</label
+          >
+          <input
+            type="text"
+            id="first_name"
+            name="first_name"
+            class="w-full border border-gray-900 p-2 rounded-md"
+            placeholder="First name"
+            value="{{ user.first_name if user.first_name is not none }}"
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="last_name"
+            class="block text-gray-600 text-sm font-medium mb-2"
+            >Last name:</label
+          >
+          <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            class="w-full border border-gray-900 p-2 rounded-md"
+            placeholder="Last name"
+            value="{{ user.last_name if user.last_name is not none }}"
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="email"
+            class="block text-gray-600 text-sm font-medium mb-2"
+            >Email:</label
+          >
+          <input
+            type="text"
+            id="email"
+            name="email"
+            class="w-full border border-gray-900 p-2 rounded-md"
+            placeholder="Email"
+            value="{{ user.email }}"
+            disabled
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="phone"
+            class="block text-gray-600 text-sm font-medium mb-2"
+            >Phone Number:</label
+          >
+          <input
+            type="number"
+            id="phone"
+            name="phone"
+            class="w-full border border-gray-900 p-2 rounded-md"
+            placeholder="Phone Number"
+            value="{{ user.phone if user.phone is not none }}"
+          />
+        </div>
+        <div class="mb-4">
+          <label
+            for="address"
+            class="block text-gray-600 text-sm font-medium mb-2"
+            >Address:</label
+          >
+          <input
+            type="text"
+            id="address"
+            name="address"
+            class="w-full border border-gray-900 p-2 rounded-md"
+            placeholder="Address"
+            value="{{ user.address.address if user.address.address is not none }}"
+          />
+        </div>
+        <div
+          class="flex justify-between mb-4 flex-col sm:flex-row w-full items-start space-y-8 sm:space-y-0 sm:space-x-8"
+        >
+          <div class="relative w-full">
+            <label
+              for="city"
+              class="block text-gray-600 text-sm font-medium mb-2"
+              >City:</label
+            >
+            <input
+              type="text"
+              id="city"
+              name="city"
+              class="w-full border border-gray-900 p-2 rounded-md"
+              placeholder="City"
+              value="{{ user.address.city if user.address.city is not none }}"
+            />
+          </div>
+          <div class="relative w-full">
+            <label
+              for="region"
+              class="block text-gray-600 text-sm font-medium mb-2"
+              >Region:</label
+            >
+            <input
+              type="text"
+              id="region"
+              name="region"
+              class="w-full border border-gray-900 p-2 rounded-md"
+              placeholder="Region"
+              value="{{ user.address.region if user.address.region is not none }}"
+            />
+          </div>
+          <div class="relative w-full">
+            <label
+              for="country"
+              class="block text-gray-600 text-sm font-medium mb-2"
+              >Country:</label
+            >
+            <input
+              type="text"
+              id="country"
+              name="country"
+              class="w-full border border-gray-900 p-2 rounded-md"
+              placeholder="Country"
+              value="{{ user.address.country if user.address.country is not none }}"
+            />
+          </div>
+          <div class="relative w-full">
+            <label
+              for="zip_code"
+              class="block text-gray-600 text-sm font-medium mb-2"
+              >Zip Code:</label
+            >
+            <input
+              type="number"
+              id="zip_code"
+              name="zip_code"
+              class="w-full border border-gray-900 p-2 rounded-md"
+              placeholder="Zip Code"
+              value="{{ user.address.zip_code if user.address.zip_code is not none }}"
+            />
+          </div>
+        </div>
+        <div class="flex justify-center m-3">
+          <input
+          type="submit"
+          id="submit"
+          class="rounded-lg bg-primary w-52 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-darkPrimary focus:outline-none focus:ring-4 focus:ring-blue-300"
+          value="Save"
+          />
+        </div>
+      </form>
+    </section>
+    <!-- footer -->
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/global.js"></script>
+    <title>My Orders</title>
+  </head>
+
+  <body>
+    {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
+    <section class="min-h-screen bg-darkPrimary pt-12 px-4 h-auto relative">
+      <h1 class="pb-10 text-center text-2xl sm:text-4xl font-bold text-white">
+        Orders
+      </h1>
+      {% if orders|length == 0 %}
+      <div class="flex justify-center">
+        <img
+          src="../static/images/no_orders.png"
+          alt="no orders"
+          width="250px"
+        />
+      </div>
+      <h3 class="text-2xl text-center text-slate-300">No orders yet!</h3>
+      <div class="flex justify-center">
+        <button
+          class="px-8 py-2 bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
+          onclick="window.location.href = '/categories'"
+        >
+          Shop Now
+        </button>
+      </div>
+      {% else %}
+      <!-- spawn user's orders -->
+      <div class="flex flex-col justify-center gap-3">
+        {% for order in orders %}
+        <!-- orders -->
+        {% import 'components/order_card.html' as orderCard %} {{
+        orderCard.order_card(order) }}
+        <!-- end for -->
+        {%endfor %}
+      </div>
+
+      <!-- end if -->
+      {% endif %}
+    </section>
+    <!-- footer -->
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
+  </body>
+</html>

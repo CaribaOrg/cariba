@@ -1,0 +1,111 @@
+<!-- account dropdown macro -->
+{% macro display_drop(current_user) %}
+{% if current_user.is_authenticated %}
+<script>
+  function initialize_notifications() {
+    let since = 0;
+    setInterval(async function() {
+      const response = await fetch('{{ url_for("notifications") }}?since=' + since);
+      const notifications = await response.json();
+      for (let i = 0; i < notifications.length; i++) {
+        if (notifications[i].name == 'unread_message_count')
+          set_message_count(notifications[i].data);
+        since = notifications[i].timestamp;
+      }
+    }, 100000);
+  }
+  document.addEventListener('DOMContentLoaded', initialize_notifications);
+</script>
+{% endif %}
+<div
+  class="account_drop absolute top-2 right-6 w-64 bg-gray-200 rounded-3xl py-3 px-4"
+>
+  <ul
+    class="flex flex-col items-center w-full gap-2 border-b-[1px] border-gray-300 pb-2"
+  >
+    {% if not current_user.is_authenticated %}
+    <li class="text-sm rounded-full w-full text-center">Welcome back!</li>
+    <li
+      class="text-lg font-bold bg-black rounded-full w-full text-white text-center py-1 cursor-pointer mt-5"
+      onclick="window.location.href='/login'"
+    >
+      Log In
+    </li>
+    <li
+      class="text-md rounded-full w-full text-center cursor-pointer"
+      onclick="window.location.href='/register'"
+    >
+      Register
+    </li>
+
+    {% else %}
+    <li class="text-md rounded-full w-full text-center">
+      Hi {{current_user.username }}!
+    </li>
+    {% endif %}
+  </ul>
+  {% if current_user.is_authenticated %}
+  <ul
+    class="flex flex-col items-center w-full gap-2 border-b-[1px] border-gray-300 mx-2 pb-2"
+  >
+    <li
+      class="w-full text-lg hover:bg-black hover:text-white cursor-pointer"
+      onclick="window.location.href='/myOrders'"
+    >
+      <a class="flex w-full pl-2">My Orders</a>
+    </li>
+    <li
+      class="w-full text-lg hover:bg-black hover:text-white cursor-pointer"
+      onclick="window.location.href='/myCart'"
+    >
+      <a class="flex w-full pl-2">Cart</a>
+    </li>
+    <li
+      class="w-full text-lg hover:bg-black hover:text-white cursor-pointer"
+      onclick="window.location.href='/favourites'"
+    >
+      <a class="flex w-full pl-2">Favourites</a>
+    </li>
+    <li
+      class="w-full text-lg hover:bg-black hover:text-white cursor-pointer"
+      onclick="window.location.href='/myGarage'"
+    >
+      <a class="flex w-full pl-2">Garage</a>
+    </li>
+    <li class="w-full text-lg hover:bg-black hover:text-white cursor-pointer">
+      <a href="{{ url_for('messages') }}" class="flex w-full pl-2">
+        Messages
+        {% set unread_message_count = current_user.unread_message_count() %}
+        <div class="pl-2 bg-white flex rounded-full px-3 items-center" style="visibility: {% if unread_message_count %}visible
+        {% else %}hidden {% endif %};">
+        <span id="message_count" class="text-darkPrimary text-sm"
+              style="visibility: {% if unread_message_count %}visible
+                                  {% else %}hidden {% endif %};">
+                {{ unread_message_count }}
+        </span>
+      </div>
+      </a>
+  </li>
+    <li
+      class="w-full text-lg hover:bg-black hover:text-white cursor-pointer"
+      onclick="window.location.href='/account'"
+    >
+      <a class="flex w-full pl-2">Account</a>
+    </li>
+    <li
+      class="w-full text-lg hover:bg-black hover:text-white cursor-pointer"
+      onclick="window.location.href='/logout'"
+    >
+      <a href="/logout" class="flex w-full pl-2">Log out</a>
+    </li>
+  </ul>
+  {% endif %}
+  <div class="flex justify-center pt-2">
+    <img
+      class="w-1/2"
+      src="../../static/images/caribaSmall.png"
+      alt="cariba logo"
+    />
+  </div>
+</div>
+{% endmacro %}

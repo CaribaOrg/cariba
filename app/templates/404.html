@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/404.css" />
+    <title>404!</title>
+  </head>
+  <body>
+    <!-- component -->
+    <!-- This is an example component -->
+    <div class="h-screen w-screen bg-darkPrimary flex items-center">
+      <div
+        class="container flex flex-col md:flex-row items-center justify-center px-5 text-white"
+      >
+        <div class="max-w-md">
+          <div class="text-5xl font-dark font-bold">404</div>
+          <p class="text-2xl md:text-3xl font-light leading-normal">
+            Sorry we couldn't find this page.
+          </p>
+          <p class="mb-8 text-slate-400">
+            Hit a dead end? Turn the page back to our homepage for a new chapter
+            of content.
+          </p>
+
+          <button
+            class="px-4 inline py-2 text-sm font-medium leading-5 shadow text-white transition-colors duration-150 border border-transparent rounded-lg focus:outline-none focus:shadow-outline-blue bg-primary active:bg-primary hover:bg-blue-900"
+            onclick="window.location.href = '/'"
+          >
+            back to homepage
+          </button>
+        </div>
+        <div class="max-w-lg relative w-96 h-96 max-lg:w-52 max-lg:h-52">
+          <img
+            class="error-image"
+            src="../static/images/err404_2.png"
+            alt="404 image"
+          />
+          <img class="" src="../static/images/err404_1.png" alt="404 image" />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

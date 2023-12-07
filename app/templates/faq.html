@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/global.js"></script>
+
+    <title>FAQ</title>
+  </head>
+  <body class="flex flex-col text-white bg-darkPrimary w-full">
+    <header
+      class="sticky z-10 top-0 w-full border-b-2 border-b-primary bg-black p-3"
+    >
+      <nav class="flex justify-between items-center">
+        <a href="/home">
+          <img
+            src="../static/images/caribawhite.png"
+            alt="Cariba Logo"
+            width="110"
+            class="max-md:w-[80px]"
+          />
+        </a>
+        <ul class="flex flex-row items-center gap-3"></ul>
+      </nav>
+    </header>
+    <h2 class="my-12 text-3xl font-bold text-center md:text-5xl">FAQ's</h2>
+    <section class="min-h-screen">
+      <div class="container w-ful flex flex-col p-4 mx-auto md:p-8">
+        <div
+          class="flex flex-col gap-3 w-full divide-y sm:px-8 lg:px-12 xl:px-32"
+        >
+          <details class="w-full bg-white text-slate-900 rounded-lg px-2">
+            <summary
+              class="py-2 font-bold outline-none cursor-pointer focus:underline"
+            >
+              1. What types of car parts do you sell?
+            </summary>
+            <div class="px-6 pb-4">
+              <p>
+                We offer a wide range of car parts, including but not limited to
+                engine components, brake systems, suspension parts, electrical
+                components, and body accessories.
+              </p>
+            </div>
+          </details>
+          <details class="w-full bg-white text-slate-900 rounded-lg px-2">
+            <summary
+              class="py-2 font-bold outline-none cursor-pointer focus:underline"
+            >
+              2. Are your car parts genuine and of high quality?
+            </summary>
+            <div class="px-6 pb-4">
+              <p>
+                Yes, we take pride in providing genuine and high-quality car
+                parts. We source our products from reputable manufacturers to
+                ensure the reliability and performance of the parts we sell.
+              </p>
+            </div>
+          </details>
+          <details class="w-full bg-white text-slate-900 rounded-lg px-2">
+            <summary
+              class="py-2 font-bold outline-none cursor-pointer focus:underline"
+            >
+              3. How do I find the right part for my vehicle?
+            </summary>
+            <div class="px-6 pb-4">
+              <p>
+                You can add to your profile the vehicle's make, model, and year,
+                and you will find a list of compatible parts specifically
+                designed for your vehicle.
+              </p>
+            </div>
+          </details>
+          <details class="w-full bg-white text-slate-900 rounded-lg px-2">
+            <summary
+              class="py-2 font-bold outline-none cursor-pointer focus:underline"
+            >
+              4. What if I can't find the part I need?
+            </summary>
+            <div class="px-6 pb-4">
+              <p>
+                If you're having trouble finding a specific part, feel free to
+                reach out to our customer support team. They will be happy to
+                assist you in locating the right car part for your needs.
+              </p>
+            </div>
+          </details>
+          <details class="w-full bg-white text-slate-900 rounded-lg px-2">
+            <summary
+              class="py-2 font-bold outline-none cursor-pointer focus:underline"
+            >
+              5. How do I place an order?
+            </summary>
+            <div class="px-6 pb-4">
+              <p>
+                To place an order, simply browse our website, add the desired
+                items to your cart, and proceed to checkout. Follow the prompts
+                to enter your shipping information and payment details to
+                complete the purchase.
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
+  </body>
+</html>

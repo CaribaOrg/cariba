@@ -1,0 +1,94 @@
+{% macro order_card(order) %}
+<div class="flex flex-col flex-wrap bg-white w-full rounded-lg p-2 sm:p-4">
+  <div
+    class="flex justify-between bg-slate-100 rounded-t-lg p-1 max-md:flex-col max-sm:gap-2"
+  >
+    <div class="text-black sm:inline-flex items-center text-sm sm:text-base">
+      <span class="text-slate-500 pr-1 text-xs sm:text-sm md:text-base"
+        >Order ID:</span
+      >
+      <div class="sm:inline-flex">
+        <span id="orderID" class="font-bold bg-transparent text-sm"
+          >{{ order.id }}</span
+        >
+        <span
+          id="copyBtn"
+          class="ml-2 cursor-pointer"
+          onclick="copyToClipboard()"
+        >
+          <img
+            src="../../static/images/copy.png"
+            alt="copy to clipboard"
+            width="24px"
+            class="inline"
+          />
+          <img
+            src="../../static/images/check.png"
+            alt="copy to clipboard"
+            width="24px"
+            class="inline hidden"
+          />
+        </span>
+      </div>
+    </div>
+
+    <div class="text-black text-sm sm:text-base">
+      <span class="text-slate-500 text-xs sm:text-sm md:text-base">Date:</span>
+      <span class="font-bold">{{ order.created_at }}</span>
+    </div>
+  </div>
+  <div class="text-black text-sm sm:text-base">
+    <span class="text-slate-500 text-xs sm:text-sm md:text-base"
+      >Number of products:</span
+    >
+    <span class="font-bold">{{ order.cart.cart_items|length }}</span>
+  </div>
+  <div class="text-black text-sm sm:text-base">
+    <span class="text-slate-500 text-xs sm:text-sm md:text-base"
+      >Order Total:</span
+    >
+    <span class="font-bold"
+      >${{ (order.cart.total_price + order.cart.shipping)|round(2) }}</span
+    >
+  </div>
+  <div class="text-right text-gray-600">
+    <!-- <span class="text-slate-500">Status:</span> <span></span> -->
+    <span class="text-white font-bold px-1 rounded-md {{ order.order_status }}"
+      >{{ order.order_status }}</span
+    >
+  </div>
+  <details class="text-slate-900 px-2">
+    <summary
+      class="py-2 font-bold outline-none cursor-pointer text-sm sm:text-base"
+    >
+      Products
+    </summary>
+    <div class="flex flex-col w-full gap-1 px-6 pb-4">
+      {% for item in order.cart.cart_items %}
+      <div class="flex items-center px-2 py-1 justify-between bg-slate-50">
+        <div class="flex items-center gap-1">
+          <img
+            src="{{ url_for('static', filename='images/pics/' + item.product.icon + '.jpg') }}"
+            alt="{{ item.product.name }}"
+            class="w-[32px] h-[32px] sm:w-[40px] sm:h-[40px] object-contain rounded-t-lg"
+          />
+          <div class="w-[70%] text-xs sm:text-base">
+            <a href="{{ url_for('product_page', id=item.product.id) }}">
+              <h3
+                class="pt-2 text-sm leading-normal font-semibold font-palanquin text-clip"
+              >
+                {{ item.product.name }}
+              </h3>
+            </a>
+          </div>
+        </div>
+        <div class="w-[10%] text-right text-xs sm:text-base">
+          <span>{{ item.product.price }}$ x ({{ item.quantity }})</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </details>
+</div>
+<!-- and up -->
+{% endmacro %}

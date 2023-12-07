@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <link rel="stylesheet" href="../static/dist/css/styles.css" />
+    <script src="../static/scripts/product_details.js"></script>
+    <script src="../static/scripts/global.js"></script>
+
+    <title>{{ product.name }}</title>
+  </head>
+  <body class="bg-white">
+    {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
+
+    <div
+      class="my-8 py-8 mx-auto rounded-lg flex justify-center flex-wrap gap-3 min-h-[75vh] bg-white"
+    >
+      <div class="flex flex-col p-4 gap-1 sm:gap-2">
+        <div class="sm:w-72 sm:h-72 w-60 h-60">
+          <img
+            id="big_image"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
+            alt="car oil"
+            class="border-[1px] sm:w-72 sm:h-72 w-60 h-60 object-contain border-black"
+          />
+        </div>
+
+        <div id="imgs_holder" class="flex justify-between sm:w-72 w-60">
+          <img
+            class="sm:w-16 sm:h-16 w-12 h-12 border-[1px] border-black object-contain cursor-pointer"
+            id="image_1"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
+            alt="car oil"
+            width="64px"
+          />
+          <img
+            class="sm:w-16 sm:h-16 w-12 h-12 border-[1px] border-black object-contain cursor-pointer"
+            id="image_2"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
+            alt="car oil"
+            width="64px"
+          />
+          <img
+            class="sm:w-16 sm:h-16 w-12 h-12 border-[1px] border-black object-contain cursor-pointer"
+            id="image_3"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
+            alt="car oil"
+            width="64px"
+          />
+          <img
+            class="sm:w-16 sm:h-16 w-12 h-12 border-[1px] border-black object-contain cursor-pointer"
+            id="image_4"
+            src="{{ url_for('static', filename='images/pics/' + product.icon + '.jpg') }}"
+            alt="car oil"
+            width="64px"
+          />
+        </div>
+      </div>
+      <div class="flex flex-col p-4">
+        <h3 class="text-xl max-w-lg font-semibold">{{ product.name }}</h3>
+        <ul class="my-2 pl-2 max-w-lg py-1 border-y-2 border-slate-300">
+          {{ product.description }}
+        </ul>
+        <!--compatibility tooltip start-->
+        {% if current_user.is_authenticated and supported_cars|length > 0 %}
+        <div class="flex flex-row pb-2">
+          <span class="pr-2">Compatibility: </span>
+          <a
+            tabindex="0"
+            aria-label="tooltip"
+            role="link"
+            class="focus:outline-none focus:ring-gray-300 rounded-full focus:ring-offset-2 focus:ring-2 focus:bg-gray-200 relative"
+            onmouseover="showTooltip()"
+            onfocus="showTooltip()"
+            onmouseout="hideTooltip()"
+          >
+            <div class="cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                class="flex-shrink-0 w-6 h-6 text-green-600"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                ></path>
+              </svg>
+            </div>
+            <div
+              id="tooltip"
+              role="tooltip"
+              class="z-20 -mt-12 w-48 sm:w-64 absolute transition duration-150 ease-in-out left-0 ml-8 shadow-lg bg-gray-800 p-4 rounded hidden"
+            >
+              <svg
+                class="absolute left-0 -ml-2 bottom-0 top-0 h-full"
+                width="9px"
+                height="16px"
+                viewBox="0 0 9 16"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <g
+                  id="Page-1"
+                  stroke="none"
+                  stroke-width="1"
+                  fill="none"
+                  fill-rule="evenodd"
+                >
+                  <g
+                    id="Tooltips-"
+                    transform="translate(-874.000000, -1029.000000)"
+                    fill="#2D3748"
+                  >
+                    <g
+                      id="Group-3-Copy-16"
+                      transform="translate(850.000000, 975.000000)"
+                    >
+                      <g
+                        id="Group-2"
+                        transform="translate(24.000000, 0.000000)"
+                      >
+                        <polygon
+                          id="Triangle"
+                          transform="translate(4.500000, 62.000000) rotate(-90.000000) translate(-4.500000, -62.000000) "
+                          points="4.5 57.5 12.5 66.5 -3.5 66.5"
+                        ></polygon>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+              <p class="text-sm text-white pb-1">Compatible with:</p>
+              {% for car in supported_cars %}
+              <!-- spawn compatible cars -->
+              <p class="text-xs font-bold leading-4 text-white">
+                <span>  - </span>{{ car.name }} ({{ car.make }})
+              </p>
+              {% endfor %}
+            </div>
+          </a>
+        </div>
+        <!--compatibility tooltip end-->
+        {% endif %}
+        <div
+          class="my-1 pl-2 py-1 flex flex-col border-b-2 border-slate-300 gap-4"
+          action="/submit_form"
+          method="post"
+        >
+          <div class="flex items-center gap-2">
+            <label for="quantityInput">Quantity:</label>
+
+            <div class="flex items-center border-gray-100">
+              <span
+                id="decreaseQuantity"
+                class="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50"
+                onclick="decreaseProductQuantity()"
+              >
+                -
+              </span>
+              <input
+                id="quantityCount"
+                class="h-8 w-8 border bg-white text-center text-xs outline-none"
+                type="number"
+                value="1"
+                min="1"
+                max="{{ product.quantity }}"
+              />
+              <span
+                id="increaseQuantity"
+                class="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50"
+                onclick="IncreaseCartItem('{{ product.id }}', false)"
+              >
+                +
+              </span>
+            </div>
+            <p id="totalQuantity" class="text-red-600">
+              / {{ product.quantity }} left
+            </p>
+          </div>
+          <h3 class="">
+            Price:
+            <span class="text-primary text-2xl">{{ product.price }}$</span>
+          </h3>
+          <div class="flex gap-3">
+            <svg 
+              class="hidden"
+              id="fullHeart"
+              width="50px"
+              height="50px"
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg" 
+              stroke="#fe104c">
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+              <g id="SVGRepo_iconCarrier"> <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" fill="#fe104c"></path> </g>
+            </svg>
+            <svg 
+              class="hidden"
+              id="outlineHeart"
+              width="50px"
+              height="50px"
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg" 
+              stroke="#fe104c">
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+              <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M5.62436 4.4241C3.96537 5.18243 2.75 6.98614 2.75 9.13701C2.75 11.3344 3.64922 13.0281 4.93829 14.4797C6.00072 15.676 7.28684 16.6675 8.54113 17.6345C8.83904 17.8642 9.13515 18.0925 9.42605 18.3218C9.95208 18.7365 10.4213 19.1004 10.8736 19.3647C11.3261 19.6292 11.6904 19.7499 12 19.7499C12.3096 19.7499 12.6739 19.6292 13.1264 19.3647C13.5787 19.1004 14.0479 18.7365 14.574 18.3218C14.8649 18.0925 15.161 17.8642 15.4589 17.6345C16.7132 16.6675 17.9993 15.676 19.0617 14.4797C20.3508 13.0281 21.25 11.3344 21.25 9.13701C21.25 6.98614 20.0346 5.18243 18.3756 4.4241C16.7639 3.68739 14.5983 3.88249 12.5404 6.02065C12.399 6.16754 12.2039 6.25054 12 6.25054C11.7961 6.25054 11.601 6.16754 11.4596 6.02065C9.40166 3.88249 7.23607 3.68739 5.62436 4.4241ZM12 4.45873C9.68795 2.39015 7.09896 2.10078 5.00076 3.05987C2.78471 4.07283 1.25 6.42494 1.25 9.13701C1.25 11.8025 2.3605 13.836 3.81672 15.4757C4.98287 16.7888 6.41022 17.8879 7.67083 18.8585C7.95659 19.0785 8.23378 19.292 8.49742 19.4998C9.00965 19.9036 9.55954 20.3342 10.1168 20.6598C10.6739 20.9853 11.3096 21.2499 12 21.2499C12.6904 21.2499 13.3261 20.9853 13.8832 20.6598C14.4405 20.3342 14.9903 19.9036 15.5026 19.4998C15.7662 19.292 16.0434 19.0785 16.3292 18.8585C17.5898 17.8879 19.0171 16.7888 20.1833 15.4757C21.6395 13.836 22.75 11.8025 22.75 9.13701C22.75 6.42494 21.2153 4.07283 18.9992 3.05987C16.901 2.10078 14.3121 2.39015 12 4.45873Z" fill="#fe104c"></path> </g>
+            </svg>
+            <button
+              onclick="{{ 'buyNow(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_cart') ~ '\'' }}"
+              class="bg-primary text-white py-2 px-4 rounded-lg cursor-pointer"
+            >
+              Buy Now
+            </button>
+            <button
+              onclick="{{ 'addToCart2(\'' ~ product.id ~ '\', this)' if (current_user.is_authenticated) else 'window.location.href = \'' ~ url_for('my_cart') ~ '\'' }}"
+              class="bg-darkPrimary text-white py-2 px-4 rounded-lg cursor-pointer"
+            >
+              Add to cart
+            </button>
+          </div>
+          <div class="flex items-center gap-2">
+            <h3 class="">Payments:</h3>
+            <img
+              class="w-16"
+              src="../static/images/payments/Paypal.jpg"
+              alt="paypal"
+            />
+            <img
+              class="w-16"
+              src="../static/images/payments/MasterCard.png"
+              alt="MasterCard"
+            />
+            <img
+              class="w-16"
+              src="../static/images/payments/Visa.png"
+              alt="Visa"
+            />
+          </div>
+        </div>
+        <div class="flex gap-1 items-center pl-2">
+          <h3>
+            Rating: <span class="font-semibold">{{ product.rating }}</span>
+          </h3>
+          <img class="w-4 h-4" src="../static/images/star-yellow.png" />
+          <a href="#reviews_section"><span>(25 reviews)</span></a>
+        </div>
+      </div>
+    </div>
+
+    <section id="reviews_section" class="p-5">
+      <h2 class="text-3xl">Reviews</h2>
+      <div class="flex flex-col pl-8 gap-3">
+        <!-- review -->
+        <div class="py-2 px-2 bg-slate-100">
+          <h4 class="text-lg font-bold">User123</h4>
+          <p class="text-xs">25-11-2022</p>
+          <p class="pt-1">
+            I recently purchased the SuperTech XYZ Smartphone, and I'm
+            absolutely thrilled with my decision. The sleek design and powerful
+            features make it a standout in the smartphone market.
+          </p>
+        </div>
+        <!-- review -->
+        <div class="py-2 px-2 bg-slate-100">
+          <h4 class="text-lg font-bold">User123</h4>
+          <p class="text-xs">25-11-2022</p>
+          <p class="pt-1">
+            I recently purchased the SuperTech XYZ Smartphone, and I'm
+            absolutely thrilled with my decision. The sleek design and powerful
+            features make it a standout in the smartphone market.
+          </p>
+        </div>
+        <!-- review -->
+        <div class="py-2 px-2 bg-slate-100">
+          <h4 class="text-lg font-bold">User123</h4>
+          <p class="text-xs">25-11-2022</p>
+          <p class="pt-1">
+            I recently purchased the SuperTech XYZ Smartphone, and I'm
+            absolutely thrilled with my decision. The sleek design and powerful
+            features make it a standout in the smartphone market.
+          </p>
+        </div>
+        <!-- review -->
+        <div class="py-2 px-2 bg-slate-100">
+          <h4 class="text-lg font-bold">User123</h4>
+          <p class="text-xs">25-11-2022</p>
+          <p class="pt-1">
+            I recently purchased the SuperTech XYZ Smartphone, and I'm
+            absolutely thrilled with my decision. The sleek design and powerful
+            features make it a standout in the smartphone market.
+          </p>
+        </div>
+      </div>
+      <div class="flex justify-center pt-3">
+        <div
+          id="load_more_products"
+          class="bg-slate-700 text-white py-2 px-6 rounded-full cursor-pointer"
+        >
+          Load more
+        </div>
+      </div>
+    </section>
+
+    <!-- popular products -->
+    <section class="flex flex-col p-8 gap-4">
+      <h2 class="text-black text-3xl">Popular products</h2>
+      <div class="flex flex-wrap justify-around gap-6 justify-start">
+        {% if popular|length == 0%}
+        <p class="text-gray-900">
+          No product is compatible with any of the cars in your garage, make
+          sure your car information is correct
+        </p>
+        {% else %} {% for prod in popular %} {% import
+        'components/product_card.html' as product %} {{
+        product.product_card(prod, current_user) }} {% endfor %} {% endif %}
+      </div>
+    </section>
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
+    <script>
+      function toggleHearts() {
+        var fullHeart = document.getElementById('fullHeart');
+        var outlineHeart = document.getElementById('outlineHeart');
+        {% if current_user.is_authenticated and product.is_in_wishlist(current_user) %}
+          fullHeart.classList.remove("hidden");
+          outlineHeart.classList.add("hidden");
+        {% else %}
+          fullHeart.classList.add("hidden");
+          outlineHeart.classList.remove("hidden");
+        {% endif %}
+        }
+      toggleHearts();
+  
+      document.getElementById('outlineHeart').addEventListener('click', function() {
+        fetch('/add_to_favourites/{{ product.id }}', {
+          method: 'POST',
+         })
+          .then(response => response.text())
+          .then(data => JSON.parse(data || '{}'))
+          .then(function() {
+            document.getElementById('fullHeart').classList.remove("hidden")
+            document.getElementById('outlineHeart').classList.add("hidden");
+          })
+          .catch(error => console.error('There has been a problem:', error));
+        });
+       document.getElementById('fullHeart').addEventListener('click', function() {
+        fetch('/remove_from_favourites/{{ product.id }}', {
+          method: 'POST',
+         })
+         .then(response => response.text())
+         .then(data => JSON.parse(data || '{}'))
+         .then(function() {
+          document.getElementById('outlineHeart').classList.remove("hidden")
+          document.getElementById('fullHeart').classList.add("hidden");
+        })
+         .catch(error => console.error('There has been a problem:', error));
+      });
+    </script>
+  </body>
+</html>
