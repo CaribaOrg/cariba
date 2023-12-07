@@ -78,6 +78,9 @@
         {% endfor %}
       </div>
     </section>
+
+    <!-- offer section -->
+    {% import 'components/offers.html' as offers %} {{ offers.offers() }}
     <!-- popular products -->
     <section class="flex flex-col p-4 gap-4">
       <h2 class="text-white text-3xl">Popular products</h2>
