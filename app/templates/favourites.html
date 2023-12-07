@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../static/dist/css/output.css" />
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/global.js"></script>
-    <title>Shopping Cart</title>
+    <title>Favourites</title>
   </head>
 
   <body>
@@ -14,7 +14,7 @@
     header.display_header(current_user) }}
     <div class="min-h-screen bg-darkPrimary pt-12">
       <h1 class="pb-10 text-center text-2xl sm:text-4xl font-bold text-white">
-        Wishlist
+        Favourites
       </h1>
       <div
         class="mx-auto max-w-5xl justify-center px-6 md:flex pb-8 md:space-x-6 xl:px-0"
@@ -38,7 +38,7 @@
           </button>
         </div>
         {% else %}
-        <div class="flex flex-col justify-center gap-3">
+        <div class="flex flex-row flex-wrap max-w-5xl justify-center gap-3">
           {% for item in current_user.wishlist_items %}
           {% import 'components/product_card.html' as product %} {{
             product.product_card(item.product, current_user) }}

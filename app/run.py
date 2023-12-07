@@ -346,19 +346,19 @@ def buy_again(order_id):
         item.product.add_to_cart(current_user, item.quantity)
     return redirect(url_for('my_cart'))
 
-@app.route("/wishlist")
+@app.route("/favourites")
 @login_required
 def wishlist():
-    return render_template("wishlist.html", current_user=current_user)
+    return render_template("favourites.html", current_user=current_user)
 
-@app.route("/add_to_wishlist/<uuid:id>", methods=['POST'])
+@app.route("/add_to_favourites/<uuid:id>", methods=['POST'])
 @login_required
 def add_to_wishlist(id):
     product = strg.session().query(Product).get(id)
     product.add_to_wishlist(current_user)
     return '', 200
 
-@app.route("/remove_from_wishlist/<uuid:id>", methods=['POST'])
+@app.route("/remove_from_favourites/<uuid:id>", methods=['POST'])
 @login_required
 def remove_from_wishlist(id):
     product = strg.session().query(Product).get(id)

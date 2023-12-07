@@ -342,7 +342,7 @@
       toggleHearts();
   
       document.getElementById('outlineHeart').addEventListener('click', function() {
-        fetch('/add_to_wishlist/{{ product.id }}', {
+        fetch('/add_to_favourites/{{ product.id }}', {
           method: 'POST',
          })
           .then(response => response.text())
@@ -354,7 +354,7 @@
           .catch(error => console.error('There has been a problem:', error));
         });
        document.getElementById('fullHeart').addEventListener('click', function() {
-        fetch('/remove_from_wishlist/{{ product.id }}', {
+        fetch('/remove_from_favourites/{{ product.id }}', {
           method: 'POST',
          })
          .then(response => response.text())
