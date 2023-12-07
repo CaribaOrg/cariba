@@ -42,6 +42,10 @@
 
         labelItems: [],
         labelLoaded: false,
+        hasMessage: false,
+        message: "",
+        flashType: "",
+        ftype: false,
         
 
         init() {
@@ -59,10 +63,8 @@
               label: "",
               body: "",
             },
-            formMessage: "",
             submitForm() {
               console.log(JSON.stringify(this.formData));
-              this.formMessage = "";
               fetch(`api/send_messages`, {
                 method: "POST",
                 headers: {
@@ -72,22 +74,42 @@
                 body: JSON.stringify(this.formData),
               })
                 .then((response) => {
-                  this.modelOpen = false;
-                  this.formData.send_all =  true;
-                  this.formData.author = "{{ current_user.username }}";
-                  this.formData.recipient = "";
-                  this.formData.title = "";
-                  this.formData.label = "";
-                  this.formData.body = "";
-                  this.formMessage = response;
-                  CKEDITOR.instances.body.setData('');
+                  if (response.ok) {
+                    this.modelOpen = false;
+                    this.formData.send_all =  true;
+                    this.formData.author = "{{ current_user.username }}";
+                    this.formData.recipient = "";
+                    this.formData.title = "";
+                    this.formData.label = "";
+                    this.formData.body = "";
+                    this.hasMessage = true;
+                    this.flashType = "Success"
+                    this.ftype = "success";
+                    this.message = "Message Sent";
+                    CKEDITOR.instances.body.setData('');
+                  } else {
+                    this.hasMessage = true;
+                    this.flashType = "Error"
+                    this.ftype = "error";
+                    this.message = "Failed to send";
+                  }
                 })
                 .catch((response) => {
-                  this.formMessage = response;
+                  this.hasMessage = true;
+                  this.flashType = "Error"
+                  this.ftype = "error";
+                  this.message = "Failed to send";
                 });
             },
           };
         },
+
+        closeFlashMessage() {
+          this.hasMessage = false;
+          this.flashType = "";
+          this.ftype = false;
+          this.message = "";
+      },
 
         getSentMessages() {
           this.CurrentLabel = "sent_messages";
@@ -134,8 +156,14 @@
     <!-- END: Alpinejs -->
 </head>
 <body class="w-full h-screen overflow-hidden flex items-center" style="background: #edf2f7;">
-  
+
+  <!-- Flash message container -->
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% set flashType, message = messages[0] %} {% import
+    'components/flash_notification.html' as notif %} {{
+    notif.notification(flashType, message) }} {% endif %} {% endwith %}
     <main x-data="GmailKit" class="w-full">
+      
       <template x-if="loaded">
         <div class="h-screen flex">
           <!-- BEGIN: Navbar -->
@@ -327,7 +355,23 @@
                     >Created Messages</div>
                   </div>
               </div>
-
+              <template x-if="hasMessage">
+                <div
+          class="flash-message fixed z-20 top-32 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex shadow-md gap-6 rounded-lg overflow-hidden divide-x max-w-2xl bg-gray-500 text-gray-100"
+        >
+        
+          <div class="flex flex-1 flex-col p-4 border-l-8" :class="ftype ? 'Success': 'Error'">
+            <span class="text-2xl" :class="ftype ? 'Success': 'Error'" x-text="flashType"></span>
+            <span class="text-xs text-gray-100" x-text="message"></span>
+          </div>
+          <button
+            @click="closeFlashMessage()"
+            class="px-4 flex items-center text-xs uppercase tracki text-gray-100"
+          >
+            Dismiss
+          </button>
+        </div>
+              </template>
              
             </aside>
           </template>
