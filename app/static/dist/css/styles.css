@@ -11,10 +11,9 @@ body {
   z-index: 2;
   display: none;
 }
-@media (min-width: 768px) {
-  .nav_my_account:hover > .account_drop {
-    display: block;
-  }
+
+.nav_my_account:hover > .account_drop {
+  display: block;
 }
 
 .w-100 {

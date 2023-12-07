@@ -7,8 +7,9 @@
     class="flex flex-col items-center w-full gap-2 border-b-[1px] border-gray-300 pb-2"
   >
     {% if not current_user.is_authenticated %}
+    <li class="text-sm rounded-full w-full text-center">Welcome back!</li>
     <li
-      class="text-lg font-bold bg-black rounded-full w-full text-white text-center py-1 cursor-pointer"
+      class="text-lg font-bold bg-black rounded-full w-full text-white text-center py-1 cursor-pointer mt-5"
       onclick="window.location.href='/login'"
     >
       Log In
@@ -19,6 +20,7 @@
     >
       Register
     </li>
+
     {% else %}
     <li class="text-md rounded-full w-full text-center">
       Hi {{current_user.username }}!
@@ -40,11 +42,11 @@
       onclick="window.location.href='/myCart'"
     >
       <a class="flex w-full pl-2">Cart</a>
-    </li>   
-    <li 
+    </li>
+    <li
       class="w-full text-lg hover:bg-black hover:text-white cursor-pointer"
       onclick="window.location.href='/favourites'"
-      >
+    >
       <a class="flex w-full pl-2">Favourites</a>
     </li>
     <li
