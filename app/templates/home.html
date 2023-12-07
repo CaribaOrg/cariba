@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/global.js"></script>
     <script src="../static/scripts/addCar.js"></script>
+    <script src="../static/scripts/carousel.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js"
       defer
     ></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
 
     <title>Cariba</title>
   </head>
@@ -24,11 +26,13 @@
     {%import'components/hero.html' as hero %} {{ hero.display_hero() }}
 
     <!-- add car -->
-    <div class="flex items-center my-8 py-8 px-4 max-md:flex-col gap-16">
-      <div class="border-2 border-white rounded-lg p-2">
-        <div class="border-2 border-primary rounded-lg">
+    <div
+      class="flex items-center my-8 py-8 px-4 max-md:flex-col max-sm:gap-6 max-lg:gap-10 gap-16"
+    >
+      <div class="border-2 border-white rounded-lg p-2 mr-14">
+        <div class="border-2 border-primary rounded-lg relative">
           <img
-            class="translate-x-14"
+            class="translate-x-5 sm:translate-x-14"
             src="../static/images/ford.png"
             alt="ford car image"
             width="512px"

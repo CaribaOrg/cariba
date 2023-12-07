@@ -1,31 +1,73 @@
 <!-- hero's macro -->
 {% macro display_hero() %}
-<div class="w-full bg-black p-8">
-  <div class="flex flex-row justify-between max-md:flex-col">
-    <div
-      class="flex flex-col justify-center items-center w-full max-md:items-start"
-    >
-      <span class="text-white text-6xl max-md:text-4xl"
-        >Explore our wide range <br />
-        of car <span class="text-primary">batteries</span>
-      </span>
-      <div class="w-full">
-        <button
-        class="px-8 py-2 bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
-        onclick="window.location.href = '/categories'"
-        >
-        Shop Now
-        </button>
+<div class="sliderAx h-auto">
+  <div id="slider-1" class="w-full bg-black p-8">
+    <div class="flex flex-row justify-between max-md:flex-col">
+      <div
+        class="flex flex-col justify-center items-center w-full max-md:items-start"
+      >
+        <span class="text-white text-6xl max-md:text-4xl max-sm:text-2xl"
+          >Explore our wide range <br />
+          of car <span class="text-primary">batteries</span>
+        </span>
+        <div class="w-full">
+          <button
+            class="px-8 py-2 bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
+            onclick="window.location.href = '/categories/Batteries'"
+          >
+            Shop Now
+          </button>
+        </div>
+      </div>
+      <div class="w-full relative z-1">
+        <div class="img-wrap"></div>
+        <img
+          src="../../static/images/carousel/battery-carousel.jpg"
+          alt="Battery image"
+          class="rounded-xl"
+        />
       </div>
     </div>
-    <div class="w-full relative z-1">
-      <div class="img-wrap"></div>
-      <img
-        src="../../static/images/carousel/battery-carousel.jpg"
-        alt="Battery image"
-        class="rounded-xl"
-      />
+  </div>
+  <div id="slider-2" class="w-full bg-black p-8">
+    <div class="flex flex-row justify-between max-md:flex-col">
+      <div
+        class="flex flex-col justify-center items-center w-full max-md:items-start"
+      >
+        <span class="text-white text-6xl max-md:text-4xl max-sm:text-2xl"
+          >Explore our diverse selection <br />
+          of premium <span class="text-primary">oils</span>
+        </span>
+        <div class="w-full">
+          <button
+            class="px-8 py-2 bg-primary rounded-full font-bold text-white my-4 hover:bg-white hover:text-primary max-md:w-full"
+            onclick="window.location.href = '/categories/Oils'"
+          >
+            Shop Now
+          </button>
+        </div>
+      </div>
+      <div class="w-full relative z-1">
+        <div class="img-wrap"></div>
+        <img
+          src="../../static/images/carousel/mechanic_oil.jpg"
+          alt="Battery image"
+          class="rounded-xl"
+        />
+      </div>
     </div>
   </div>
+</div>
+<div class="flex justify-between w-12 mx-auto py-2">
+  <button
+    id="sButton1"
+    onclick="sliderButton1() "
+    class="bg-blue-200 rounded-full w-4 p-2 border-2 border-white"
+  ></button>
+  <button
+    id="sButton2"
+    onclick="sliderButton2() "
+    class="bg-blue-200 rounded-full w-4 p-2 border-2 border-white"
+  ></button>
 </div>
 {% endmacro %}

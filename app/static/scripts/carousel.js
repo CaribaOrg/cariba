@@ -1,60 +1,57 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // Get the carousel element
-    const carousel = document.getElementById("carouselExampleCaptions");
+var cont = 0;
+let xx;
+function loopSlider() {
+    xx = setInterval(function () {
+        switch (cont) {
+            case 0: {
+                $("#slider-1").fadeOut(400);
+                $("#slider-2").delay(400).fadeIn(400);
+                $("#sButton1").removeClass("bg-primary");
+                $("#sButton2").addClass("bg-primary");
+                cont = 1;
 
-    // Get the carousel items and indicators
-    const items = carousel.querySelectorAll("[data-te-carousel-item]");
-    const indicators = carousel.querySelectorAll("[data-te-carousel-indicators] button");
-
-    // Get the previous and next buttons
-    const prevButton = carousel.querySelector("[data-te-slide='prev']");
-    const nextButton = carousel.querySelector("[data-te-slide='next']");
-
-    // Set initial index
-    let currentIndex = 0;
-
-    // Function to show the current slide
-    function showCurrentSlide() {
-        items.forEach((item, index) => {
-            if (index === currentIndex) {
-                item.classList.add("transition-transform", "ease-in-out", "duration-600");
-                item.style.transform = "translateX(0)";
-            } else {
-                item.classList.remove("transition-transform", "ease-in-out", "duration-600");
-                item.style.transform = `translateX(${100 * (index - currentIndex)}%)`;
+                break;
             }
-        });
+            case 1: {
+                $("#slider-2").fadeOut(400);
+                $("#slider-1").delay(400).fadeIn(400);
+                $("#sButton2").removeClass("bg-primary");
+                $("#sButton1").addClass("bg-primary");
 
-        // Update the indicators
-        indicators.forEach((indicator, index) => {
-            indicator.setAttribute("aria-current", index === currentIndex ? "true" : "false");
-        });
-    }
+                cont = 0;
 
-    // Function to show the next slide
-    function showNextSlide() {
-        currentIndex = (currentIndex + 1) % items.length;
-        showCurrentSlide();
-    }
+                break;
+            }
+        }
+    }, 8000);
+}
 
-    // Function to show the previous slide
-    function showPrevSlide() {
-        currentIndex = (currentIndex - 1 + items.length) % items.length;
-        showCurrentSlide();
-    }
+function reinitLoop(time) {
+    clearInterval(xx);
+    setTimeout(loopSlider(), time);
+}
 
-    // Event listeners for next and previous buttons
-    prevButton.addEventListener("click", showPrevSlide);
-    nextButton.addEventListener("click", showNextSlide);
+function sliderButton1() {
+    $("#slider-2").fadeOut(400);
+    $("#slider-1").delay(400).fadeIn(400);
+    $("#sButton2").removeClass("bg-primary");
+    $("#sButton1").addClass("bg-primary");
+    reinitLoop(4000);
+    cont = 0;
+}
 
-    // Event listeners for indicator buttons
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener("click", function () {
-            currentIndex = index;
-            showCurrentSlide();
-        });
-    });
+function sliderButton2() {
+    $("#slider-1").fadeOut(400);
+    $("#slider-2").delay(400).fadeIn(400);
+    $("#sButton1").removeClass("bg-primary");
+    $("#sButton2").addClass("bg-primary");
+    reinitLoop(4000);
+    cont = 1;
+}
 
-    // Show the initial slide
-    showCurrentSlide();
+document.addEventListener("DOMContentLoaded", function () {
+    $("#slider-2").hide();
+    $("#sButton1").addClass("bg-primary");
+
+    loopSlider();
 });
