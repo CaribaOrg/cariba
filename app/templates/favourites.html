@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/global.js"></script>
     <title>Favourites</title>
+    <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico" />
   </head>
 
   <body>
@@ -19,7 +20,8 @@
       <div
         class="mx-auto max-w-5xl justify-center px-6 md:flex pb-8 md:space-x-6 xl:px-0"
       >
-        {% if current_user.wishlist_items is none or current_user.wishlist_items|length == 0 %}
+        {% if current_user.wishlist_items is none or
+        current_user.wishlist_items|length == 0 %}
         <div class="flex flex-col flex-wrap justify-center text-center">
           <div class="flex justify-center">
             <img
@@ -39,10 +41,9 @@
         </div>
         {% else %}
         <div class="flex flex-row flex-wrap max-w-5xl justify-center gap-3">
-          {% for item in current_user.wishlist_items %}
-          {% import 'components/product_card.html' as product %} {{
-            product.product_card(item.product, current_user) }}
-          {% endfor %}
+          {% for item in current_user.wishlist_items %} {% import
+          'components/product_card.html' as product %} {{
+          product.product_card(item.product, current_user) }} {% endfor %}
         </div>
         {% endif %}
       </div>

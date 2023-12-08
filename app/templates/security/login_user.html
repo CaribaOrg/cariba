@@ -1,4 +1,5 @@
-{% from "security/_macros.html" import render_field_with_errors, render_field, render_field_errors, render_form_errors, prop_next %}
+{% from "security/_macros.html" import render_field_with_errors, render_field,
+render_field_errors, render_form_errors, prop_next %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,13 +9,14 @@
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/global.js"></script>
     <title>Login</title>
+    <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico" />
   </head>
   <body>
     <!-- Flash message container -->
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% set flashType, message = messages[0] %} {% import
-      'components/flash_notification.html' as notif %} {{
-      notif.notification(flashType, message) }} {% endif %} {% endwith %}
+    messages %} {% set flashType, message = messages[0] %} {% import
+    'components/flash_notification.html' as notif %} {{
+    notif.notification(flashType, message) }} {% endif %} {% endwith %}
     <!-- component -->
     <body class="font-mono bg-darkPrimary">
       <!-- Container -->
@@ -40,9 +42,9 @@
                 action="{{ url_for_security('login') }}"
                 name="login_user_form"
               >
-              {{ login_user_form.hidden_tag() }}
-              {{ render_field_errors(login_user_form.csrf_token) }}
-              {{ render_form_errors(login_user_form) }}
+                {{ login_user_form.hidden_tag() }} {{
+                render_field_errors(login_user_form.csrf_token) }} {{
+                render_form_errors(login_user_form) }}
                 <div class="mb-4">
                   <label
                     class="block mb-2 text-sm font-bold text-gray-700"
@@ -50,7 +52,17 @@
                   >
                     Username
                   </label>
-                  <input placeholder="Username" autocomplete="username" id="username" name="username" type="text" value="" minlength="4" maxlength="15" class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline">
+                  <input
+                    placeholder="Username"
+                    autocomplete="username"
+                    id="username"
+                    name="username"
+                    type="text"
+                    value=""
+                    minlength="4"
+                    maxlength="15"
+                    class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  />
                   {{ render_field_errors(login_user_form.username) }}
                 </div>
                 <div class="mb-4">
@@ -60,7 +72,15 @@
                   >
                     Password
                   </label>
-                  <input placeholder="******************" id="password" name="password" type="password" minlength="4" maxlength="80" class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline">
+                  <input
+                    placeholder="******************"
+                    id="password"
+                    name="password"
+                    type="password"
+                    minlength="4"
+                    maxlength="80"
+                    class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  />
                   {{ render_field_errors(login_user_form.password) }}
                   <p class="hidden text-xs italic text-red-500">
                     Please enter a correct password.
@@ -91,7 +111,7 @@
                     class="inline-block text-sm text-blue-500 align-baseline hover:text-blue-800"
                     href="{{ url_for_security('forgot_password') }}"
                   >
-                  Forgot your password?
+                    Forgot your password?
                   </a>
                 </div>
               </form>

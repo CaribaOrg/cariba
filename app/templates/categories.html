@@ -10,6 +10,7 @@
     <script src="../static/scripts/categories.js"></script>
 
     <title>Categories</title>
+    <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico" />
   </head>
 
   <body class="bg-darkPrimary">
@@ -30,10 +31,10 @@
           {% for catego in categories %} {% if catego.parent_id is none %}
           <div class="space-y-2">
             <a
-                class="text-sm font-bold uppercase text-slate-900"
-                href="/categories/{{ catego.name }}"
-                >{{ catego.name }}</a
-              >
+              class="text-sm font-bold uppercase text-slate-900"
+              href="/categories/{{ catego.name }}"
+              >{{ catego.name }}</a
+            >
             <!-- sub categories -->
             <div class="flex flex-col pl-1 space-y-1">
               {% for sub_catego in catego.children %}
@@ -91,15 +92,18 @@
             {{ current_category.name }}
           </h2>
           {% if prod_list|length == 0%}
-          <p class="text-white">No product is compatible with any of the cars in your garage, make sure your car information is correct</p> 
+          <p class="text-white">
+            No product is compatible with any of the cars in your garage, make
+            sure your car information is correct
+          </p>
           {% else %}
-          <h3 class="text-white pl-8 text-2xl">{{ prod_list|length }} products</h3>
+          <h3 class="text-white pl-8 text-2xl">
+            {{ prod_list|length }} products
+          </h3>
           <div class="flex flex-wrap gap-3 justify-start">
-          {% for prod in prod_list %}
-          {% import 'components/product_card.html' as product %}
-          {{ product.product_card(prod, current_user) }}
-          {% endfor %}
-          {% endif %}
+            {% for prod in prod_list %} {% import 'components/product_card.html'
+            as product %} {{ product.product_card(prod, current_user) }} {%
+            endfor %} {% endif %}
           </div>
         </section>
       </div>

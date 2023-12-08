@@ -1,4 +1,5 @@
-{% from "security/_macros.html" import render_field_with_errors, render_field, render_form_errors, render_field_errors %}
+{% from "security/_macros.html" import render_field_with_errors, render_field,
+render_form_errors, render_field_errors %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -6,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../static/dist/css/output.css" />
     <title>Register</title>
+    <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico" />
   </head>
   <body>
     <!-- component -->
@@ -33,8 +35,8 @@
                 action="{{ url_for_security('register') }}"
                 name="register_user_form"
               >
-              {{ register_user_form.hidden_tag() }}
-              {{ render_form_errors(register_user_form) }}
+                {{ register_user_form.hidden_tag() }} {{
+                render_form_errors(register_user_form) }}
                 <div class="mb-4">
                   <label
                     class="block mb-2 text-sm font-bold text-gray-700"
@@ -42,7 +44,17 @@
                   >
                     Username
                   </label>
-                  <input placeholder="Username" autocomplete="username" id="username" name="username" type="text" value="" minlength="4" maxlength="15" class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline">
+                  <input
+                    placeholder="Username"
+                    autocomplete="username"
+                    id="username"
+                    name="username"
+                    type="text"
+                    value=""
+                    minlength="4"
+                    maxlength="15"
+                    class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  />
                   {{ render_field_errors(register_user_form.username) }}
                 </div>
                 <div class="mb-4">
@@ -52,7 +64,15 @@
                   >
                     Email
                   </label>
-                  <input placeholder="user_name@domain.com" autocomplete="email" id="email" name="email" type="email" value="" class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline">
+                  <input
+                    placeholder="user_name@domain.com"
+                    autocomplete="email"
+                    id="email"
+                    name="email"
+                    type="email"
+                    value=""
+                    class="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  />
                   {{ render_field_errors(register_user_form.email) }}
                 </div>
                 <div class="mb-4">
@@ -62,7 +82,17 @@
                   >
                     Password
                   </label>
-                  <input placeholder="******************" autocomplete="password" id="password" name="password" type="password" value="" minlength="4" maxlength="80" class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline">
+                  <input
+                    placeholder="******************"
+                    autocomplete="password"
+                    id="password"
+                    name="password"
+                    type="password"
+                    value=""
+                    minlength="4"
+                    maxlength="80"
+                    class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  />
                   {{ render_field_errors(register_user_form.password) }}
                   <p class="hidden text-xs italic text-red-500">
                     Please enter a correct password.
@@ -75,7 +105,15 @@
                   >
                     Confirm Password
                   </label>
-                  <input placeholder="******************" id="password_confirm" name="password_confirm" type="password" minlength="4" maxlength="80" class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline">
+                  <input
+                    placeholder="******************"
+                    id="password_confirm"
+                    name="password_confirm"
+                    type="password"
+                    minlength="4"
+                    maxlength="80"
+                    class="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  />
                   {{ render_field_errors(register_user_form.password_confirm) }}
                   <p class="hidden text-xs italic text-red-500">
                     Please enter a correct password.

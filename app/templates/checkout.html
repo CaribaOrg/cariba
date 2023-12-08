@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/checkout.js"></script>
     <title>Checkout Cart</title>
+    <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico" />
   </head>
 
   <body>
@@ -45,11 +46,16 @@
         >
           <div class="flex w-full flex-col justify-start items-start">
             <div class="">
-              <p id="title" class="text-xl font-semibold text-darkPrimary leading-5">
+              <p
+                id="title"
+                class="text-xl font-semibold text-darkPrimary leading-5"
+              >
                 Shipping Details
               </p>
             </div>
-            <form id="userDetails" onsubmit="toPayment(event, '{{ current_user.id }}')"
+            <form
+              id="userDetails"
+              onsubmit="toPayment(event, '{{ current_user.id }}')"
               class="mt-8 flex flex-col justify-start items-start w-full space-y-8"
               id="userDetails"
             >
@@ -155,7 +161,7 @@
               id="paypal-button-container"
               class="hidden mt-8 text-base font-medium leading-4 py-4 w-full md:w-4/12 lg:w-full text-white"
             ></div>
-            <script>    
+            <script>
               paypal
                 .Buttons({
                   // Sets up the transaction when a payment button is clicked
@@ -195,8 +201,9 @@
                         element.innerHTML =
                           "<h3 class='text-base text-gray-600'>Thank you for your payment!</h3>";
                         // Or go to another URL:  actions.redirect('thank_you.html');
-                        const cart = document.getElementById('cart_items_count')
-                        cart.textContent = 0
+                        const cart =
+                          document.getElementById("cart_items_count");
+                        cart.textContent = 0;
                       });
                   },
                 })

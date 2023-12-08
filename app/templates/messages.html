@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="../static/dist/css/output.css" />
     <link rel="stylesheet" href="../static/dist/css/styles.css" />
     <script src="../static/scripts/global.js"></script>
     <script src="../static/scripts/addCar.js"></script>
+    <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico" />
 
     <!-- BEGIN: Tailwind -->
-    
+
     {{ ckeditor.load() }}
     <!-- END: Tailwind -->
 
@@ -23,13 +24,7 @@
         postContentComments: null,
         sidebarExtended: true,
         CurrentLabel: "all",
-        label: [
-          "all",
-          "notifications",
-          "payments",
-          "features",
-          "alerts",
-        ],
+        label: ["all", "notifications", "payments", "features", "alerts"],
         labelIcons: [
           "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/inbox_fill_baseline_p900_20dp.png",
           "https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/star_baseline_nv700_20dp.png",
@@ -47,7 +42,6 @@
         flashType: "",
         ftype: false,
         messageExtended: false,
-        
 
         init() {
           this.loaded = true;
@@ -77,27 +71,27 @@
                 .then((response) => {
                   if (response.ok) {
                     this.modelOpen = false;
-                    this.formData.send_all =  true;
+                    this.formData.send_all = true;
                     this.formData.author = "{{ current_user.username }}";
                     this.formData.recipient = "";
                     this.formData.title = "";
                     this.formData.label = "";
                     this.formData.body = "";
                     this.hasMessage = true;
-                    this.flashType = "Success"
+                    this.flashType = "Success";
                     this.ftype = true;
                     this.message = "Message Sent";
-                    CKEDITOR.instances.body.setData('');
+                    CKEDITOR.instances.body.setData("");
                   } else {
                     this.hasMessage = true;
-                    this.flashType = "Error"
+                    this.flashType = "Error";
                     this.ftype = false;
                     this.message = "Failed to send";
                   }
                 })
                 .catch((response) => {
                   this.hasMessage = true;
-                  this.flashType = "Error"
+                  this.flashType = "Error";
                   this.ftype = false;
                   this.message = "Failed to send";
                 });
@@ -110,7 +104,7 @@
           this.flashType = "";
           this.ftype = false;
           this.message = "";
-      },
+        },
 
         getSentMessages() {
           this.CurrentLabel = "sent_messages";
@@ -119,7 +113,7 @@
           fetch(`api/sent_messages/{{ current_user.id }}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+              console.log(data);
               this.labelItems = data;
               this.labelLoaded = true;
             });
@@ -141,7 +135,6 @@
               this.labelItems = data;
               this.labelLoaded = true;
               this.messageExtended = false;
-              
             });
         },
 
@@ -158,20 +151,18 @@
       });
     </script>
     <!-- END: Alpinejs -->
-</head>
+  </head>
 
-<body style="background: #edf2f7;">
-  {% import 'components/header.html' as header %} {{
+  <body style="background: #edf2f7">
+    {% import 'components/header.html' as header %} {{
     header.display_header(current_user) }}
 
-  <!-- Flash message container -->
-  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    <!-- Flash message container -->
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% set flashType, message = messages[0] %} {% import
     'components/flash_notification.html' as notif %} {{
     notif.notification(flashType, message) }} {% endif %} {% endwith %}
     <main x-data="GmailKit" class="w-full overflow-y-auto">
-
-      
       <template x-if="loaded">
         <div class="h-screen flex">
           <!-- BEGIN: Navbar -->
@@ -201,132 +192,211 @@
           <!-- BEGIN: Sidebar -->
           <template x-if="sidebarExtended">
             <aside class="w-64 bg-gray-50 h-screen py-3 px-6">
-              
-
               <div x-data="{ modelOpen: false }">
-
                 <button
-                @click="modelOpen =!modelOpen"
-                class="px-3 py-3 bg-cyan-400/30 rounded-xl my-6 flex flex-row space-x-4 items-center"
-              >
+                  @click="modelOpen =!modelOpen"
+                  class="px-3 py-3 bg-cyan-400/30 rounded-xl my-6 flex flex-row space-x-4 items-center"
+                >
+                  <div
+                    class="w-6 h-6 object-fill bg-no-repeat"
+                    style="
+                      background-image: url('https://www.gstatic.com/images/icons/material/system_gm/1x/create_black_24dp.png');
+                    "
+                  ></div>
+                  <p class="text-sm pr-4">Compose</p>
+                </button>
+
                 <div
-                  class="w-6 h-6 object-fill bg-no-repeat"
-                  style="
-                    background-image: url('https://www.gstatic.com/images/icons/material/system_gm/1x/create_black_24dp.png');
-                  "
-                ></div>
-                <p class="text-sm pr-4">Compose</p>
-              </button>
-            
-                <div x-show="modelOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                    <div class="flex items-end justify-center min-h-screen px-4 text-center md:items-center sm:block sm:p-0">
-                        <div x-cloak @click="modelOpen = false" x-show="modelOpen" 
-                            x-transition:enter="transition ease-out duration-300 transform"
-                            x-transition:enter-start="opacity-0" 
-                            x-transition:enter-end="opacity-100"
-                            x-transition:leave="transition ease-in duration-200 transform"
-                            x-transition:leave-start="opacity-100" 
-                            x-transition:leave-end="opacity-0"
-                            class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-40" aria-hidden="true"
-                        ></div>
-            
-                        <div x-cloak x-show="modelOpen" 
-                            x-transition:enter="transition ease-out duration-300 transform"
-                            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
-                            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                            x-transition:leave="transition ease-in duration-200 transform"
-                            x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
-                            x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                            class="inline-block w-full max-w-xl p-8 my-20 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl 2xl:max-w-2xl"
+                  x-show="modelOpen"
+                  class="fixed inset-0 z-50 overflow-y-auto"
+                  aria-labelledby="modal-title"
+                  role="dialog"
+                  aria-modal="true"
+                >
+                  <div
+                    class="flex items-end justify-center min-h-screen px-4 text-center md:items-center sm:block sm:p-0"
+                  >
+                    <div
+                      x-cloak
+                      @click="modelOpen = false"
+                      x-show="modelOpen"
+                      x-transition:enter="transition ease-out duration-300 transform"
+                      x-transition:enter-start="opacity-0"
+                      x-transition:enter-end="opacity-100"
+                      x-transition:leave="transition ease-in duration-200 transform"
+                      x-transition:leave-start="opacity-100"
+                      x-transition:leave-end="opacity-0"
+                      class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-40"
+                      aria-hidden="true"
+                    ></div>
+
+                    <div
+                      x-cloak
+                      x-show="modelOpen"
+                      x-transition:enter="transition ease-out duration-300 transform"
+                      x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                      x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                      x-transition:leave="transition ease-in duration-200 transform"
+                      x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                      x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                      class="inline-block w-full max-w-xl p-8 my-20 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl 2xl:max-w-2xl"
+                    >
+                      <div class="flex items-center justify-between space-x-4">
+                        <h1 class="text-xl font-medium text-black-800">
+                          Compose Message
+                        </h1>
+
+                        <button
+                          @click="modelOpen = false"
+                          class="text-black-600 focus:outline-none hover:text-black-700"
                         >
-                            <div class="flex items-center justify-between space-x-4">
-                                <h1 class="text-xl font-medium text-black-800 ">Compose Message</h1>
-            
-                                <button @click="modelOpen = false" class="text-black-600 focus:outline-none hover:text-black-700">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </button>
-                            </div>
-            
-                            <p class="mt-2 text-sm text-black-500 ">
-                                Compose a message below
-                            </p>
-            
-                            <form class="mt-5" x-data="composeMessagesForm()" @submit.prevent="submitForm">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-6 h-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
 
-                              <div class="mt-4">
-                                <div class="mt-4 space-y-5">
-                                    <div class="flex items-center space-x-3 cursor-pointer" x-data="{ show: true }">
-                                        <div class="relative w-10 h-5 transition duration-200 ease-linear rounded-full"
-                                            :class="[show ? 'bg-indigo-500' : 'bg-gray-300']">
-                                            <label for="show"
-                                                @click="show =!show"
-                                                class="absolute left-0 w-5 h-5 mb-2 transition duration-100 ease-linear transform bg-white border-2 rounded-full cursor-pointer"
-                                                :class="[show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']"></label>
-                                            <input type="checkbox" name="show" x-model="formData.send_all=show" class="hidden w-full h-full rounded-full appearance-none active:outline-none focus:outline-none"/>
-                                        </div>
-        
-                                        <p class="text-black-500">Send to All</p>
-                                        <div x-show="!show" :class="[!show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']">
-                                          <label for="recipient" class="block text-sm text-black-700 capitalize dark:text-black-200" >Recipient</label>
-                                          <input name="recipient" 
-                                          placeholder="Arthur Melo" 
-                                          type="text" 
-                                          x-model="formData.recipient"
-                                          class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
-                                      </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-3 cursor-pointer" x-data="{ username: '{{ current_user.username }}' }">
-                                <input name="author" type="hidden"  value="{{ current_user.username }}" x-model="formData.author=username">
-                            </div>
+                      <p class="mt-2 text-sm text-black-500">
+                        Compose a message below
+                      </p>
 
-                                <div>
-                                    <label for="title" class="block text-sm text-black-700 capitalize dark:text-black-200">Title</label>
-                                    <input name="title" 
-                                    placeholder="Title" 
-                                    type="text"
-                                    requried x-model="formData.title"
-                                    class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
-                                </div>
-
-                                <div>
-                                  <label for="label" class="block text-sm text-black-700 capitalize dark:text-black-200">Label</label>
-                                  <input 
-                                  name="label" 
-                                  placeholder="notifications"
-                                  requried x-model="formData.label"
-                                  type="text" 
-                                  class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40">
+                      <form
+                        class="mt-5"
+                        x-data="composeMessagesForm()"
+                        @submit.prevent="submitForm"
+                      >
+                        <div class="mt-4">
+                          <div class="mt-4 space-y-5">
+                            <div
+                              class="flex items-center space-x-3 cursor-pointer"
+                              x-data="{ show: true }"
+                            >
+                              <div
+                                class="relative w-10 h-5 transition duration-200 ease-linear rounded-full"
+                                :class="[show ? 'bg-indigo-500' : 'bg-gray-300']"
+                              >
+                                <label
+                                  for="show"
+                                  @click="show =!show"
+                                  class="absolute left-0 w-5 h-5 mb-2 transition duration-100 ease-linear transform bg-white border-2 rounded-full cursor-pointer"
+                                  :class="[show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']"
+                                ></label>
+                                <input
+                                  type="checkbox"
+                                  name="show"
+                                  x-model="formData.send_all=show"
+                                  class="hidden w-full h-full rounded-full appearance-none active:outline-none focus:outline-none"
+                                />
                               </div>
-            
-                                <div>
-                                    <label for="body" class="block text-sm text-black-700 capitalize dark:text-black-200">Message Body</label>
-                                    <textarea 
-                                    name="body" 
-                                    id="body" 
-                                    requried x-model="formData.body"
-                                    x-init="
+
+                              <p class="text-black-500">Send to All</p>
+                              <div
+                                x-show="!show"
+                                :class="[!show ? 'translate-x-full border-indigo-500' : 'translate-x-0 border-gray-300']"
+                              >
+                                <label
+                                  for="recipient"
+                                  class="block text-sm text-black-700 capitalize dark:text-black-200"
+                                  >Recipient</label
+                                >
+                                <input
+                                  name="recipient"
+                                  placeholder="Arthur Melo"
+                                  type="text"
+                                  x-model="formData.recipient"
+                                  class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="flex items-center space-x-3 cursor-pointer"
+                          x-data="{ username: '{{ current_user.username }}' }"
+                        >
+                          <input
+                            name="author"
+                            type="hidden"
+                            value="{{ current_user.username }}"
+                            x-model="formData.author=username"
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            for="title"
+                            class="block text-sm text-black-700 capitalize dark:text-black-200"
+                            >Title</label
+                          >
+                          <input
+                            name="title"
+                            placeholder="Title"
+                            type="text"
+                            requried
+                            x-model="formData.title"
+                            class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40"
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            for="label"
+                            class="block text-sm text-black-700 capitalize dark:text-black-200"
+                            >Label</label
+                          >
+                          <input
+                            name="label"
+                            placeholder="notifications"
+                            requried
+                            x-model="formData.label"
+                            type="text"
+                            class="block w-full px-3 py-2 mt-2 text-black-600 placeholder-gray-400 bg-white border border-gray-200 rounded-md focus:border-indigo-400 focus:outline-none focus:ring focus:ring-indigo-300 focus:ring-opacity-40"
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            for="body"
+                            class="block text-sm text-black-700 capitalize dark:text-black-200"
+                            >Message Body</label
+                          >
+                          <textarea
+                            name="body"
+                            id="body"
+                            requried
+                            x-model="formData.body"
+                            x-init="
       CKEDITOR.replace('body');
       CKEDITOR.instances.body.on('change', function() {
         $dispatch('input', this.getData());
       });"
-  
-                                    ></textarea>
-                                </div>
-                                
-                                <div class="flex justify-end mt-6">
-                                    <button type="submit" class="px-3 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-500 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50">
-                                        Compose Message
-                                    </button>
-                                </div>
-                            </form>
+                          ></textarea>
                         </div>
+
+                        <div class="flex justify-end mt-6">
+                          <button
+                            type="submit"
+                            class="px-3 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-200 transform bg-indigo-500 rounded-md dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:bg-indigo-700 hover:bg-indigo-600 focus:outline-none focus:bg-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
+                          >
+                            Compose Message
+                          </button>
+                        </div>
+                      </form>
                     </div>
+                  </div>
                 </div>
-            </div>
+              </div>
 
               <div class="flex flex-col space-y-0">
                 <template x-for="(label, index) in label">
@@ -348,69 +418,91 @@
                   </div>
                 </template>
                 <div
-                    @click="getSentMessages()"
-                    class="flex items-center space-x-2 rounded-full py-2 px-4 cursor-pointer"
-                    :class="{ 'bg-blue-200/80 font-bold': 'sent_messages' === CurrentLabel, 'hover:bg-gray-200/80': 'sent_messages' !== CurrentLabel }"
-                  >
-                    <div class="w-4 h-4 rounded-full">
-                      <img
-                        src="https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/send_baseline_nv700_20dp.png"
-                        alt="Subreddit Icon"
-                      />
-                    </div>
-                    <div
-                      class="text-sm font-medium text-black-700"
-                    >sent</div>
+                  @click="getSentMessages()"
+                  class="flex items-center space-x-2 rounded-full py-2 px-4 cursor-pointer"
+                  :class="{ 'bg-blue-200/80 font-bold': 'sent_messages' === CurrentLabel, 'hover:bg-gray-200/80': 'sent_messages' !== CurrentLabel }"
+                >
+                  <div class="w-4 h-4 rounded-full">
+                    <img
+                      src="https://ssl.gstatic.com/ui/v1/icons/mail/gm3/1x/send_baseline_nv700_20dp.png"
+                      alt="Subreddit Icon"
+                    />
                   </div>
+                  <div class="text-sm font-medium text-black-700">sent</div>
+                </div>
               </div>
               <template x-if="hasMessage">
                 <div
-          class="flash-message fixed z-20 top-32 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex shadow-md gap-6 rounded-lg overflow-hidden divide-x max-w-2xl bg-gray-500 text-gray-100"
-        >
-        
-          <div class="flex flex-1 flex-col p-4 border-l-8" :class="ftype ? 'Success': 'Error'">
-            <span class="text-2xl" :class="ftype ? 'Success': 'Error'" x-text="flashType"></span>
-            <span class="text-xs text-gray-100" x-text="message"></span>
-          </div>
-          <button
-            @click="closeFlashMessage()"
-            class="px-4 flex items-center text-xs uppercase tracki text-gray-100"
-          >
-            Dismiss
-          </button>
-        </div>
+                  class="flash-message fixed z-20 top-32 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex shadow-md gap-6 rounded-lg overflow-hidden divide-x max-w-2xl bg-gray-500 text-gray-100"
+                >
+                  <div
+                    class="flex flex-1 flex-col p-4 border-l-8"
+                    :class="ftype ? 'Success': 'Error'"
+                  >
+                    <span
+                      class="text-2xl"
+                      :class="ftype ? 'Success': 'Error'"
+                      x-text="flashType"
+                    ></span>
+                    <span class="text-xs text-gray-100" x-text="message"></span>
+                  </div>
+                  <button
+                    @click="closeFlashMessage()"
+                    class="px-4 flex items-center text-xs uppercase tracki text-gray-100"
+                  >
+                    Dismiss
+                  </button>
+                </div>
               </template>
-             
             </aside>
           </template>
           <!-- END: Sidebar -->
 
           <div class="flex-1 h-screen max-h-screen flex flex-col">
             <!-- BEGIN: Menu bar -->
-            
+
             <!-- BEGIN: Prelist actions -->
             <div class="w-full flex flex-row items-center p-4">
-              <div 
-              @click="messageExtended = false"
-              x-show="messageExtended"
-              class="pr-4"
+              <div
+                @click="messageExtended = false"
+                x-show="messageExtended"
+                class="pr-4"
               >
-                <svg class="w-6 h-6 text-black-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+                <svg
+                  class="w-6 h-6 text-black-800 dark:text-black"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 10"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 5H1m0 0 4 4M1 5l4-4"
+                  />
                 </svg>
               </div>
-              
-                  Messages <span class="pl-4" x-text="labelItems.length"></span>
-                  {% set unread_message_count = current_user.unread_message_count() %}
-                  <div class="bg-white flex rounded-full px-3 items-center" style="visibility: {% if unread_message_count %}visible
-                  {% else %}hidden {% endif %};">
-                  <span id="message_count" class="text-darkPrimary text-sm"
-                        style="visibility: {% if unread_message_count %}visible
-                                            {% else %}hidden {% endif %};">
-                          {{ unread_message_count }}
-                  </span>
-                </div>
-           <!--
+
+              Messages <span class="pl-4" x-text="labelItems.length"></span>
+              {% set unread_message_count = current_user.unread_message_count()
+              %}
+              <div
+                class="bg-white flex rounded-full px-3 items-center"
+                style="visibility: {% if unread_message_count %}visible
+                  {% else %}hidden {% endif %};"
+              >
+                <span
+                  id="message_count"
+                  class="text-darkPrimary text-sm"
+                  style="visibility: {% if unread_message_count %}visible
+                                            {% else %}hidden {% endif %};"
+                >
+                  {{ unread_message_count }}
+                </span>
+              </div>
+              <!--
               <div>
                   <input type="checkbox" />
               </div>
@@ -419,23 +511,22 @@
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>
               </div>
-            -->
-            </div>
+            --></div>
             <!-- END: Prelist actions -->
             <!-- END: Menu bar -->
             <div class="flex flex-row flex-1 overflow-y-auto">
               <!-- BEGIN: List posts -->
-              <div 
-              :class="{'hidden' : messageExtended === true }"
-
-              class="h-full max–h-full flex-1 overflow-y-yes">
+              <div
+                :class="{'hidden' : messageExtended === true }"
+                class="h-full max–h-full flex-1 overflow-y-yes"
+              >
                 <template x-for="item in labelItems">
                   <div
                     @click="fetchMessage(item)"
                     class="flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
                     :class="{ 'bg-blue-200': postContent !== null && postContent.id === item.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.id }"
                   >
-                  <!--
+                    <!--
                     <div>
                       <input type="checkbox" />
                     </div>
@@ -449,16 +540,10 @@
                       </div>
                     </div>
                     <div class="flex-1">
-                      <p
-                        class="line-clamp-1 text-sm"
-                        x-text="item.title"
-                      ></p>
+                      <p class="line-clamp-1 text-sm" x-text="item.title"></p>
                     </div>
                     <div>
-                      <p
-                        class="text-sm"
-                        x-text="item.created"
-                      ></p>
+                      <p class="text-sm" x-text="item.created"></p>
                     </div>
                   </div>
                 </template>
@@ -466,9 +551,9 @@
               <!-- END: List posts -->
 
               <!-- BEGIN: Post content -->
-              <article 
-              class="h-full max–h-full flex-1  overflow-y-yes"
-              :class="{ 'hidden': messageExtended === false }"
+              <article
+                class="h-full max–h-full flex-1 overflow-y-yes"
+                :class="{ 'hidden': messageExtended === false }"
               >
                 <!--
                 <template x-if="postContent === null">
@@ -479,17 +564,13 @@
                 </template>
                 -->
                 <template x-if="postContent !== null">
-                  
                   <div class="px-8">
-                    
                     <h1 class="text-xl" x-text="postContent.title"></h1>
                     <div>
-                      
                       <div
                         class="px-[0.25rem] rounded bg-neutral-200 text-black-800 text-xs w-fit"
                         x-text="postContent.label"
                       >
-                    
                         Inbox
                       </div>
                     </div>
@@ -519,7 +600,6 @@
                               class="text-black-500 text-xs"
                               x-text="postContent.created"
                             ></p>
-                            
                           </div>
                           <!--
                           <div>
@@ -535,8 +615,7 @@
                             </svg>
                           </div>
                           
-                        -->
-                        </div>
+                        --></div>
                         <div>
                           <p
                             class="font-medium text-sm opacity-0"
@@ -549,19 +628,15 @@
                       class="text-sm text-black-500 pl-14"
                       x-html="postContent.body"
                     ></div>
-
-                    
                   </div>
                 </template>
               </article>
               <!-- END: Post content -->
             </div>
           </div>
-          
         </div>
-        
       </template>
-     
+
       <template x-if="!loaded">
         <div class="h-screen flex justify-center items-center">
           <div
@@ -569,9 +644,8 @@
           ></div>
         </div>
       </template>
-      
     </main>
     <!-- footer -->
     {% import 'components/footer.html' as footer %} {{ footer.footer() }}
-</body>
+  </body>
 </html>
