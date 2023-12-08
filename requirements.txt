@@ -24,3 +24,4 @@ werkzeug==2.3.8
 mysqlclient==2.2.0
 Flask-CKEditor==0.5.1
 pycodestyle==2.10.0
+gunicorn==21.2.0
