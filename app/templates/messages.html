@@ -428,11 +428,11 @@
               <div 
               :class="{'hidden' : messageExtended === true }"
 
-              class="h-full max–h-full w-screen flex-1 overflow-y-yes">
+              class="h-full max–h-full flex-1 overflow-y-yes">
                 <template x-for="item in labelItems">
                   <div
                     @click="fetchMessage(item)"
-                    class="w-screen flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
+                    class="flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
                     :class="{ 'bg-blue-200': postContent !== null && postContent.id === item.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.id }"
                   >
                   <!--
@@ -467,7 +467,7 @@
 
               <!-- BEGIN: Post content -->
               <article 
-              class="h-full max–h-full w-screen flex-1  overflow-y-yes"
+              class="h-full max–h-full flex-1  overflow-y-yes"
               :class="{ 'hidden': messageExtended === false }"
               >
                 <!--
