@@ -74,6 +74,9 @@ class SendMessage(Resource):
         label = data.get("label")
         recipient_username = data.get("recipient")
         
+        if not title.strip() or not body.strip():
+            return {'error': 'Invalid request format Error 5055'}, 404
+        
         if not send_to_all:
             recipient = strg.session.query(User).filter_by(username=recipient_username).first()
             if not recipient:
