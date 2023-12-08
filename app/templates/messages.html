@@ -46,6 +46,7 @@
         message: "",
         flashType: "",
         ftype: false,
+        messageExtended: false,
         
 
         init() {
@@ -139,6 +140,8 @@
 
               this.labelItems = data;
               this.labelLoaded = true;
+              this.messageExtended = false;
+              
             });
         },
 
@@ -150,12 +153,16 @@
         fetchPostBody(messageId) {
           this.postContentComments = [];
           this.postContentComments = messageId;
+          this.messageExtended = true;
         },
       });
     </script>
     <!-- END: Alpinejs -->
 </head>
-<body class="w-full h-screen overflow-hidden flex items-center" style="background: #edf2f7;">
+
+<body style="background: #edf2f7;">
+  {% import 'components/header.html' as header %} {{
+    header.display_header(current_user) }}
 
   <!-- Flash message container -->
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
@@ -163,6 +170,7 @@
     'components/flash_notification.html' as notif %} {{
     notif.notification(flashType, message) }} {% endif %} {% endwith %}
     <main x-data="GmailKit" class="w-full">
+
       
       <template x-if="loaded">
         <div class="h-screen flex">
@@ -207,7 +215,7 @@
                     background-image: url('https://www.gstatic.com/images/icons/material/system_gm/1x/create_black_24dp.png');
                   "
                 ></div>
-                <p class="text-sm pr-4">Compose Message</p>
+                <p class="text-sm pr-4">Compose</p>
               </button>
             
                 <div x-show="modelOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -352,7 +360,7 @@
                     </div>
                     <div
                       class="text-sm font-medium text-black-700"
-                    >Created Messages</div>
+                    >sent</div>
                   </div>
               </div>
               <template x-if="hasMessage">
@@ -379,10 +387,18 @@
 
           <div class="flex-1 h-screen max-h-screen flex flex-col">
             <!-- BEGIN: Menu bar -->
-            {% import 'components/header.html' as header %} {{
-                header.display_header(current_user) }}
+            
             <!-- BEGIN: Prelist actions -->
             <div class="w-full flex flex-row items-center p-4">
+              <div 
+              @click="messageExtended = false"
+              x-show="messageExtended"
+              class="pr-4"
+              >
+                <svg class="w-6 h-6 text-black-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+                </svg>
+              </div>
               
                   Messages <span class="pl-4" x-text="labelItems.length"></span>
                   {% set unread_message_count = current_user.unread_message_count() %}
@@ -409,11 +425,14 @@
             <!-- END: Menu bar -->
             <div class="flex flex-row flex-1 overflow-y-auto">
               <!-- BEGIN: List posts -->
-              <div class="h-full max–h-full flex-1 overflow-y-scroll">
+              <div 
+              :class="{'hidden' : messageExtended === true }"
+
+              class="h-full max–h-full w-screen flex-1  overflow-y-scroll">
                 <template x-for="item in labelItems">
                   <div
                     @click="fetchMessage(item)"
-                    class="flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
+                    class="w-screen flex flex-row items-center space-x-4 py-2 px-4 cursor-pointer max-w-full border-b border-gray-200"
                     :class="{ 'bg-blue-200': postContent !== null && postContent.id === item.id, 'hover:bg-gray-100': postContent !== null && postContent.id !== item.id }"
                   >
                   <!--
@@ -447,21 +466,30 @@
               <!-- END: List posts -->
 
               <!-- BEGIN: Post content -->
-              <article class="flex-1 bg-white overflow-y-scroll">
+              <article 
+              class="h-full max–h-full w-screen flex-1  overflow-y-scroll"
+              :class="{ 'hidden': messageExtended === false }"
+              >
+                <!--
                 <template x-if="postContent === null">
                   <div class="p-8">
                     <p>No Message Selected!</p>
                     
                   </div>
                 </template>
+                -->
                 <template x-if="postContent !== null">
+                  
                   <div class="px-8">
+                    
                     <h1 class="text-xl" x-text="postContent.title"></h1>
                     <div>
+                      
                       <div
                         class="px-[0.25rem] rounded bg-neutral-200 text-black-800 text-xs w-fit"
                         x-text="postContent.label"
                       >
+                    
                         Inbox
                       </div>
                     </div>
@@ -543,5 +571,7 @@
       </template>
       
     </main>
+    <!-- footer -->
+    {% import 'components/footer.html' as footer %} {{ footer.footer() }}
 </body>
 </html>
