@@ -23,8 +23,9 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+<!--
 [![LinkedIn][linkedin-shield]][linkedin-url]
-
+-->
 
 
 <!-- PROJECT LOGO -->
@@ -186,7 +187,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the GPLv3 License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -216,16 +217,16 @@ Project Link: [https://github.com/CaribaOrg/cariba](https://github.com/CaribaOrg
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/CaribaOrg/cariba.svg?style=for-the-badge
 [contributors-url]: https://github.com/CaribaOrg/cariba/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/CaribaOrg/cariba.svg?style=for-the-badge
 [forks-url]: https://github.com/CaribaOrg/cariba/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/CaribaOrg/cariba.svg?style=for-the-badge
 [stars-url]: https://github.com/CaribaOrg/cariba/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/CaribaOrg/cariba.svg?style=for-the-badge
 [issues-url]: https://github.com/CaribaOrg/cariba/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/CaribaOrg/cariba/blob/master/LICENSE.txt
+[license-shield]: https://img.shields.io/github/license/CaribaOrg/cariba.svg?style=for-the-badge
+[license-url]: https://github.com/CaribaOrg/cariba/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
