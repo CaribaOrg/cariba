@@ -1,14 +1,15 @@
 <!-- hero's macro -->
 {% macro display_hero() %}
 <div class="sliderAx h-auto">
-  <div id="slider-1" class="w-full bg-black p-8">
+  <div id="slider-1" class="slider w-full bg-black p-8">
+    <!-- Slide 1 Content -->
     <div class="flex flex-row justify-between max-md:flex-col">
       <div
         class="flex flex-col justify-center items-center w-full max-md:items-start"
       >
-        <span class="text-white text-6xl max-md:text-4xl max-sm:text-2xl"
-          >Explore our wide range <br />
-          of car <span class="text-primary">batteries</span>
+        <span class="text-white text-6xl max-md:text-4xl max-sm:text-2xl">
+          Explore our wide range of car
+          <span class="text-primary">batteries</span>
         </span>
         <div class="w-full">
           <button
@@ -29,14 +30,16 @@
       </div>
     </div>
   </div>
-  <div id="slider-2" class="w-full bg-black p-8">
+
+  <div id="slider-2" class="slider w-full bg-black p-8">
+    <!-- Slide 2 Content -->
     <div class="flex flex-row justify-between max-md:flex-col">
       <div
         class="flex flex-col justify-center items-center w-full max-md:items-start"
       >
-        <span class="text-white text-6xl max-md:text-4xl max-sm:text-2xl"
-          >Explore our diverse selection <br />
-          of premium <span class="text-primary">oils</span>
+        <span class="text-white text-6xl max-md:text-4xl max-sm:text-2xl">
+          Explore our diverse selection of premium
+          <span class="text-primary">oils</span>
         </span>
         <div class="w-full">
           <button
@@ -51,22 +54,23 @@
         <div class="img-wrap"></div>
         <img
           src="../../static/images/carousel/mechanic_oil.jpg"
-          alt="Battery image"
+          alt="Oil image"
           class="rounded-xl"
         />
       </div>
     </div>
   </div>
 </div>
+
 <div class="flex justify-between w-12 mx-auto py-2">
   <button
     id="sButton1"
-    onclick="sliderButton1() "
+    onclick="sliderButton(0)"
     class="bg-blue-200 rounded-full w-4 p-2 border-2 border-white"
   ></button>
   <button
     id="sButton2"
-    onclick="sliderButton2() "
+    onclick="sliderButton(1)"
     class="bg-blue-200 rounded-full w-4 p-2 border-2 border-white"
   ></button>
 </div>
