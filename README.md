@@ -37,7 +37,7 @@
 <h3 align="center">Cariba</h3>
 
   <p align="center">
-    project_description
+    Automobile Car Parts Store
     <br />
     <a href="https://github.com/CaribaOrg/cariba"><strong>Explore the docs »</strong></a>
     <br />
