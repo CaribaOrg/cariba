@@ -31,7 +31,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/CaribaOrg/cariba">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="app/static/images/caribaSmall.png" alt="Logo" height="80">
   </a>
 
 <h3 align="center">Cariba</h3>
