@@ -169,7 +169,7 @@
     messages %} {% set flashType, message = messages[0] %} {% import
     'components/flash_notification.html' as notif %} {{
     notif.notification(flashType, message) }} {% endif %} {% endwith %}
-    <main x-data="GmailKit" class="w-full">
+    <main x-data="GmailKit" class="w-full overflow-y-auto">
 
       
       <template x-if="loaded">
@@ -428,7 +428,7 @@
               <div 
               :class="{'hidden' : messageExtended === true }"
 
-              class="h-full max–h-full w-screen flex-1  overflow-y-scroll">
+              class="h-full max–h-full w-screen flex-1 overflow-y-yes">
                 <template x-for="item in labelItems">
                   <div
                     @click="fetchMessage(item)"
@@ -467,7 +467,7 @@
 
               <!-- BEGIN: Post content -->
               <article 
-              class="h-full max–h-full w-screen flex-1  overflow-y-scroll"
+              class="h-full max–h-full w-screen flex-1  overflow-y-yes"
               :class="{ 'hidden': messageExtended === false }"
               >
                 <!--
