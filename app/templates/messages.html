@@ -84,20 +84,20 @@
                     this.formData.body = "";
                     this.hasMessage = true;
                     this.flashType = "Success"
-                    this.ftype = "success";
+                    this.ftype = true;
                     this.message = "Message Sent";
                     CKEDITOR.instances.body.setData('');
                   } else {
                     this.hasMessage = true;
                     this.flashType = "Error"
-                    this.ftype = "error";
+                    this.ftype = false;
                     this.message = "Failed to send";
                   }
                 })
                 .catch((response) => {
                   this.hasMessage = true;
                   this.flashType = "Error"
-                  this.ftype = "error";
+                  this.ftype = false;
                   this.message = "Failed to send";
                 });
             },
