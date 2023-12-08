@@ -6,6 +6,7 @@ render_form_errors, render_field_errors %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../static/dist/css/output.css" />
+    <script src="../../static/scripts/login.js"></script>
     <title>Register</title>
     <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico" />
   </head>
@@ -83,6 +84,7 @@ render_form_errors, render_field_errors %}
                     Password
                   </label>
                   <input
+                    autocomplete="new-password"
                     placeholder="******************"
                     autocomplete="password"
                     id="password"
@@ -106,6 +108,7 @@ render_form_errors, render_field_errors %}
                     Confirm Password
                   </label>
                   <input
+                    autocomplete="new-password"
                     placeholder="******************"
                     id="password_confirm"
                     name="password_confirm"
