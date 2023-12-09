@@ -1,31 +1,11 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-<!--
-[![LinkedIn][linkedin-shield]][linkedin-url]
--->
 
 
 <!-- PROJECT LOGO -->
@@ -84,9 +64,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+Welcome to the Cariba project repository! This repository contains the source code and assets for the Cariba project that specializes in automobile parts.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -94,14 +73,11 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-[![Next][Next.js]][Next-url]
-[![React][React.js]][React-url]
-[![Vue][Vue.js]][Vue-url]
-[![Angular][Angular.io]][Angular-url]
-[![Svelte][Svelte.dev]][Svelte-url]
-[![Laravel][Laravel.com]][Laravel-url]
-[![Bootstrap][Bootstrap.com]][Bootstrap-url]
-[![JQuery][JQuery.com]][JQuery-url]
+[![Flask](https://img.shields.io/badge/flask-black?style=for-the-badge&logo=flask)](https://github.com/CaribaOrg/cariba)
+[![Tailwind CSS](https://img.shields.io/badge/tailwindcss-black?style=for-the-badge&logo=tailwindcss)](https://github.com/CaribaOrg/cariba)
+[![HTML](https://img.shields.io/badge/html-black?style=for-the-badge&logo=html5)](https://github.com/CaribaOrg/cariba)
+[![Flask](https://img.shields.io/badge/flask-black?style=for-the-badge&logo=flask)](https://github.com/CaribaOrg/cariba)
+[![Javascript](https://img.shields.io/badge/javascript-black?style=for-the-badge&logo=javascript)](https://github.com/CaribaOrg/cariba)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -110,32 +86,54 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
+Follow these steps to set up the project on your local machine.
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+- [Python3](https://www.python.org/)
+- [pip](https://pip.pypa.io/en/stable/)
+- [Git](https://git-scm.com/)
 
-### Installation
+### Clone the repo:
+```bash
+git clone https://github.com/CaribaOrg/cariba.git
+cd cariba
+```
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/CaribaOrg/cariba.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+### Create a Virtual Environment
+```bash
+python3 -m venv my_env
+```
+
+Activate the virtual environment:
+* On Windows:
+```bash
+my_env\Scripts\activate
+```
+* On Unix or MacOS:
+```bash
+source my_env/bin/activate
+```
+
+### Install Python Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Configure Environment Variables
+
+
+### Configure MYSQL Variables
+```bash
+cat misc/setup_mysql_dev.sql | sudo mysql
+```
+
+### Run the Flask Application
+```bash
+python3 --app app/run.py run
+```
+Visit http://localhost:5000 in your browser to see the application running.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
