@@ -122,7 +122,9 @@ pip install -r requirements.txt
 ```
 
 ### Configure Environment Variables
-
+```bash
+source misc/env_setup.sh
+```
 
 ### Configure MYSQL Variables
 ```bash
