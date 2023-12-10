@@ -23,7 +23,7 @@
     <a href="https://github.com/CaribaOrg/cariba"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/CaribaOrg/cariba">View Demo</a>
+    <a href="https://www.fuzzfoo.tech/">View Demo</a>
     ·
     <a href="https://github.com/CaribaOrg/cariba/issues">Report Bug</a>
     ·
@@ -47,11 +47,15 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#installation">Clone the repo</a></li>
+        <li><a href="#installation">Create a Virtual Environment</a></li>
+        <li><a href="#installation">Install Python Dependencies</a></li>
+        <li><a href="#installation">Configure Environment Variables</a></li>
+        <li><a href="#installation">Install Python Dependencies</a></li>
+        <li><a href="#installation">Configure MYSQL</a></li>
+        <li><a href="#installation">Run the Flask Application</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -126,7 +130,7 @@ pip install -r requirements.txt
 source misc/env_setup.sh
 ```
 
-### Configure MYSQL Variables
+### Configure MYSQL
 ```bash
 cat misc/setup_mysql_dev.sql | sudo mysql
 ```
@@ -136,31 +140,6 @@ cat misc/setup_mysql_dev.sql | sudo mysql
 python3 --app app/run.py run
 ```
 Visit http://localhost:5000 in your browser to see the application running.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
-
-See the [open issues](https://github.com/CaribaOrg/cariba/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -196,9 +175,12 @@ Distributed under the GPLv3 License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+- Hasbi Sabah - [linkedin](https://www.linkedin.com/in/sabahhasbi/) - sabahhasbi13@gmail.com
 
-Project Link: [https://github.com/CaribaOrg/cariba](https://github.com/CaribaOrg/cariba)
+- Nyangasi Mhozya - [linkedin](https://www.linkedin.com/in/nyangasi-m-54467816b/) - nyangasi.m@gmail.com
+
+- EL FADILI Abdessamad - [linkedin](www.linkedin.com/in/abdessamad-el-fadili) - elfadili.ae@gmail.com
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -207,9 +189,25 @@ Project Link: [https://github.com/CaribaOrg/cariba](https://github.com/CaribaOrg
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+We are deeply grateful to [ALX](https://www.alxafrica.com/blog/software-engineering-hard-vs-soft-skills/) team for providing us with the incredible opportunity to embark on this learning journey. Their guidance, support, and expertise have been instrumental in shaping our growth as aspiring software engineers.
+
+## ALX and Mentors
+
+- **ALX** - Thank you for creating an environment that fosters learning, collaboration, and personal development. ALX has been the catalyst for our journey towards becoming skilled software engineers.
+
+- **Mentors** - A heartfelt thank you to our mentors who have generously shared their knowledge and experiences. Your guidance has been invaluable in navigating the complexities of software development, and we are truly appreciative of your commitment to our success.
+
+## Community and Peers
+
+We are thrilled to be part of a vibrant community where individuals come together to learn, share, and support each other. Our peers have played a significant role in creating a collaborative atmosphere that encourages growth and camaraderie.
+
+- ** Cohort 13 Members** - To our fellow cohort members, thank you for the countless hours of collaboration, PLDs, problem-solving, and shared learning experiences. Together, we are creating a supportive community that propels us towards our common goal of becoming proficient software engineers.
+
+---
+
+Our journey would not be the same without the support, encouragement, and knowledge shared within the ALX community. We look forward to continued collaboration and growth together.
+
+---
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -230,19 +228,3 @@ Project Link: [https://github.com/CaribaOrg/cariba](https://github.com/CaribaOrg
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
