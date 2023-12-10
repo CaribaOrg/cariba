@@ -1,6 +1,6 @@
 from requests.auth import HTTPBasicAuth
 from flask import Flask, render_template, redirect, url_for, request, session, jsonify, flash
-from flask_admin import Admin
+from flask_admin import Admin, AdminIndexView
 # from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
 import requests
@@ -26,7 +26,6 @@ from datetime import datetime
 from flask_ckeditor import CKEditor
 
 
-
 app = Flask(__name__)
 
 app.config.from_pyfile('config.py')
@@ -42,7 +41,6 @@ mail = Mail(app)
 ckeditor = CKEditor(app)
 
 
-
 # login = LoginManager(app)
 
 
@@ -53,23 +51,35 @@ def load_user(user_id):
 
 class myAdminView(ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated
+        """Check if current user is an admin"""
+        return current_user.is_authenticated and current_user.is_admin()
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for("security.login"))
 
 
-def create_admin(app):
-    from flask_admin.contrib.sqla import ModelView
+class CustomAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        # Check if the current user is an admin (you need to implement this logic)
+        return current_user.is_authenticated and current_user.is_admin()
 
-    admin = Admin(app, name='Admin', template_mode='bootstrap3')
-    admin.add_view(CustomView(User))
-    admin.add_view(CustomView(Cart))
-    admin.add_view(CustomView(Product))
-    admin.add_view(CustomView(Car))
-    admin.add_view(CustomView(Order))
-    admin.add_view(CustomView(Address))
-    admin.add_view(CustomView(WishlistItem))
+    def inaccessible_callback(self, name, **kwargs):
+        # Redirect to login page if the user is not an admin
+        return redirect(url_for("security.login"))
+
+
+def create_admin(app):
+    # from flask_admin.contrib.sqla import ModelView
+
+    admin = Admin(app, name='Admin', template_mode='bootstrap3',
+                  index_view=CustomAdminIndexView())
+    admin.add_view(myAdminView(User, strg.session))
+    admin.add_view(myAdminView(Cart, strg.session))
+    admin.add_view(myAdminView(Product, strg.session))
+    admin.add_view(myAdminView(Car, strg.session))
+    admin.add_view(myAdminView(Order, strg.session))
+    admin.add_view(myAdminView(Address, strg.session))
+    admin.add_view(myAdminView(WishlistItem, strg.session))
 
 
 create_admin(app)
@@ -80,13 +90,13 @@ app.url_map.strict_slashes = False
 
 
 def login_required(f):
-   @wraps(f)
-   def decorated_function(*args, **kwargs):
-       if not current_user.is_authenticated:
-           flash("Please login to access this page.", "Info")
-           return redirect(url_for('security.login'))
-       return f(*args, **kwargs)
-   return decorated_function
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            flash("Please login to access this page.", "Info")
+            return redirect(url_for('security.login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.route("/")
@@ -342,6 +352,7 @@ def about():
     """About us page."""
     return render_template("about.html")
 
+
 @app.route("/buyAgain/<uuid:order_id>")
 @login_required
 def buy_again(order_id):
@@ -351,10 +362,12 @@ def buy_again(order_id):
         item.product.add_to_cart(current_user, item.quantity)
     return redirect(url_for('my_cart'))
 
+
 @app.route("/favourites")
 @login_required
 def wishlist():
     return render_template("favourites.html", current_user=current_user)
+
 
 @app.route("/add_to_favourites/<uuid:id>", methods=['POST'])
 @login_required
@@ -363,6 +376,7 @@ def add_to_wishlist(id):
     product.add_to_wishlist(current_user)
     return '', 200
 
+
 @app.route("/remove_from_favourites/<uuid:id>", methods=['POST'])
 @login_required
 def remove_from_wishlist(id):
@@ -370,10 +384,12 @@ def remove_from_wishlist(id):
     product.remove_from_wishlist(current_user)
     return '', 200
 
+
 @app.errorhandler(404)
 def notfound(error):
     """Handle the error 404"""
     return render_template("404.html"), 404
+
 
 @app.route('/messages')
 @login_required
@@ -381,20 +397,24 @@ def messages():
     current_user.last_message_read_time = datetime.utcnow()
     current_user.add_notification('unread_message_count', 0)
     strg.save()
-    messages = current_user.messages_received#.order_by(Message.updated_at.desc())
+    # .order_by(Message.updated_at.desc())
+    messages = current_user.messages_received
     return render_template('messages.html', messages=messages, current_user=current_user)
+
 
 @app.route('/notifications')
 @login_required
 def notifications():
     since = request.args.get('since', 0.0, type=float)
-    query = strg.session.query(Notification).filter(Notification.updated_at > since).order_by(Notification.updated_at.asc())
+    query = strg.session.query(Notification).filter(
+        Notification.updated_at > since).order_by(Notification.updated_at.asc())
     notifications = strg.session.scalars(query)
     return [{
         'name': n.name,
         'data': n.get_data(),
         'updated_at': n.updated_at
     } for n in notifications]
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

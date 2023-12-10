@@ -11,7 +11,6 @@ from models.notification import Message, Notification
 from datetime import datetime
 
 
-
 class RolesUsers(Base):
     '''
     Docs
@@ -30,6 +29,7 @@ class Role(BaseModel, Base, RoleMixin):
     name = Column(String(80), unique=True)
     description = Column(String(255))
     permissions = Column(MutableList.as_mutable(AsaList()), nullable=True)
+
 
 class User(BaseModel, Base, UserMixin):
     '''
@@ -85,21 +85,22 @@ class User(BaseModel, Base, UserMixin):
     orders = relationship('Order',
                           back_populates='user',
                           cascade='all, delete-orphan')
-    wishlist_items = relationship('WishlistItem', 
+    wishlist_items = relationship('WishlistItem',
                                   uselist=True,
                                   back_populates='user')
-    messages_sent= relationship('Message',
-        foreign_keys='Message.sender_id', back_populates='author')
+    messages_sent = relationship('Message',
+                                 foreign_keys='Message.sender_id', back_populates='author')
     messages_received = relationship('Message',
-        foreign_keys='Message.recipient_id', back_populates='recipient')
+                                     foreign_keys='Message.recipient_id', back_populates='recipient')
     notifications = relationship('Notification', back_populates='user')
 
     def unread_message_count(self):
         from models import strg
         last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
-        number_of_unread = strg.session.query(Message).filter_by(recipient_id=self.id).filter(Message.updated_at > last_read_time).count()
+        number_of_unread = strg.session.query(Message).filter_by(
+            recipient_id=self.id).filter(Message.updated_at > last_read_time).count()
         return number_of_unread
-    
+
     def add_notification(self, name, data):
         from models import strg
         strg.session.query(Notification).filter_by(name=name).delete()
@@ -107,7 +108,7 @@ class User(BaseModel, Base, UserMixin):
         n = Notification(name=name, payload_json=json.dumps(data), user=self)
         strg.save()
         return n
-    
+
     def __init__(self, **kwargs):
         from models.cart import Cart
         from models.address import Address
@@ -131,12 +132,16 @@ class User(BaseModel, Base, UserMixin):
 
     def get_id(self):
         return self.id
-    
+
     def is_authenticated(self):
-                return True
+        return True
 
     def is_active(self):
-            return self.active
+        return self.active
 
     def is_anonymous(self):
-            return False
+        return False
+
+    def is_admin(self):
+        """heck if the user is an admin"""
+        return 'admin' in self.roles
