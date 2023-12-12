@@ -1523,7 +1523,7 @@ video {
 
 .bg-darkPrimary {
   --tw-bg-opacity: 1;
-  background-color: rgb(3 15 39 / var(--tw-bg-opacity));
+  background-color: rgb(2 8 24 / var(--tw-bg-opacity));
 }
 
 .bg-gray-100 {
@@ -2016,7 +2016,7 @@ video {
 
 .text-darkPrimary {
   --tw-text-opacity: 1;
-  color: rgb(3 15 39 / var(--tw-text-opacity));
+  color: rgb(2 8 24 / var(--tw-text-opacity));
 }
 
 .text-gray-100 {
@@ -2341,7 +2341,7 @@ video {
 
 .hover\:bg-darkPrimary:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(3 15 39 / var(--tw-bg-opacity));
+  background-color: rgb(2 8 24 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-gray-100:hover {
@@ -2597,10 +2597,6 @@ video {
 
   .max-lg\:top-16 {
     top: 4rem;
-  }
-
-  .max-lg\:top-20 {
-    top: 5rem;
   }
 
   .max-lg\:top-\[74px\] {
