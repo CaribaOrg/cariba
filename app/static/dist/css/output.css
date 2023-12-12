@@ -2607,6 +2607,10 @@ video {
     top: 74px;
   }
 
+  .max-lg\:z-10 {
+    z-index: 10;
+  }
+
   .max-lg\:block {
     display: block;
   }
