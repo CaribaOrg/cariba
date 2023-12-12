@@ -74,9 +74,10 @@
     </ul>
   </nav>
   <!-- search bar -->
-  <form id="search_bar" class="md:hidden h-10 max-lg:flex w-full mt-1">
+  <form id="search_bar" class="md:hidden h-10 max-lg:flex w-full mt-1", method="POST", action="/search">
     <input
       id="search_input"
+      name="name"
       type="text"
       placeholder="Search Cariba"
       class="px-3 py-2 rounded-l-lg w-full focus:outline-none"
