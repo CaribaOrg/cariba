@@ -9,8 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
             switchNav = !switchNav;
             categoryNav.classList.add("slideOut");
             showCategories.classList.add("slideOut");
-            showCategories.children[0].classList.remove("hidden")
-            showCategories.children[1].classList.add("hidden")
+            showCategories.children[0].classList.add("hidden")
+            showCategories.children[1].classList.remove("hidden")
+
             showCategories.style.backgroundColor = "#21A4D8";
         }
         else {
@@ -18,8 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
             switchNav = !switchNav;
             categoryNav.classList.remove("slideOut");
             showCategories.classList.remove("slideOut");
-            showCategories.children[0].classList.add("hidden")
-            showCategories.children[1].classList.remove("hidden")
+            showCategories.children[0].classList.remove("hidden")
+            showCategories.children[1].classList.add("hidden")
             showCategories.style.backgroundColor = "red";
         }
     });
