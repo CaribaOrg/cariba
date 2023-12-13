@@ -19,3 +19,8 @@ export MAIL_DEFAULT_SENDER="your_default_mail_sender"
 #paypal
 export PAYPAL_SANDBOX_BUSINESS_SECRET="your_paypal_sandbox_business_secret"
 export PAYPAL_SANDBOX_BUSINESS_CLIENT_ID="your_paypal_sandbox_business_client_id"
+
+#security
+export SECURITY_PASSWORD_SALT="your_security_password_salt"
+export DEBUG="False"
+export SECRET_KEY="your_secret_key"

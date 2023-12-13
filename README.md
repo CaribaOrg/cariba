@@ -141,6 +141,8 @@ python3 --app app/run.py run
 ```
 Visit http://localhost:5000 in your browser to see the application running.
 
+Or visit https://www.fuzzfoo.tech for the deployed version
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 

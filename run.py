@@ -1,11 +1,9 @@
 from requests.auth import HTTPBasicAuth
-from flask import Flask, render_template, redirect, url_for, request, session, jsonify, flash
+from flask import Flask, render_template, redirect, url_for, request, jsonify, flash
 from flask_admin import Admin, AdminIndexView
-# from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
 import requests
 from api import api
-from models import strg
 from models.user import User, Role
 from models.cart import Cart
 from models.car import Car
@@ -15,20 +13,18 @@ from models.category import Category
 from models.order import Order
 from models.wishlist import WishlistItem
 from models.address import Address
-# from app.forms.user_forms import LoginForm, RegisterForm
-from models.custom_view import CustomView
 import random
-from flask_security import Security, current_user, auth_required, SQLAlchemySessionUserDatastore, login_required
+from flask_security import Security, current_user, SQLAlchemySessionUserDatastore, login_required
 from flask_mailman import Mail, EmailMessage
 from functools import wraps
-from models.notification import Message, Notification
+from models.notification import Notification
 from datetime import datetime
 from flask_ckeditor import CKEditor
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="app/templates", static_folder="app/static")
 
-app.config.from_pyfile('config.py')
+app.config.from_pyfile('app/config.py')
 
 # manage sessions per request - make sure connections are closed and returned
 app.teardown_appcontext(lambda exc: strg.session.close())
@@ -37,6 +33,7 @@ app.teardown_appcontext(lambda exc: strg.session.close())
 # Setup Flask-Security
 user_datastore = SQLAlchemySessionUserDatastore(strg.session, User, Role)
 app.security = Security(app, user_datastore)
+
 mail = Mail(app)
 ckeditor = CKEditor(app)
 
@@ -60,17 +57,15 @@ class myAdminView(ModelView):
 
 class CustomAdminIndexView(AdminIndexView):
     def is_accessible(self):
-        # Check if the current user is an admin (you need to implement this logic)
+        """Check if the current user is an admin"""
         return current_user.is_authenticated and current_user.is_admin()
 
     def inaccessible_callback(self, name, **kwargs):
-        # Redirect to login page if the user is not an admin
+        """Redirect to login page if the user is not an admin"""
         return redirect(url_for("security.login"))
 
 
 def create_admin(app):
-    # from flask_admin.contrib.sqla import ModelView
-
     admin = Admin(app, name='Admin', template_mode='bootstrap3',
                   index_view=CustomAdminIndexView())
     admin.add_view(myAdminView(User, strg.session))
@@ -114,7 +109,6 @@ def index():
 
 @app.route("/product/<uuid:id>")
 def product_page(id):
-    # product = strg.search(cls=Product, id=id) // search needs a fix
     product = strg.session().query(Product).get(id)
     popular_products = supported_products(strg.all(Product))
     if not popular_products or len(popular_products) < 5:
@@ -295,7 +289,10 @@ def search():
     if current_user.is_authenticated:
         products = supported_products(products)
     categories = strg.search(cls=Category, parent_id=None)
-    return render_template('search.html', products=products, search_input=request.form.get('name'), categories=categories)
+    return render_template('search.html',
+                           products=products,
+                           search_input=request.form.get('name'),
+                           categories=categories)
 
 
 @app.route("/myOrders")
