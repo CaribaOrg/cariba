@@ -17,7 +17,7 @@ import random
 from flask_security import Security, current_user, SQLAlchemySessionUserDatastore, login_required
 from flask_mailman import Mail, EmailMessage
 from functools import wraps
-from models.notification import Notification
+from models.notification import Message, Notification
 from datetime import datetime
 from flask_ckeditor import CKEditor
 
@@ -246,6 +246,28 @@ def capture_payment(order_id):  # Checks and confirms payment
     if is_approved_payment(captured_payment):
         # Do something (for example Update user field)
         current_user.cart.checkout(captured_payment.get("status"))
+        author = current_user
+        recipient = current_user
+        body = "<h1>Order successful!!</h1>"
+        title = "Payment Succesful"
+        label = "payments"
+        Message(author=author, recipient=recipient, body=body, title=title, message_label=label)
+        strg.save()
+        recipient.add_notification('unread_message_count',
+                            recipient.unread_message_count())
+        strg.save()
+    else:
+        author = current_user
+        recipient = current_user
+        body = "<h1>Order unsuccessful!!</h1>"
+        title = "Payment Unsuccesful"
+        label = "payments"
+        Message(author=author, recipient=recipient, body=body, title=title, message_label=label)
+        strg.save()
+        recipient.add_notification('unread_message_count',
+                            recipient.unread_message_count())
+        strg.save()
+        
     return jsonify(captured_payment)
 
 
